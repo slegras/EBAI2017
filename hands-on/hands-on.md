@@ -1,19 +1,30 @@
 # ChIP-seq Hands-on
-### Introduction
-#### Goal
+
+1. [Introduction](#introduction)  
+2. [Downloading ChIP-seq reads from NCBI](#download)
+3. [Quality control of the reads and statistics](#qc)
+4. [Mapping the reads with Bowtie](#mapping)
+5. [Bonus: checking two ENCODE quality metrics](#bonus)
+6. [Peak calling with MACS](#macs)
+7. [Visualizing the peaks in a genome browser](#visualize)
+8. [Bonus: vizualisation with deeptools](#deeptools)
+8. [FAQ](#faq)
+
+## Introduction <a name="introduction"></a>
+### Goal
 The aim is to :
   * have an understanding of the nature of ChIP-Seq data
   * perform a complete analysis workflow including quality check (QC), read mapping, visualization in a genome browser and peak-calling. Use command line and open source software for each each step of the workflow and feel the complexity of the task
   * have an overview of possible downstream analyses
   * perform a motif analysis with online web programs
 
-#### Summary
+### Summary
 This training gives an introduction to ChIP-seq data analysis, covering the processing steps starting from the reads to the peaks. Among all possible downstream analyses, the practical aspect will focus on motif analyses. A particular emphasis will be put on deciding which downstream analyses to perform depending on the biological question. This training does not cover all methods available today. It does not aim at bringing users to a professional NGS analyst level but provides enough information to allow biologists understand what DNA sequencing practically is and to communicate with NGS experts for more in-depth needs.
 
-#### Dataset description
+### Dataset description
 For this training, we will use a dataset produced by Myers et al (see on the right of the page for details on the publication) involved in the regulation of gene expression under anaerobic conditions in bacteria. We will focus on one factor: FNR.
 
-## Downloading ChIP-seq reads from NCBI
+## Downloading ChIP-seq reads from NCBI <a name="download"></a>
 **Goal**: Identify the dataset corresponding to the studied article and retrieve the data (reads as FASTQ file) corresponding to one experiment and the control.  
 **Related VIB training**: Downloading NGS data from NCBI
 
@@ -40,7 +51,7 @@ Although direct access to the SRA database at the NCBI is doable, SRA does not s
 1. Go to the EBI website. Paste your SRA identifier (SRX189773) and click on the button "search".
 2. Click on the first result. On the next page, there is a link to the FASTQ file. For efficiency, this file has already been downloaded and is available in the "data" folder (SRR576933.fastq)
 
-## Quality control of the reads and statistics
+## Quality control of the reads and statistics <a name="qc"></a>
 **Goal**: Get some basic information on the data (read length, number of reads, global quality of dataset)  
 **Related VIB training**: Quality control of NGS data
 
@@ -78,7 +89,7 @@ Knowing your organism size is important to evaluate if your dataset has sufficie
 1. Go to the NCBI Genome website, and search for the organism **Escherichia coli**
 2. Click on the **Escherichia coli str. K-12 substr. MG1655** to access statistics on this genome.
 
-## Mapping the reads with Bowtie
+## Mapping the reads with Bowtie <a name="mapping"></a>
 **Goal**: Obtain the coordinates of each read on the reference genome.  
 **Related VIB training**: Mapping of NGS data
 
@@ -115,7 +126,7 @@ $ bowtie-1.1.1 Escherichia_coli_K12 -q SRR576933.fastq  -v 2 -m 1 -3 1 -S 2> SRR
 ### 4 - Mapping the control
 1. Repeat the steps above (step 3) for the file SRR576938.fastq.
 
-## Bonus: checking two ENCODE quality metrics
+## Bonus: checking two ENCODE quality metrics <a name="bonus"></a>
 **Goal**: This optional exercice aims at calculating the NSC and RSC ENCODE quality metrics. These metrics allow to classify the datasets (after mapping, contrary to FASTC that works on raw reads) in regards to the NSC and RSC values observed in the ENCODE datasets (see ENCODE guidelines)
 
 ### 1 - PhantomPeakQualTools
@@ -136,7 +147,7 @@ samtools-0.1.19 view -F 0x0204 -o - SRR576933.bam | awk 'BEGIN{OFS="\t"}{if (and
 Rscript /usr/bin/tools/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_experiment_phantompeaks
 ```
 
-## Peak calling with MACS
+## Peak calling with MACS <a name="macs"></a>
 **Goal**: Define the peaks, i.e. the region with a high density of reads, where the studied factor was bound
 
 ### 1 - Choosing a peak-calling program
@@ -166,7 +177,7 @@ $ macs14 -t SRR576933.sam -c SRR576938.sam --format SAM  --gsize 4639675 --name 
 
 ### 3 - Analyzing the MACS results
 
-## Visualizing the peaks in a genome browser
+## Visualizing the peaks in a genome browser <a name="visualize"></a>
 **Goal**: View the peaks in their genomic context, to help the biological interpretation of the results   
 **Related VIB training**: Visualize all results in the Interactive Genome Viewer (IGV)
 
@@ -176,7 +187,7 @@ If the data are on your computer, to prevent data transfer, it's easier to visua
 
 ### 2 - Viewing the peaks in IGV
 
-## Bonus: vizualisation with deeptools
+## Bonus: vizualisation with deeptools <a name="deeptools"></a>
 **Goal**: This optional exercises illustrate some usage of the recent DeepTools suite for visualization
 
 ### 1 - From SAM to sorted BAM
@@ -206,7 +217,7 @@ bamCoverage --help
 bamCoverage --bam SRR576933_sorted_nodup.bam --outFileName SRR576933_nodup.bedgraph --outFileFormat bedgraph --normalizeTo1x 4639675
 ```
 
-## Motif analysis
+## Motif analysis <a name="motif"></a>
 **Goal**: Define binding motif(s) for the ChIPed transcription factor and identify potential cofactors
 
 ### 1 - Retrieve the peak sequences corresponding to the peak coordinate file (BED)
@@ -243,7 +254,7 @@ bedtools getfasta -fi Escherichia_coli_K_12_MG1655.fasta -bed macs14_summits+-10
 3. Run RSAT peak-motifs with the same options, but choosing as input file this new dataset (macs14_summits+-100.fa)
 and setting the title box to **FNR Anaerobic A summit +/-100bp**
 
-## FAQ
+## FAQ <a name="faq"></a>
 ### How to extract peaks from the supplementary data of a publication ?
 The processed peaks (BED file) is sometimes available on the GEO website, or in supplementary data. Unfortunately, most of the time, the peak coordinates are embedded into supplementary tables and thus not usable "as is".
 This is the case for the studied article. To be able to use these peaks (visualize them in a genome browser, compare them with the peaks found with another program, perform downstream analyses...), you will need to (re)-create a BED file from the information available.
