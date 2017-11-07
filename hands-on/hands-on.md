@@ -156,7 +156,8 @@ Are there any concerns raised by the report ? If so, can you tell where the prob
 Knowing your organism size is important to evaluate if your dataset has sufficient coverage to continue your analyses. For the human genome (3 Gb), we usually aim at least 10 Million reads.
 
 1. Go to the [NCBI Genome](http://www.ncbi.nlm.nih.gov/genome) website, and search for the organism **Escherichia coli**
-2. Click on the **Escherichia coli str. K-12 substr. MG1655** to access statistics on this genome.
+2. Scroll down up to the **Escherichia coli str. K-12 substr. MG1655** to access statistics on this genome.
+![alt text][genome5]
 
 > How long is the genome ?  
 > Do both FASTQ files contain enough reads for a proper analysis ?  
@@ -359,3 +360,4 @@ This file will work directly in IGV
 [geo2]: https://github.com/slegras/EBAI2017/blob/master/src/common/images/2_GEO.png "GEO2"
 [geo3]: https://github.com/slegras/EBAI2017/blob/master/src/common/images/3_GEO.png "GEO3"
 [ebi4]: https://github.com/slegras/EBAI2017/blob/master/src/common/images/4_EBI.png "EBI"
+[genome5]: https://github.com/slegras/EBAI2017/blob/master/src/common/images/5_Genomes.png "E. Coli K-12"
