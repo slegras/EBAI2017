@@ -42,14 +42,17 @@ Functional genomic datasets (transcriptomics, genome-wide binding such as ChIP-s
 2. Search in google **GSE41195**. Click on the first link to directly access the correct page on the GEO database.
 ![alt text][geo]
 3. This GEO entry is a mixture of expression analysis and chip-seq. At the bottom of the page, click on the subseries related to the chip-seq datasets. (this subseries has its own identifier: **GSE41187**).
+![alt text][geo2]
 4. From this page, we will focus on the experiment **FNR IP ChIP-seq Anaerobic A**. At the bottom of the page, click on the link "GSM1010219 - FNR IP ChIP-seq Anaerobic A".
 5. In the new page, go to the bottom to find the SRA identifier. This is the identifier of the raw dataset stored in the SRA database.
+![alt text][geo3]
 6. Copy the identifier **SRX189773** (do not click on the link that would take you to the SRA database, see below why)
 
 ### 3 - Downloading FASTQ file from the ENA database
 Although direct access to the SRA database at the NCBI is doable, SRA does not store the sequence FASTQ format. In practice, it's simpler (and quicker!!) to download datasets from the ENA database (European Nucleotide Archive) hosted by EBI (European Bioinformatics Institute) in UK. ENA encompasses the data from SRA.
 
-1. Go to the EBI website. Paste your SRA identifier (SRX189773) and click on the button "search".
+1. Go to the [EBI](http://www.ebi.ac.uk/) website. Paste your SRA identifier (SRX189773) and click on the button "search".
+![alt text][ebi4]
 2. Click on the first result. On the next page, there is a link to the FASTQ file. For efficiency, this file has already been downloaded and is available in the "data" folder (SRR576933.fastq)
 
 ## Quality control of the reads and statistics <a name="qc"></a>
@@ -283,3 +286,6 @@ perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' Escherichia_coli_K_12_MG1655
 This file will work directly in IGV
 
 [geo]: https://github.com/slegras/EBAI2017/blob/master/src/common/images/1_GEO.png "GEO"
+[geo2]: https://github.com/slegras/EBAI2017/blob/master/src/common/images/2_GEO.png "GEO2"
+[geo3]: https://github.com/slegras/EBAI2017/blob/master/src/common/images/3_GEO.png "GEO3"
+[ebi4]: https://github.com/slegras/EBAI2017/blob/master/src/common/images/4_EBI.png "EBI"
