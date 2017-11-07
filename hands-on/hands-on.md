@@ -282,4 +282,4 @@ perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' Escherichia_coli_K_12_MG1655
 ```
 This file will work directly in IGV
 
-[logo]: https://github.com/slegras/EBAI2017/tree/master/hands-on/src/common/images/1_GEO.png "Logo Title Text 2"
+[geo]: https://github.com/slegras/EBAI2017/tree/master/hands-on/src/common/images/1_GEO.png "GEO"
