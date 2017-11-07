@@ -98,19 +98,50 @@ cd EBA2017_chipseq
 ### 1 - Getting the FASTQC report
 Before you analyze the data, it is crucial to check the quality of the data. We will use the standard tool for checking the quality of data generated on the Illumina platform: [FASTQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/).
 
-1. First check the help page of the program to see its usage and parameters.
+1. Create a directory named **01-QualityControl** in which to output results from fastqc
+```bash
+mkdir 01-QualityControl
+```
+2. Go to the directory you've just created
+```bash
+cd 01-QualityControl
+```
+3. Check the help page of the program to see its usage and parameters.
 ```bash
 srun fastqc --help
 ```
-3. Launch the FASTQC program on the experiment file (SRR576933.fastq)
+4. Launch the FASTQC program on the experiment file (SRR576933.fastq)
+  * -o: creates all output files in the specified output directory. '.' is current directory.
 ```bash
-srun fastqc SRR576933.fastq
+srun fastqc ../data/SRR576933.fastq.gz -o .
 ```
-4. Wait until the analysis is finished. Check the files output by the program.
+> Started analysis of SRR576933.fastq.gz
+> Approx 5% complete for SRR576933.fastq.gz
+> Approx 10% complete for SRR576933.fastq.gz
+> Approx 15% complete for SRR576933.fastq.gz
+> Approx 20% complete for SRR576933.fastq.gz
+> Approx 25% complete for SRR576933.fastq.gz
+> Approx 30% complete for SRR576933.fastq.gz
+> Approx 35% complete for SRR576933.fastq.gz
+> Approx 40% complete for SRR576933.fastq.gz
+> Approx 45% complete for SRR576933.fastq.gz
+> Approx 50% complete for SRR576933.fastq.gz
+> Approx 55% complete for SRR576933.fastq.gz
+> Approx 60% complete for SRR576933.fastq.gz
+> Approx 65% complete for SRR576933.fastq.gz
+> Approx 70% complete for SRR576933.fastq.gz
+> Approx 75% complete for SRR576933.fastq.gz
+> Approx 80% complete for SRR576933.fastq.gz
+> Approx 85% complete for SRR576933.fastq.gz
+> Approx 90% complete for SRR576933.fastq.gz
+> Approx 95% complete for SRR576933.fastq.gz
+> Analysis complete for SRR576933.fastq.gz
+5. Wait until the analysis is finished. Check the files output by the program.
 ```bash
 ls
-SRR576933_fastqc  SRR576933_fastqc.zip	SRR576933.fastq
 ```
+> SRR576933_fastqc  SRR576933_fastqc.zip	SRR576933.fastq
+
 6. Access the result
 ```bash
 cd SRR576933_fastqc
@@ -118,6 +149,14 @@ ls
 fastqc_data.txt  fastqc_report.html  Icons  Images  summary.txt
 ```
 7. Open the HTML file fastqc_report.html in Firefox.
+
+**Analyze the result of the FASTQC program:  
+How many reads are present in the file ?  
+What is the read length ?  
+Is the overall quality good ?  
+Are there any concerns raised by the report ? If so, can you tell where the problem might come from ?**  
+
+**What are the adapters ?**  
 
 ### 2 - Organism length
 Knowing your organism size is important to evaluate if your dataset has sufficient coverage to continue your analyses. For the human genome (3 Gb), we usually aim at least 10 Million reads.
