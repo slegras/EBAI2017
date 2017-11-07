@@ -40,6 +40,7 @@ Functional genomic datasets (transcriptomics, genome-wide binding such as ChIP-s
 ### 2 - Accessing GSE41195 from GEO
 1.  The GEO database hosts processed data files and many details related to the experiments. The SRA (Sequence Read Archive) stores the actual raw sequence data.
 2. Search in google **GSE41195**. Click on the first link to directly access the correct page on the GEO database.
+![alt text][geo]
 3. This GEO entry is a mixture of expression analysis and chip-seq. At the bottom of the page, click on the subseries related to the chip-seq datasets. (this subseries has its own identifier: **GSE41187**).
 4. From this page, we will focus on the experiment **FNR IP ChIP-seq Anaerobic A**. At the bottom of the page, click on the link "GSM1010219 - FNR IP ChIP-seq Anaerobic A".
 5. In the new page, go to the bottom to find the SRA identifier. This is the identifier of the raw dataset stored in the SRA database.
@@ -280,3 +281,5 @@ Here, I downloaded the annotation from the UCSC Table browser as "Escherichia_co
 perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' Escherichia_coli_K_12_MG1655.annotation.bed > Escherichia_coli_K_12_MG1655.annotation.fixed.bed
 ```
 This file will work directly in IGV
+
+[logo]: https://github.com/slegras/EBAI2017/tree/master/hands-on/src/common/images/1_GEO.png "Logo Title Text 2"
