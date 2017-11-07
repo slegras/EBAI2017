@@ -165,3 +165,107 @@ $ macs14 -t SRR576933.sam -c SRR576938.sam --format SAM  --gsize 4639675 --name 
 3. This should take about 10 minutes, mainly because of the --diag and the --bdg options. Without, the program runs much faster.
 
 ### 3 - Analyzing the MACS results
+
+## Visualizing the peaks in a genome browser
+**Goal**: View the peaks in their genomic context, to help the biological interpretation of the results   
+**Related VIB training**: Visualize all results in the Interactive Genome Viewer (IGV)
+
+### 1 - Choosing a genome browser
+There are several options for genome browsers, divided between the local browsers (need to install the program, eg. IGV) and the online web browsers (eg. UCSC genome browser, Ensembl). We often use both types, depending on the aim and the localisation of the data.
+If the data are on your computer, to prevent data transfer, it's easier to visualize the data locally (IGV). Note that if you're working on a non-model organism, the local viewer will be the only choice. If the aim is to share the results with your collaborators, view many tracks in the context of many existing annotations, then the online genome browsers are more suitable.
+
+### 2 - Viewing the peaks in IGV
+
+## Bonus: vizualisation with deeptools
+**Goal**: This optional exercises illustrate some usage of the recent DeepTools suite for visualization
+
+### 1 - From SAM to sorted BAM
+The SAM format correspond to large text files, that can be compressed ("zipped") into BAM format. The BAM format are usually sorted and indexed for fast access to the data it contains.
+
+1. convert the SAM file into a sorted BAM file
+```bash
+samtools-0.1.19 view -bS SRR576933.sam  | samtools-0.1.19 sort - SRR576933_sorted
+```
+2. Remove the duplicated reads
+```bash
+samtools-0.1.19 rmdup -s SRR576933_sorted.bam SRR576933_sorted_nodup.bam
+```
+from 2242431 uniquely mapped reads, it remains 1142724 reads without duplicates.
+3. Index the BAM file
+```bash
+samtools-0.1.19 index SRR576933_sorted_nodup.bam SRR576933_sorted_nodup.bai
+```
+
+### 2 - From BAM to scaled Bedgraph files
+1. bamCoverage from deepTools generates BedGraphs from BAM files
+```bash
+bamCoverage --help
+```
+2. Generate a scaled BedGraph file
+```bash
+bamCoverage --bam SRR576933_sorted_nodup.bam --outFileName SRR576933_nodup.bedgraph --outFileFormat bedgraph --normalizeTo1x 4639675
+```
+
+## Motif analysis
+**Goal**: Define binding motif(s) for the ChIPed transcription factor and identify potential cofactors
+
+### 1 - Retrieve the peak sequences corresponding to the peak coordinate file (BED)
+
+For the motif analysis, you first need to extract the sequences corresponding the the peaks. There are several ways to do this (as usual...). If you work on a UCSC-supported organism, the easiest is to use RSAT fetch-sequences or Galaxy . Here, we will use Bedtools, as we have the genome of our interest on our computer (Escherichia_coli_K_12_MG1655.fasta).
+```bash
+bedtools getfasta -fi Escherichia_coli_K_12_MG1655.fasta -bed macs14_peaks.bed -fo macs14_peaks.fa
+```
+
+### 2 - Motif discovery with RSAT
+1. Open a connection to a Regulatory Sequence Analysis Tools server. You can choose between various website mirrors.
+  * Server at Roscoff (recommended for this training) rsat.sb-roscoff.fr
+  * Main server (currently in Brussels) www.rsat.eu
+2. In the left menu, click on **NGS ChIP-seq** and then click on **peak-motifs**. A new page opens, with a form
+3. The default peak-motifs web form only displays the essential options. There are only two mandatory parameters.
+  * The title box, which you will set as FNR Anaerobic A b. The sequences, that you will upload from your computer, by clicking on the buttonChoose file, and select the file macs14_peaks.fa from your computer.
+4. We could launch the analysis like this, but we will now modify some of the advanced options in order to fine-tune the analysis according to your data set.
+  * Open the "Reduce peak sequences" title, and make sure the "Cut peak sequences: +/- " option is set to 0 (we wish to analyse our full dataset)
+  * Open the “Motif Discovery parameters” title, and check the oligomer sizes 6 and 7 (but not 8). Check "Discover over-represented spaced word pairs [dyad-analysis]"
+  Under “Compare discovered motifs with databases”, uncheck "JASPAR core vertebrates" and check RegulonDB prokaryotes (2012_05) as the studied organism is the bacteria E. coli.
+5. You can indicate your email address in order to receive notification of the task submission and completion. This is particularly useful because the full analysis may take some time for very large datasets.
+6. Click “GO”. As soon as the query has been launched, you should receive an email indicating confirming the task submission, and providing a link to the future result page.
+7. The Web page also displays a link, You can already click on this link. The report will be progressively updated during the processing of the workflow.
+
+### 3 - Motif discovery with RSAT (short peaks)
+1. Restrict the dataset to the summit of the peaks +/- 100bp
+```bash
+perl -lane '$start=$F[1]-100 ; $end = $F[2]+100 ; print "$F[0]\t$start\t$end"' macs14_summits.bed > macs14_summits+-100.bed
+```
+2. Extract the sequences for this BED file
+```bash
+bedtools getfasta -fi Escherichia_coli_K_12_MG1655.fasta -bed macs14_summits+-100.bed -fo macs14_summits+-100.fa
+```
+3. Run RSAT peak-motifs with the same options, but choosing as input file this new dataset (macs14_summits+-100.fa)
+and setting the title box to **FNR Anaerobic A summit +/-100bp**
+
+## FAQ
+### How to extract peaks from the supplementary data of a publication ?
+The processed peaks (BED file) is sometimes available on the GEO website, or in supplementary data. Unfortunately, most of the time, the peak coordinates are embedded into supplementary tables and thus not usable "as is".
+This is the case for the studied article. To be able to use these peaks (visualize them in a genome browser, compare them with the peaks found with another program, perform downstream analyses...), you will need to (re)-create a BED file from the information available.
+Here, Table S5 provides the coordinates of the summit of the peaks. The coordinates are for the same assembly as we used.
+
+1. copy/paste the first column into a new file, and save it as retained_peaks.txt
+2. use a PERL command (or awk if you know this language) to create a BED-formatted file. As we need start and end coordinates, we will arbitrarily take +/-50bp around the summit.
+```bash
+perl -lane 'print "gi|49175990|ref|NC_000913.2|\t".($F[0]-50)."\t".($F[0]+50)."\t" ' retained_peaks.txt > retained_peaks.bed
+```
+3. The BED file looks like this:
+> gi|49175990|ref|NC_000913.2|	120	220
+> gi|49175990|ref|NC_000913.2|	20536	20636
+> gi|49175990|ref|NC_000913.2|	29565	29665
+> gi|49175990|ref|NC_000913.2|	34015	34115
+4. Depending on the available information, the command will be different.
+
+### How to obtain the annotation (=Gene) BED file for IGV?
+Annotation files can be found on genome websites, NCBI FTP server, Ensembl, ... However, IGV required GFF format, or BED format, which are often not directly available.
+Here, I downloaded the annotation from the UCSC Table browser as "Escherichia_coli_K_12_MG1655.annotation.bed". Then, I changed the "chr" to the name of our genome with the following PERL command:
+
+```bash
+perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' Escherichia_coli_K_12_MG1655.annotation.bed > Escherichia_coli_K_12_MG1655.annotation.fixed.bed
+```
+This file will work directly in IGV
