@@ -163,7 +163,7 @@ This prints the help of the program.
   * ChIP-seq tag file (-t) is the name of our experiment (treatment) mapped read file SRR576933.sam
   * ChIP-seq control file (-c) is the name of our input (control) mapped read file SRR576938.sam
   * --format SAM indicates the input file are in SAM format. Other formats can be specified (BAM,BED...)
-  * --gsize Effective genome size: this is the size of the genome considered "usable" for peak calling. This value is given by the MACS developpers on their website. It is smaller than the complete genome because many regions are excluded (telomeres, highly repeated regions...). The default value is for human (2700000000.0), so we need to chnage it. As the value for E. coli is not provided, we will take the complete genome size 4639675.
+  * --gsize Effective genome size: this is the size of the genome considered "usable" for peak calling. This value is given by the MACS developpers on their website. It is smaller than the complete genome because many regions are excluded (telomeres, highly repeated regions...). The default value is for human (2700000000.0), so we need to change it. As the value for E. coli is not provided, we will take the complete genome size 4639675.
   * --name provides a prefix for the output files. We set this to macs14, but it could be any name.
   * --bw The bandwidth is the size of the fragment extracted from the gel electrophoresis or expected from sonication. By default, this value is 300bp. Usually, this value is indicated in the Methods section of publications. In the studied publication, a sentence mentions "400bp fragments (FNR libraries)". We thus set this value to 400.
   * --keep-dup specifies how MACS should treat the reads that are located at the exact same location (duplicates). The manual specifies that keeping only 1 representative of these "stacks" of reads is giving the best results.
@@ -201,7 +201,7 @@ samtools-0.1.19 view -bS SRR576933.sam  | samtools-0.1.19 sort - SRR576933_sorte
 ```bash
 samtools-0.1.19 rmdup -s SRR576933_sorted.bam SRR576933_sorted_nodup.bam
 ```
-from 2242431 uniquely mapped reads, it remains 1142724 reads without duplicates.
+from 2242431 uniquely mapped reads, it remains 1142724 reads without duplicates.  
 3. Index the BAM file
 ```bash
 samtools-0.1.19 index SRR576933_sorted_nodup.bam SRR576933_sorted_nodup.bai
