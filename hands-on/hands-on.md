@@ -155,8 +155,13 @@ Are there any concerns raised by the report ? If so, can you tell where the prob
 ### 2 - Organism length
 Knowing your organism size is important to evaluate if your dataset has sufficient coverage to continue your analyses. For the human genome (3 Gb), we usually aim at least 10 Million reads.
 
-1. Go to the NCBI Genome website, and search for the organism **Escherichia coli**
+1. Go to the [NCBI Genome](http://www.ncbi.nlm.nih.gov/genome) website, and search for the organism **Escherichia coli**
 2. Click on the **Escherichia coli str. K-12 substr. MG1655** to access statistics on this genome.
+
+> How long is the genome ?  
+> Do both FASTQ files contain enough reads for a proper analysis ?  
+
+**At this point, you should be confident about the quality of the datasets, and wether it's worth following with analyzing the datasets.**
 
 ## Mapping the reads with Bowtie <a name="mapping"></a>
 **Goal**: Obtain the coordinates of each read on the reference genome.  
