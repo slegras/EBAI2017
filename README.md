@@ -1,37 +1,14 @@
-## Welcome to GitHub Pages
+## EBAI 2017 - ChIP-seq course
 
-You can use the [editor on GitHub](https://github.com/slegras/EBAI2017/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+### Planning
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/slegras/EBAI2017/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+| **Start** | **End** | **Duration** | **Topics** | **Teacher** |
+| -------- | --------- | --------- | ----------- | ----------- |
+| 08:30 | 10:15 | 01:45 | Experimental design, Quality Controls, Mapping | S | 
+| 10:15 | 10:45 | 00:30 | **Break** |  |
+| 10:45 | 12:45 | 02:00 | ChIP-Seq normalisation, peak-calling | S |
+| 12:45 | 14:30 | 01:45 | **Lunch Break** |  |
+| 14:30 | 16:00 | 01:30 | Peak annotation | S, V |
+| 16:00 | 16:45 | 00:45 | **Break** |  |
+| 16:45 | 18:00 | 01:15 | Peak annotation | S, V |
+| 18:00 | 19:15 | 01:15 | Motif analysis | M |
