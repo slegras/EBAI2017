@@ -159,8 +159,8 @@ Knowing your organism size is important to evaluate if your dataset has sufficie
 2. Scroll down up to the **Escherichia coli str. K-12 substr. MG1655** to access statistics on this genome.
 ![alt text][genome5]
 
-> How long is the genome ?  
-> Do both FASTQ files contain enough reads for a proper analysis ?  
+**How long is the genome ?  
+Do both FASTQ files contain enough reads for a proper analysis ?  **
 
 **At this point, you should be confident about the quality of the datasets, and wether it's worth following with analyzing the datasets.**
 
