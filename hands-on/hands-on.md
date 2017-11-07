@@ -2,13 +2,14 @@
 
 1. [Introduction](#introduction)  
 2. [Downloading ChIP-seq reads from NCBI](#download)
-3. [Quality control of the reads and statistics](#qc)
-4. [Mapping the reads with Bowtie](#mapping)
-5. [Bonus: checking two ENCODE quality metrics](#bonus)
-6. [Peak calling with MACS](#macs)
-7. [Visualizing the peaks in a genome browser](#visualize)
-8. [Bonus: vizualisation with deeptools](#deeptools)
-8. [FAQ](#faq)
+3. [Connect to the server and set up your environment](#setup)
+4. [Quality control of the reads and statistics](#qc)
+5. [Mapping the reads with Bowtie](#mapping)
+6. [Bonus: checking two ENCODE quality metrics](#bonus)
+7. [Peak calling with MACS](#macs)
+8. [Visualizing the peaks in a genome browser](#visualize)
+9. [Bonus: vizualisation with deeptools](#deeptools)
+10. [FAQ](#faq)
 
 ## Introduction <a name="introduction"></a>
 ### Goal
@@ -58,19 +59,50 @@ Although direct access to the SRA database at the NCBI is doable, SRA does not s
 **tip**: To download the control dataset, we should redo the same steps starting from the GEO web page specific to the chip-seq datasets (see step 2.4) and choose **anaerobic INPUT DNA**.  
 The downloaded FASTQ file is available in the data folder (SRR576938.fastq)
 
-<span style="color:red">At this point, you should have two FASTQ files, one for the experiment, one for the control. In which organism are you working ?</span>
+**At this point, you should have two FASTQ files, one for the experiment, one for the control. In which organism are you working ?**
+
+## Connect to the server and set up your environment <a name="setup"></a>
+### 1 - Sign in on the server
+  * On MobaXterm
+> Session : ssh  
+> Host : hpc.igbmc.fr  
+> Specify username : ticked and filled in  
+> Advanced SSH settings : X11-Forwarding  
+  * On MacOS and Linux
+```bash
+ssh -XY <login>@hpc.igbmc.fr
+```
+
+### 2 - Set up your working environment
+1. Go to your working directory
+```bash
+cd /shared/projects/training/<login>/
+```
+2. Load the conda virtual environment which contains all bioinformatics tools used to analyze ChIP-seq data.
+```bash
+source activate eba2017_chipseq
+```
+3. Create a directory that will contain all results of the upcoming analyses.
+```bash
+mkdir EBA2017_chipseq
+```
+4. Go to the newly created directory
+```bash
+cd EBA2017_chipseq
+```
 
 ## Quality control of the reads and statistics <a name="qc"></a>
 **Goal**: Get some basic information on the data (read length, number of reads, global quality of dataset)  
 **Related VIB training**: Quality control of NGS data
 
 ### 1 - Getting the FASTQC report
-Before you analyze the data, it is crucial to check the quality of the data. We will use the standard tool for checking the quality of data generated on the Illumina platform: FASTQC. Now is the time to gather your courage and face the terminal. Don't worry, it's not as scary as it seems ! Below, the "$" sign is to indicate what you must type in the command line, but don't type the "$".
+Before you analyze the data, it is crucial to check the quality of the data. We will use the standard tool for checking the quality of data generated on the Illumina platform: [FASTQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/).
 
 1. Open the terminal and go to the course directory.
 ```bash
-cd /home/bits/NGS/ChIPSeq
+cd /shared/projects/training/<login>/
 ```
+**Replace <login> by your login on the cluster**
 2. First check the help page of the program to see its usage and parameters.
 ```bash
 srun fastqc --help
