@@ -140,15 +140,9 @@ srun fastqc ../data/SRR576933.fastq.gz -o .
 ```bash
 ls
 ```
-> SRR576933_fastqc  SRR576933_fastqc.zip	SRR576933.fastq
+> SRR576933_fastqc.html  SRR576933_fastqc.zip
 
-6. Access the result
-```bash
-cd SRR576933_fastqc
-ls
-fastqc_data.txt  fastqc_report.html  Icons  Images  summary.txt
-```
-7. Open the HTML file fastqc_report.html in Firefox.
+7. Open the HTML file SRR576933_fastqc.html in Firefox.
 
 **Analyze the result of the FASTQC program:  
 How many reads are present in the file ?  
