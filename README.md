@@ -1,10 +1,13 @@
 ## EBAI 2017 - ChIP-seq course
 
+### Hands-on
+Go to [hands-on](https://slegras.github.io/EBAI2017/hands-on/hands-on.md)
+
 ### Planning
 
 | **Start** | **End** | **Duration** | **Topics** | **Teacher** |
 | -------- | --------- | --------- | ----------- | ----------- |
-| 08:30 | 10:15 | 01:45 | Experimental design, Quality Controls, Mapping | S | 
+| 08:30 | 10:15 | 01:45 | Experimental design, Quality Controls, Mapping | S |
 | 10:15 | 10:45 | 00:30 | **Break** |  |
 | 10:45 | 12:45 | 02:00 | ChIP-Seq normalisation, peak-calling | S |
 | 12:45 | 14:30 | 01:45 | **Lunch Break** |  |
