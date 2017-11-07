@@ -1,7 +1,7 @@
 ## EBAI 2017 - ChIP-seq course
 
 ### Hands-on
-Go to [hands-on](https://slegras.github.io/EBAI2017/hands-on/hands-on.md)
+Go to [hands-on](/hands-on/hands-on.md)
 
 ### Planning
 
