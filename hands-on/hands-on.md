@@ -98,12 +98,7 @@ cd EBA2017_chipseq
 ### 1 - Getting the FASTQC report
 Before you analyze the data, it is crucial to check the quality of the data. We will use the standard tool for checking the quality of data generated on the Illumina platform: [FASTQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/).
 
-1. Open the terminal and go to the course directory.
-```bash
-cd /shared/projects/training/<login>/
-```
-**Replace <login> by your login on the cluster**
-2. First check the help page of the program to see its usage and parameters.
+1. First check the help page of the program to see its usage and parameters.
 ```bash
 srun fastqc --help
 ```
