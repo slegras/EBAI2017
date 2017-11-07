@@ -22,7 +22,7 @@ The aim is to :
 This training gives an introduction to ChIP-seq data analysis, covering the processing steps starting from the reads to the peaks. Among all possible downstream analyses, the practical aspect will focus on motif analyses. A particular emphasis will be put on deciding which downstream analyses to perform depending on the biological question. This training does not cover all methods available today. It does not aim at bringing users to a professional NGS analyst level but provides enough information to allow biologists understand what DNA sequencing practically is and to communicate with NGS experts for more in-depth needs.
 
 ### Dataset description
-For this training, we will use a dataset produced by Myers et al (see on the right of the page for details on the publication) involved in the regulation of gene expression under anaerobic conditions in bacteria. We will focus on one factor: FNR.
+For this training, we will use a dataset produced by Myers et al (see on the right of the page for details on the publication) involved in the regulation of gene expression under anaerobic conditions in bacteria. We will focus on one factor: **FNR**.
 
 ## Downloading ChIP-seq reads from NCBI <a name="download"></a>
 **Goal**: Identify the dataset corresponding to the studied article and retrieve the data (reads as FASTQ file) corresponding to one experiment and the control.  
@@ -33,9 +33,9 @@ Within an article of interest, search for a sentence mentioning the deposition o
 *"All genome-wide data from this publication have been deposited in NCBI’s Gene Expression Omnibus (**GSE41195**)."*
 We will thus use the **GSE41195** identifier to retrieve the dataset from the **NCBI GEO** (Gene Expression Omnibus) database.
 
-NGS datasets are (usually) made freely accessible for other scientists, by depositing these datasets into specialized databanks. Sequence Read Archive (SRA) located in USA hosted by NCBI, and its european equivalent European Nucleotide Archive (ENA) located in England hosted by EBI both contains **raw reads**.
+NGS datasets are (usually) made freely accessible for other scientists, by depositing these datasets into specialized databanks. [Sequence Read Archive (SRA)](http://www.ncbi.nlm.nih.gov/sra) located in USA hosted by NCBI, and its european equivalent [European Nucleotide Archive (ENA)](http://www.ebi.ac.uk/ena) located in England hosted by EBI both contains **raw reads**.
 
-Functional genomic datasets (transcriptomics, genome-wide binding such as ChIP-seq,...) are deposited in the databases Gene Expression Omnibus (GEO) or its European equivalent ArrayExpress.
+Functional genomic datasets (transcriptomics, genome-wide binding such as ChIP-seq,...) are deposited in the databases [Gene Expression Omnibus (GEO)](http://www.ncbi.nlm.nih.gov/geo/) or its European equivalent [ArrayExpress](https://www.ebi.ac.uk/arrayexpress/).
 
 ### 2 - Accessing GSE41195 from GEO
 1.  The GEO database hosts processed data files and many details related to the experiments. The SRA (Sequence Read Archive) stores the actual raw sequence data.
