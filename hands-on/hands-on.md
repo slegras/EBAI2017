@@ -43,7 +43,7 @@ Functional genomic datasets (transcriptomics, genome-wide binding such as ChIP-s
 ![alt text][geo]
 3. This GEO entry is a mixture of expression analysis and chip-seq. At the bottom of the page, click on the subseries related to the chip-seq datasets. (this subseries has its own identifier: **GSE41187**).
 ![alt text][geo2]
-4. From this page, we will focus on the experiment **FNR IP ChIP-seq Anaerobic A**. At the bottom of the page, click on the link "GSM1010219 - FNR IP ChIP-seq Anaerobic A".
+4. From this page, we will focus on the experiment **FNR IP ChIP-seq Anaerobic A**. At the bottom of the page, click on the link "**GSM1010219** - FNR IP ChIP-seq Anaerobic A".
 5. In the new page, go to the bottom to find the SRA identifier. This is the identifier of the raw dataset stored in the SRA database.
 ![alt text][geo3]
 6. Copy the identifier **SRX189773** (do not click on the link that would take you to the SRA database, see below why)
@@ -54,6 +54,11 @@ Although direct access to the SRA database at the NCBI is doable, SRA does not s
 1. Go to the [EBI](http://www.ebi.ac.uk/) website. Paste your SRA identifier (SRX189773) and click on the button "search".
 ![alt text][ebi4]
 2. Click on the first result. On the next page, there is a link to the FASTQ file. For efficiency, this file has already been downloaded and is available in the "data" folder (SRR576933.fastq)
+
+**tip**: To download the control dataset, we should redo the same steps starting from the GEO web page specific to the chip-seq datasets (see step 2.4) and choose **anaerobic INPUT DNA**.  
+The downloaded FASTQ file is available in the data folder (SRR576938.fastq)
+
+<span style="color:red">At this point, you should have two FASTQ files, one for the experiment, one for the control. In which organism are you working ?</span>
 
 ## Quality control of the reads and statistics <a name="qc"></a>
 **Goal**: Get some basic information on the data (read length, number of reads, global quality of dataset)  
