@@ -174,14 +174,14 @@ There are multiple programs to perform the mapping step. For reads produced by a
 ### 2 - Prepare the index file
 1. Try out bowtie
 ```bash
-bowtie-1.1.1
+srun bowtie
 ```
-This prints the help of the program. However, this is a bit difficult to read ! If you need to know more about the program, it's easier to directly check the manual on the website (if it's up-to-date !)
+This prints the help of the program. However, this is a bit difficult to read ! If you need to know more about the program, it's easier to directly check the manual on the [website](http://bowtie-bio.sourceforge.net/manual.shtml).
 2. bowtie needs the reference genome to align each read on it. This genome needs to be in a specific format (=index) for bowtie to be able to use it. Several pre-built indexes are available to download on the bowtie webpage, but our genome is not there. You will need to make this index file.
-3. To make the index file, you will need the complete genome, in FASTA format. It has already been downloaded to gain time (Escherichia_coli_K12.fasta in the course folder) (The genome was downloaded from the NCBI). Note that we will not work with the lastest version (NC_000913.3) but the previous one (NC_000913.2), because the available tools for visualization have not been updated yet to the latest version. This will not affect our results.
+3. To make the index file, you will need the complete genome, in FASTA format. It has already been downloaded to gain time (Escherichia_coli_K12.fasta in the course folder) (The genome was downloaded from the NCBI). Note that we will not work with the latest version (NC_000913.3) but the previous one (NC_000913.2), because the available tools for visualization have not been updated yet to the latest version. This will not affect our results.
 4. Build the index for bowtie
 ```bash
-bowtie-1.1.1-build Escherichia_coli_K12.fasta Escherichia_coli_K12
+srun bowtie-build Escherichia_coli_K12.fasta Escherichia_coli_K12
 ```
 
 ### 3 - Mapping the experiment
@@ -194,7 +194,7 @@ bowtie-1.1.1-build Escherichia_coli_K12.fasta Escherichia_coli_K12
   * -S will output the result in SAM format
   * 2> SRR576933.out will output some statistics about the mapping in the file SRR576933.out
 ```bash  
-$ bowtie-1.1.1 Escherichia_coli_K12 -q SRR576933.fastq  -v 2 -m 1 -3 1 -S 2> SRR576933.out > SRR576933.sam
+srun bowtie Escherichia_coli_K12 -q SRR576933.fastq  -v 2 -m 1 -3 1 -S 2> SRR576933.out > SRR576933.sam
 ```
 2. This should take few minutes as we work with a small genome. For the human genome, we would need either more time, or a dedicated server.
 
