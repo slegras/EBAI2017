@@ -259,7 +259,7 @@ Open the file SRR576938.out. How many reads were mapped ?**
 
 **At this point, you should have two SAM files, one for the experiment, one for the control. Check the size of your files, how large are they ?**
 
-Go to working home directory
+Go to working home directory (i.e /shared/projects/training/<login>/EBA2017_chipseq)
 ```bash
 cd ../..
 ```
