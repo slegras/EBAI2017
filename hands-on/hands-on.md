@@ -436,7 +436,7 @@ srun gzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
 
 Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
 ```bash
-## If you are in 04-PeakCalling
+## If you are in 05-PeakAnnotation
 cd ..
 ```
 
