@@ -6,11 +6,12 @@
 4. [Quality control of the reads and statistics](#qc)
 5. [Mapping the reads with Bowtie](#mapping)
 6. [Bonus: checking two ENCODE quality metrics](#bonus)
-8. [Visualizing the data in a genome browser](#visualize)
-7. [Peak calling with MACS](#macs)
-9. [Motif analysis](#motif)
-10. [FAQ](#faq)
-11. [References](#ref)
+7. [Visualizing the data in a genome browser](#visualize)
+8. [Peak calling with MACS](#macs)
+9. [Peak annotation](#annotation)
+10. [Motif analysis](#motif)
+11. [FAQ](#faq)
+12. [References](#ref)
 
 ## Introduction <a name="introduction"></a>
 ### Goal
@@ -266,6 +267,11 @@ srun samtools sort SRR576933.sam | samtools view -Sb > SRR576933.bam
 srun samtools index SRR576933.bam
 ```
 
+6. Compress the .sam file
+```bash
+gzip SRR576933.sam
+```
+
 **Analyze the result of the mapped reads:  
 Open the file SRR576933.out (for exemple using the "less" command), which contains some statistics about the mapping. How many reads were mapped ?**
 
@@ -372,27 +378,29 @@ srun macs
 ```
 This prints the help of the program.
 2. Let's see the parameters of MACS before launching the mapping:
-  * ChIP-seq tag file (-t) is the name of our experiment (treatment) mapped read file SRR576933.sam
-  * ChIP-seq control file (-c) is the name of our input (control) mapped read file SRR576938.sam
-  * --format SAM indicates the input file are in SAM format. Other formats can be specified (BAM,BED...)
+  * ChIP-seq tag file (-t) is the name of our experiment (treatment) mapped read file SRR576933.bam
+  * ChIP-seq control file (-c) is the name of our input (control) mapped read file SRR576938.bam
+  * --format BAM indicates the input file are in BAM format. Other formats can be specified (SAM,BED...)
   * --gsize Effective genome size: this is the size of the genome considered "usable" for peak calling. This value is given by the MACS developpers on their website. It is smaller than the complete genome because many regions are excluded (telomeres, highly repeated regions...). The default value is for human (2700000000.0), so we need to change it. As the value for E. coli is not provided, we will take the complete genome size 4639675.
-  * --name provides a prefix for the output files. We set this to macs14, but it could be any name.
+  * --name provides a prefix for the output files. We set this to FNR_Anaerobic_A, but it could be any name.
   * --bw The bandwidth is the size of the fragment extracted from the gel electrophoresis or expected from sonication. By default, this value is 300bp. Usually, this value is indicated in the Methods section of publications. In the studied publication, a sentence mentions "400bp fragments (FNR libraries)". We thus set this value to 400.
-  * --keep-dup specifies how MACS should treat the reads that are located at the exact same location (duplicates). The manual specifies that keeping only 1 representative of these "stacks" of reads is giving the best results.
+  * --keep-dup specifies how MACS should treat the reads that are located at the exact same location (duplicates). The manual specifies that keeping only 1 representative of these "stacks" of reads is giving the best results. We doesn't mention it as 1 is the default value.
   <!-- * --bdg --single-profile will output a file in BEDGRAPH format to visualize the peak profiles in a genome browser. There will be one file for the treatment, and one for the control. -->
   * --diag is optional and increases the running time. It tests the saturation of the dataset, and gives an idea of how many peaks are found with subsets of the initial dataset.
   * &> MACS.out will output the verbosity (=information) in the file MACS.out
 ```bash
-macs14 -t SRR576933.sam -c SRR576938.sam --format SAM  --gsize 4639675 --name "macs14" --bw 400 --keep-dup 1 --single-profile --diag &> MACS.out
+srun macs -t ../02-Mapping/IP/SRR576933.bam -c ../02-Mapping/Control/SRR576938.bam --format BAM  --gsize 4639675 \
+--name "FNR_Anaerobic_A" --bw 400 --diag &> MACS.out
 ```
 3. This should take about 10 minutes, mainly because of the --diag option. Without, the program runs faster.
-> Look at the files that were created by MACS. Which files contains which information ?  
 
-> How many peaks were detected by MACS ?
+### 3 - Analyzing the MACS results
+**Look at the files that were created by MACS. Which files contains which information ?**  
+**How many peaks were detected by MACS ?**
 
 **At this point, you should have a BED file containing the peak coordinates**
 
-### 3 - Analyzing the MACS results
+## Peak annotation <a name="annotation"></a>
 
 ## Motif analysis <a name="motif"></a>
 **Goal**: Define binding motif(s) for the ChIPed transcription factor and identify potential cofactors

@@ -105,6 +105,9 @@ srun samtools sort SRR576933.sam | samtools view -Sb > SRR576933.bam
 ## create an index for the bam file
 srun samtools index SRR576933.bam
 
+## Compress the .sam file
+gzip SRR576933.sam
+
 ## Go back to upper directory
 cd ..
 
@@ -128,6 +131,9 @@ srun samtools sort SRR576938.sam | samtools view -Sb > SRR576938.bam
 
 ## create an index for the bam file
 srun samtools index SRR576938.bam
+
+## Compress the .sam file
+gzip SRR576938.sam
 
 ## Go to the IP directory
 cd ../IP
@@ -204,7 +210,9 @@ mkdir 04-PeakCalling
 ## Go to the newly created file
 cd 04-PeakCalling
 
-## Check macs14 parameters
-macs14
+## Check macs parameters
+srun macs
 
-## Run macs14 on the IP and the Control file
+## Run macs on the IP and the Control file
+srun macs -t ../02-Mapping/IP/SRR576933.bam -c ../02-Mapping/Control/SRR576938.bam --format BAM  --gsize 4639675 \
+--name "FNR_Anaerobic_A" --bw 400 --diag &> MACS.out
