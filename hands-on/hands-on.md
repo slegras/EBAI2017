@@ -245,8 +245,19 @@ srun bowtie ../index/Escherichia_coli_K12 ../../data/SRR576933.fastq -v 2 -m 1 -
 ## Compress back fastq IP file
 srun gzip ../../data/SRR576933.fastq
 
+```  
+This should take few minutes as we work with a small genome. For the human genome, we would need either more time and more resources.
+
+The SAM format correspond to large text files, that can be compressed ("zipped") into BAM format. The BAM format are usually sorted and indexed for fast access to the data it contains.
+4. Sort the sam file and create a bam file using samtools
+```bash
+# srun samtools sort SRR576933.sam | samtools view -Sb > SRR576933.bam
 ```
-4. This should take few minutes as we work with a small genome. For the human genome, we would need either more time and more resources.
+
+5. Create an index for the bam file
+```bash
+#srun samtools index SRR576933.bam
+```
 
 **Analyze the result of the mapped reads:  
 Open the file SRR576933.out, which contains some statistics about the mapping. How many reads were mapped ?**
@@ -259,8 +270,20 @@ Open the file SRR576938.out. How many reads were mapped ?**
 
 **At this point, you should have two SAM files, one for the experiment, one for the control. Check the size of your files, how large are they ?**
 
+### 5 - Estimate the number of duplicated reads
+1. Run Picard markDuplicates to mark duplicates from data
+```bash
+picard MarkDuplicates \
+CREATE_INDEX=true \
+INPUT=SRR576933.bam \
+OUTPUT=Marked_SRR576933.bam \
+METRICS_FILE=metrics \
+VALIDATION_STRINGENCY=STRICT
+```
+
 Go to working home directory (i.e /shared/projects/training/<login>/EBA2017_chipseq)
 ```bash
+## If you are in 02-Mapping/Control
 cd ../..
 ```
 
@@ -270,20 +293,46 @@ cd ../..
 ### 1 - PhantomPeakQualTools
 Warning : this exercise is new and is tested for the first time in a classroom context. Let us know if you encounter any issue.
 
-The SAM format correspond to large text files, that can be compressed ("zipped") into BAM format. The BAM format are usually sorted and indexed for fast access to the data it contains.
+<!-- 1. convert the BAM file into TagAlign format, specific to the program that calculates the quality metrics
+```bash
+samtools view -F 0x0204 -o - SRR576933.bam | awk 'BEGIN{OFS="\t"}{if (and($2,16) > 0) {print $3,($4-1),($4-1+length($10)),"N","1000","-"} else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' | gzip -c > SRR576933_experiment.tagAlign.gz
+``` -->
+1. Run phantompeakqualtools
+```bash
+Rscript ../scripts/phantompeakqualtools/run_spp.R -c=../02-Mapping/SRR576933.bam  -savp -out=SRR576933_IP_phantompeaks
+```
 
-1. convert the SAM file into a sorted BAM file
+**A PDF file named SRR576933_IP.pdf should have been produced.  
+According to the ENCODE guidelines, NSC >= 1.05 ; RSC >= 0.8 is recommended. Qtag values range from -2,-1,0,1,2  
+What is the quality of this dataset ?**
+
+**At this point, you should be able to measure the ENCODE RSC and NSC metric values on a given dataset.**
+
+## Visualizing the data in a genome browser <a name="visualize"></a>
+**Goal**: View the peaks in their genomic context, to help the biological interpretation of the results   
+
+### 1 - Choosing a genome browser
+There are several options for genome browsers, divided between the local browsers (need to install the program, eg. IGV) and the online web browsers (eg. UCSC genome browser, Ensembl). We often use both types, depending on the aim and the localization of the data.
+If the data are on your computer, to prevent data transfer, it's easier to visualize the data locally (IGV). Note that if you're working on a non-model organism, the local viewer will be the only choice. If the aim is to share the results with your collaborators, view many tracks in the context of many existing annotations, then the online genome browsers are more suitable.
+
+### 2 - Viewing the raw alignment data in IGV
+1. Open IGV
+<!-- (A voir si on fait en local ou sur le serveur)  -->
+2. Load the genome
+> Load the Escherichia coli K12 MG1655 genome as reference
+> (from the fasta file Escherichia_coli_K_12_MG1655.fasta, used to build the bowtie index file)
+3. Load the two bam files (IP and Control) in IGV.
+
+### 3 - Viewing scaled data
+1. [bamCoverage](https://deeptools.readthedocs.io/en/latest/content/tools/bamCoverage.html) from deepTools generates BigWigs from BAM files
 ```bash
-samtools-0.1.19 view -bS SRR576933.sam  > SRR576933.bam
+bamCoverage --help
 ```
-2. convert the BAM file into TagAlign format, specific to the program that calculates the quality metrics
+2. Generate a scaled bigwig file
 ```bash
-samtools-0.1.19 view -F 0x0204 -o - SRR576933.bam | awk 'BEGIN{OFS="\t"}{if (and($2,16) > 0) {print $3,($4-1),($4-1+length($10)),"N","1000","-"} else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' | gzip -c > SRR576933_experiment.tagAlign.gz
+bamCoverage --bam Marked_SRR576933.bam --outFileName SRR576933_nodup.bw --outFileFormat bigwig --normalizeTo1x 4639675
 ```
-3. Run phantompeakqualtools
-```bash
-Rscript /usr/bin/tools/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_experiment_phantompeaks
-```
+3. Load the two bigwig files in IGV
 
 ## Peak calling with MACS <a name="macs"></a>
 **Goal**: Define the peaks, i.e. the region with a high density of reads, where the studied factor was bound
@@ -305,55 +354,20 @@ This prints the help of the program.
   * --name provides a prefix for the output files. We set this to macs14, but it could be any name.
   * --bw The bandwidth is the size of the fragment extracted from the gel electrophoresis or expected from sonication. By default, this value is 300bp. Usually, this value is indicated in the Methods section of publications. In the studied publication, a sentence mentions "400bp fragments (FNR libraries)". We thus set this value to 400.
   * --keep-dup specifies how MACS should treat the reads that are located at the exact same location (duplicates). The manual specifies that keeping only 1 representative of these "stacks" of reads is giving the best results.
-  * --bdg --single-profile will output a file in BEDGRAPH format to visualize the peak profiles in a genome browser. There will be one file for the treatment, and one for the control.
+  <!-- * --bdg --single-profile will output a file in BEDGRAPH format to visualize the peak profiles in a genome browser. There will be one file for the treatment, and one for the control. -->
   * --diag is optional and increases the running time. It tests the saturation of the dataset, and gives an idea of how many peaks are found with subsets of the initial dataset.
   * &> MACS.out will output the verbosity (=information) in the file MACS.out
 ```bash
-$ macs14 -t SRR576933.sam -c SRR576938.sam --format SAM  --gsize 4639675 --name "macs14"  --bw 400 --keep-dup 1 --bdg --single-profile --diag &> MACS.out
+$ macs14 -t SRR576933.sam -c SRR576938.sam --format SAM  --gsize 4639675 --name "macs14" --bw 400 --keep-dup 1 --single-profile --diag &> MACS.out
 ```
-3. This should take about 10 minutes, mainly because of the --diag and the --bdg options. Without, the program runs much faster.
+3. This should take about 10 minutes, mainly because of the --diag option. Without, the program runs faster.
+> Look at the files that were created by MACS. Which files contains which information ?  
+
+> How many peaks were detected by MACS ?
+
+**At this point, you should have a BED file containing the peak coordinates**
 
 ### 3 - Analyzing the MACS results
-
-## Visualizing the peaks in a genome browser <a name="visualize"></a>
-**Goal**: View the peaks in their genomic context, to help the biological interpretation of the results   
-**Related VIB training**: Visualize all results in the Interactive Genome Viewer (IGV)
-
-### 1 - Choosing a genome browser
-There are several options for genome browsers, divided between the local browsers (need to install the program, eg. IGV) and the online web browsers (eg. UCSC genome browser, Ensembl). We often use both types, depending on the aim and the localisation of the data.
-If the data are on your computer, to prevent data transfer, it's easier to visualize the data locally (IGV). Note that if you're working on a non-model organism, the local viewer will be the only choice. If the aim is to share the results with your collaborators, view many tracks in the context of many existing annotations, then the online genome browsers are more suitable.
-
-### 2 - Viewing the peaks in IGV
-
-## Bonus: vizualisation with deeptools <a name="deeptools"></a>
-**Goal**: This optional exercises illustrate some usage of the recent DeepTools suite for visualization
-
-### 1 - From SAM to sorted BAM
-The SAM format correspond to large text files, that can be compressed ("zipped") into BAM format. The BAM format are usually sorted and indexed for fast access to the data it contains.
-
-1. convert the SAM file into a sorted BAM file
-```bash
-samtools-0.1.19 view -bS SRR576933.sam  | samtools-0.1.19 sort - SRR576933_sorted
-```
-2. Remove the duplicated reads
-```bash
-samtools-0.1.19 rmdup -s SRR576933_sorted.bam SRR576933_sorted_nodup.bam
-```
-from 2242431 uniquely mapped reads, it remains 1142724 reads without duplicates.  
-3. Index the BAM file
-```bash
-samtools-0.1.19 index SRR576933_sorted_nodup.bam SRR576933_sorted_nodup.bai
-```
-
-### 2 - From BAM to scaled Bedgraph files
-1. bamCoverage from deepTools generates BedGraphs from BAM files
-```bash
-bamCoverage --help
-```
-2. Generate a scaled BedGraph file
-```bash
-bamCoverage --bam SRR576933_sorted_nodup.bam --outFileName SRR576933_nodup.bedgraph --outFileFormat bedgraph --normalizeTo1x 4639675
-```
 
 ## Motif analysis <a name="motif"></a>
 **Goal**: Define binding motif(s) for the ChIPed transcription factor and identify potential cofactors

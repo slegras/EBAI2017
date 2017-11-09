@@ -7,7 +7,7 @@ home=/shared/projects/training/${login}/EBA2017_chipseq
 
 ###################################################
 ################# Working environment
-cd /shared/projects/training/${login}
+cd ${home}
 
 ## Create a working directory for entire hands-on part
 mkdir EBA2017_chipseq
@@ -17,6 +17,18 @@ cd EBA2017_chipseq
 mkdir data
 cd data
 ## copy fastq/fasta files from local computer
+cd $home
+
+## Create a directory for scripts
+mkdir scripts
+
+## Go to the newly created directory
+cd scripts
+
+## Clone phantompeakqualtools repository
+git clone https://github.com/crazyhottommy/phantompeakqualtools.git
+
+## go back to home working directory
 cd $home
 
 ## Loading conda ChIP-Seq environment
@@ -82,10 +94,16 @@ cd IP
 srun gunzip ../../data/SRR576933.fastq.gz
 
 ## Run alignment
-srun bowtie ../index/Escherichia_coli_K12 ../../data/SRR576933.fastq -v 2 -m 1 -3 1 -S 2> SRR576933.out > SRR576933.sam
+sbatch bowtie ../index/Escherichia_coli_K12 ../../data/SRR576933.fastq -v 2 -m 1 -3 1 -S 2> SRR576933.out > SRR576933.sam
 
 ## Compress back fastq IP file
 srun gzip ../../data/SRR576933.fastq
+
+## Create a sorted bam file
+# srun samtools sort SRR576933.sam | samtools view -Sb > SRR576933.bam
+
+## create an index for the bam file
+#srun samtools index SRR576933.bam
 
 ## Go back to upper directory
 cd ..
@@ -100,10 +118,28 @@ cd Control
 srun gunzip ../../data/SRR576938.fastq.gz
 
 ## Run alignment
-srun bowtie ../index/Escherichia_coli_K12 ../../data/SRR576938.fastq -v 2 -m 1 -3 1 -S 2> SRR576938.out > SRR576938.sam
+sbatch bowtie ../index/Escherichia_coli_K12 ../../data/SRR576938.fastq -v 2 -m 1 -3 1 -S 2> SRR576938.out > SRR576938.sam
 
 ## Compress back fastq IP file
 srun gzip ../../data/SRR576938.fastq
 
 ## Go to home working directory
 cd $home
+
+###################################################
+################# Bonus: PhantomPeakQualTools
+## creating output directory for alignment
+mkdir 00-PhantomPeakQualTools
+
+## Go to newly created directory
+cd 00-PhantomPeakQualTools
+
+## Create a TagAlign file from the bam file
+## No need (see documentation)
+# srun samtools view -F 0x0204 -o - SRR576933.bam \
+# | awk 'BEGIN{OFS="\t"}{if (and($2,16) > 0) {print $3,($4-1),($4-1+length($10)),"N","1000","-"}
+# else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
+#   | gzip -c > SRR576933_experiment.tagAlign.gz
+
+## Run phantompeakqualtools
+Rscript ../scripts/phantompeakqualtools/run_spp.R -c=../02-Mapping/SRR576933.bam  -savp -out=SRR576933_IP_phantompeaks
