@@ -452,16 +452,16 @@ ceas [options] -g gdb -b bed -w wig
 ```
 
 Note: To save time, you can run each part of the program (annotated features or metagenes) separately
-    To run ChIP region annotation and gene-centered annotation only
-    
-    ```bash
-    $ ceas [options] -g gdb -b bed
-    ```
-    
-    To run  average signal profiling only
-    ```bash
-    $ ceas [options] -g gdb -w wig
-    ```
+
+To run ChIP region annotation and gene-centered annotation only 
+```bash
+$ ceas [options] -g gdb -b bed
+```
+   
+To run  average signal profiling only
+```bash
+$ ceas [options] -g gdb -w wig
+```
 
 **Are there specific chromosomes that show high binding of FNR in your sample?**
 
