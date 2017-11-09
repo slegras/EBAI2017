@@ -254,21 +254,22 @@ srun gzip ../../data/SRR576933.fastq
 This should take few minutes as we work with a small genome. For the human genome, we would need either more time and more resources.
 
 The SAM format correspond to large text files, that can be compressed ("zipped") into BAM format. The BAM format are usually sorted and indexed for fast access to the data it contains.
+
 4. Sort the sam file and create a bam file using samtools
 ```bash
-# srun samtools sort SRR576933.sam | samtools view -Sb > SRR576933.bam
+srun samtools sort SRR576933.sam | samtools view -Sb > SRR576933.bam
 ```
 
 5. Create an index for the bam file
 ```bash
-#srun samtools index SRR576933.bam
+srun samtools index SRR576933.bam
 ```
 
 **Analyze the result of the mapped reads:  
-Open the file SRR576933.out, which contains some statistics about the mapping. How many reads were mapped ?**
+Open the file SRR576933.out (for exemple using the "less" command), which contains some statistics about the mapping. How many reads were mapped ?**
 
 ### 4 - Mapping the control
-1. Repeat the steps above (step 3) for the file SRR576938.fastq.
+1. Repeat the steps above (steps 3-5) for the file SRR576938.fastq.gz.
 
 **Analyze the result of the mapped reads:  
 Open the file SRR576938.out. How many reads were mapped ?**
@@ -276,7 +277,7 @@ Open the file SRR576938.out. How many reads were mapped ?**
 **At this point, you should have two SAM files, one for the experiment, one for the control. Check the size of your files, how large are they ?**
 
 ### 5 - Estimate the number of duplicated reads
-1. Run Picard markDuplicates to mark duplicates from data
+1. Run Picard markDuplicates to mark duplicated reads (= reads mapping at the exact same location on the genome)
 ```bash
 picard MarkDuplicates \
 CREATE_INDEX=true \
@@ -286,7 +287,7 @@ METRICS_FILE=metrics \
 VALIDATION_STRINGENCY=STRICT
 ```
 
-Go to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
+Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
 ```bash
 ## If you are in 02-Mapping/Control
 cd ../..
@@ -363,7 +364,7 @@ This prints the help of the program.
   * --diag is optional and increases the running time. It tests the saturation of the dataset, and gives an idea of how many peaks are found with subsets of the initial dataset.
   * &> MACS.out will output the verbosity (=information) in the file MACS.out
 ```bash
-$ macs14 -t SRR576933.sam -c SRR576938.sam --format SAM  --gsize 4639675 --name "macs14" --bw 400 --keep-dup 1 --single-profile --diag &> MACS.out
+macs14 -t SRR576933.sam -c SRR576938.sam --format SAM  --gsize 4639675 --name "macs14" --bw 400 --keep-dup 1 --single-profile --diag &> MACS.out
 ```
 3. This should take about 10 minutes, mainly because of the --diag option. Without, the program runs faster.
 > Look at the files that were created by MACS. Which files contains which information ?  
