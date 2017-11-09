@@ -112,8 +112,8 @@ cd 01-QualityControl
 ```bash
 srun fastqc --help
 ```
-4. Launch the FASTQC program on the experiment file (SRR576933.fastq)
-  * -o: creates all output files in the specified output directory. '.' is current directory.
+4. Launch the FASTQC program on the experiment file (SRR576933.fastq.gz)
+  * -o: creates all output files in the specified output directory. '.' means current directory.
 ```bash
 srun fastqc ../data/SRR576933.fastq.gz -o .
 ```
@@ -144,7 +144,10 @@ ls
 ```
 > SRR576933_fastqc.html  SRR576933_fastqc.zip
 
-7. Open the HTML file SRR576933_fastqc.html in Firefox.
+7. Download the HTML file SRR576933_fastqc.html on your local machine (either with ssh or the program you used to upload your data on the server). On your machine, open this file in Firefox.
+
+4. Launch the FASTQC program on the control file (SRR576938.fastq)
+
 
 **Analyze the result of the FASTQC program:  
 How many reads are present in the file ?  
@@ -152,7 +155,6 @@ What is the read length ?
 Is the overall quality good ?  
 Are there any concerns raised by the report ? If so, can you tell where the problem might come from ?**  
 
-**What are the adapters ?**  
 
 ### 2 - Organism length
 Knowing your organism size is important to evaluate if your dataset has sufficient coverage to continue your analyses. For the human genome (3 Gb), we usually aim at least 10 Million reads.
@@ -178,9 +180,12 @@ There are multiple programs to perform the mapping step. For reads produced by a
 srun bowtie
 ```
 This prints the help of the program. However, this is a bit difficult to read ! If you need to know more about the program, it's easier to directly check the manual on the [website](http://bowtie-bio.sourceforge.net/manual.shtml).
+
 2. bowtie needs the reference genome to align each read on it. This genome needs to be in a specific format (=index) for bowtie to be able to use it. Several pre-built indexes are available to download on the bowtie webpage, but our genome is not there. You will need to make this index file.
+
 3. Create a directory named **02-Mapping** in which to output mapping results
 ```bash
+cd ..
 mkdir 02-Mapping
 ```
 4. Go to the directory you've just created
