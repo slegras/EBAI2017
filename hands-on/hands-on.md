@@ -400,9 +400,9 @@ cd ..
 ```
 
 ## Peak annotation <a name="annotation"></a>
-**Goals**: Associate peaks to closest genes
 
-[annotatePeaks.pl](http://homer.ucsd.edu/homer/ngs/annotation.html) from Homer associates peaks with nearby genes.
+**Goals**: Associate ChIP-seq peaks to genomic fetures, draw metagenes and identify closest genes
+
 1. Create a directory named **05-PeakAnnotation** to store annotatePeaks outputs
 ```bash
 mkdir 05-PeakAnnotation
@@ -411,19 +411,79 @@ mkdir 05-PeakAnnotation
 ```bash
 cd 05-PeakAnnotation
 ```
-3. Use the annotation file data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz. First start by uncompress the file
+### 1-Map peak location depending on genomic features
+CEAS from the liu lab can be used [http://liulab.dfci.harvard.edu/CEAS/usermanual.html]
+
+1. Get proper format table for the E. coli genome
+
+CEAS provides RefSeq tables in sqlite3 files for several genomes (ce4 and ce6 for worm, dm2 and dm3 for fly, mm8 and mm9 for mouse, hg18 and hg19 for human) but not for E. coli. However, we can generate one from our input wig file.
+```bash
+build_genomeBG
+```
+2. Select the parameters to use for CEAS
+
+srun python ceas  --help
+
+This prints the help of the program:
+
+Usage: ceas [options] -g gdb (-b bed | -w wig )
+
+The following is a detailed description of the options used to control CEAS.
+--version	Show program's version number and exit.
+-h, --help	Show this help message and exit.
+-b, --bed	BED file with ChIP regions.
+-w, --wig	WIG file for either wig profiling or genome background annotation. WARNING: CEAS accepts fixedStep and variableStep WIG file. The user must set --bgflag for genome background annotation.
+-e, --ebed	BED file of extra regions of interest (e.g. non-coding regions)
+-g, --gdb Gene annotation table file (e.g. a refGene table in sqlite3 db format provided through the CEAS web, http://liulab.dfci.harvard.edu/CEAS/download.html). If the sqlite3 file does not have the genome background annotation, the user must turn on --bg and have an input WIG file.
+--name	Experiment name. This will be used to name the output files (R script, PDF file and XLS file). If an experiment name is not given, the stem of the input BED file name will be used instead. (e.g. if BED is peaks.bed, 'peaks' will be used as a name.) If a BED file is not given, the input WIG file name will be used.
+--sizes	Promoter (also downstream) sizes for ChIP region annotation. Comma-separated three integer numbers or a single number will be accepted. If a single integer is given, it will be segmented into three equal fractions (i.e. 3000 is equivalent to 1000,2000,3000). DEFAULT: 1000,2000,3000. WARNING: numbers > 10000bp are automatically fixed to 10000bp.
+--bisizes	Bidirectional-promoter sizes for ChIP region annotation. The user can choose two numbers to define bidirectional promoters. Comma-separated two values or a single value can be given. If a single value is given, it will be segmented into two equal fractions (i.e. 5000 is equivalent to 2500,5000) DEFAULT: 2500,5000bp. WARNING: numbers > 20000bp are automatically fixed to 20000bp.
+--bg	Run genome BG annotation. WARNING: this flag is effective only if a WIG file is given through -w (--wig). Otherwise, ignored.
+--span	Span from TSS and TTS in the gene-centered annotation. ChIP regions within this range from TSS and TTS are considered when calculating the coverage rates of promoter and downstream by ChIP regions. DEFAULT=3000bp
+--pf-res	Wig profiling resolution, DEFAULT: 50bp. WARNING: a number smaller than the wig interval (resolution) may cause aliasing error.
+--rel-dist	Relative distance to TSS/TTS in wig profiling. DEFAULT: 3000bp
+--gn-groups	Gene-groups of particular interest in wig profiling. Each gene group file must have gene names in the 1s column. The file names are separated by commas w/ no space (e.g. --gn-groups=top10.txt,bottom10.txt)
+--gn-group-names	The names of the gene groups in --gn-groups. The gene group names are separated by commas. (e.g. --gn-group-names='top 10%,bottom 10%'). These group names appear in the legends of the wig profiling plots. If no group names given, the groups are represented as 'Group 1, Group2,...Group n'.
+--gname2	Whether or not use the 'name2' column of the gene annotation table when reading the gene IDs in the files given through --gn-groups. This flag is meaningful only with --gn-groups. 
+
+4. Run CEAS
+```bash
+ceas [options] -g gdb -b bed -w wig
+```
+
+Note: To save time, you can run each part of the program (annotated features or metagenes) separately
+    To run ChIP region annotation and gene-centered annotation only
+    ```bash
+    $ ceas [options] -g gdb -b bed
+    ```
+    To run  average signal profiling only
+    ```bash
+    $ ceas [options] -g gdb -w wig
+    ```
+
+**Are there specific chromosomes that show high binding of FNR in your sample?**
+**Does this transcription factor have a preference for binding at promoters or annotated exons?**
+**In which regions of the genome are most FNR binding peaks found?**
+**What is the distribution of the peaks along the genes?**
+
+
+### 2-Associate peaks to closest genes
+
+[annotatePeaks.pl](http://homer.ucsd.edu/homer/ngs/annotation.html) from Homer associates peaks with nearby genes.
+
+1. Use the annotation file data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz. First start by uncompress the file
 ```bash
 srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
 ```
-4. Create a file suitable for annotatePeaks.pl
+2. Create a file suitable for annotatePeaks.pl
 ```bash
 awk -F "\t" '{print $0"\t+"}' ../04-PeakCalling/FNR_Anaerobic_A_peaks.bed > FNR_Anaerobic_A_peaks.bed
 ```
-5. Try annotatePeaks.pl
+3. Try annotatePeaks.pl
 ```bash
 srun annotatePeaks.pl
 ```
-6. Annotation peaks with nearby genes with Homer
+4. Annotation peaks with nearby genes with Homer
 ```bash
 srun annotatePeaks.pl \
 FNR_Anaerobic_A_peaks.bed \
@@ -431,6 +491,30 @@ FNR_Anaerobic_A_peaks.bed \
 -gtf ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf \
 > FNR_Anaerobic_A_annotated_peaks.tsv
 ```
+**What information is listed in each column of the file?**
+**In which column number is the official gene symbol of the nearest gene?**
+**What are the possible gene types?**
+
+5. Retreive the list of closest genes
+```bash
+awk -F\\t '{print $16}' FNR_Anaerobic_A_annotated_peaks.tsv > FNR_Anaerobic_A_annotated_peaks_geneList.tsv
+```
+
+6. Retreive only the genes that encode for proteins
+```bash
+awk -F\\t '{print $19}' E1_chro_annotatedPeaks.txt | sort | uniq -c
+```
+
+**How many protein-coding genes are there in the file?**
+
+```bash
+awk -F\\t '{if ($19=="protein-coding") print $16}' FNR_Anaerobic_A_annotated_peaks.tsv > FNR_Anaerobic_A_annotated_peaks_proteinCodingGeneList.tsv
+
+cat FNR_Anaerobic_A_annotated_peaks_proteinCodingGeneList.tsv | wc -l
+
+```
+**Is the number of genes in your file consistent with the previous reply?**
+
 7. Compress back the annotation file
 srun gzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
 
@@ -439,6 +523,13 @@ Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA20
 ## If you are in 05-PeakAnnotation
 cd ..
 ```
+
+### 3- Search for Biological Processes, Molecular Functions or Cellular Compartments enrichment
+This gene list can then be analyzed with Gene Ontology search tools such as DAVID or IPA.
+Input your gene list on the DAVID website: https://david.ncifcrf.gov/
+
+**What are the biological processes enriched in the list of genes associated to the peaks?**
+
 
 ## Motif analysis <a name="motif"></a>
 **Goal**: Define binding motif(s) for the ChIPed transcription factor and identify potential cofactors
