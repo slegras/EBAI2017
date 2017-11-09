@@ -6,9 +6,9 @@
 4. [Quality control of the reads and statistics](#qc)
 5. [Mapping the reads with Bowtie](#mapping)
 6. [Bonus: checking two ENCODE quality metrics](#bonus)
+8. [Visualizing the data in a genome browser](#visualize)
 7. [Peak calling with MACS](#macs)
-8. [Visualizing the peaks in a genome browser](#visualize)
-9. [Bonus: vizualisation with deeptools](#deeptools)
+9. [Motif analysis](#motif)
 10. [FAQ](#faq)
 
 ## Introduction <a name="introduction"></a>
