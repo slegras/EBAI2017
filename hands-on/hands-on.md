@@ -483,6 +483,7 @@ srun gzip ../data/Escherichia_coli_K_12_MG1655.fasta
 7. The Web page also displays a link, You can already click on this link. The report will be progressively updated during the processing of the workflow.
 
 ### 3 - Motif discovery with RSAT (short peaks)
+=> UTILISER BEDTOOLS SLOP (prends en compte les bornes du génome)
 1. Restrict the dataset to the summit of the peaks +/- 100bp
 ```bash
 perl -lane '$start=$F[1]-100 ; $end = $F[2]+100 ; print "$F[0]\t$start\t$end"' macs14_summits.bed > macs14_summits+-100.bed
