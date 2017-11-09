@@ -433,8 +433,8 @@ perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' Escherichia_coli_K_12_MG1655
 ```
 This file will work directly in IGV
 
-[geo]: https://github.com/slegras/EBAI2017/blob/master/src/common/images/1_GEO.png "GEO"
-[geo2]: https://github.com/slegras/EBAI2017/blob/master/src/common/images/2_GEO.png "GEO2"
-[geo3]: https://github.com/slegras/EBAI2017/blob/master/src/common/images/3_GEO.png "GEO3"
-[ebi4]: https://github.com/slegras/EBAI2017/blob/master/src/common/images/4_EBI.png "EBI"
-[genome5]: https://github.com/slegras/EBAI2017/blob/master/src/common/images/5_Genomes.png "E. Coli K-12"
+[geo]: https://github.com/slegras/EBAI2017/blob/master/images/1_GEO.png "GEO"
+[geo2]: https://github.com/slegras/EBAI2017/blob/master/images/2_GEO.png "GEO2"
+[geo3]: https://github.com/slegras/EBAI2017/blob/master/images/3_GEO.png "GEO3"
+[ebi4]: https://github.com/slegras/EBAI2017/blob/master/images/4_EBI.png "EBI"
+[genome5]: https://github.com/slegras/EBAI2017/blob/master/images/5_Genomes.png "E. Coli K-12"
