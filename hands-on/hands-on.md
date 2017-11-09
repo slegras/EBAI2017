@@ -10,6 +10,7 @@
 7. [Peak calling with MACS](#macs)
 9. [Motif analysis](#motif)
 10. [FAQ](#faq)
+11. [References](#ref)
 
 ## Introduction <a name="introduction"></a>
 ### Goal
@@ -321,7 +322,7 @@ What is the quality of this dataset ?**
 **At this point, you should be able to measure the ENCODE RSC and NSC metric values on a given dataset.**
 
 ## Visualizing the data in a genome browser <a name="visualize"></a>
-**Goal**: View the peaks in their genomic context, to help the biological interpretation of the results   
+**Goal**: View the data in their genomic context, to check whether the IP worked  
 
 ### 1 - Choosing a genome browser
 There are several options for genome browsers, divided between the local browsers (need to install the program, eg. IGV) and the online web browsers (eg. UCSC genome browser, Ensembl). We often use both types, depending on the aim and the localization of the data.
@@ -336,15 +337,27 @@ If the data are on your computer, to prevent data transfer, it's easier to visua
 3. Load the two bam files (IP and Control) in IGV.
 
 ### 3 - Viewing scaled data
-1. [bamCoverage](https://deeptools.readthedocs.io/en/latest/content/tools/bamCoverage.html) from deepTools generates BigWigs from BAM files
+[bamCoverage](https://deeptools.readthedocs.io/en/latest/content/tools/bamCoverage.html) from deepTools generates BigWigs from BAM files
+1. Try it out
 ```bash
 bamCoverage --help
 ```
-2. Generate a scaled bigwig file
+2. Create a directory named **03-Visualization** to store bamCoverage outputs
 ```bash
-bamCoverage --bam Marked_SRR576933.bam --outFileName SRR576933_nodup.bw --outFileFormat bigwig --normalizeTo1x 4639675
+mkdir 03-Visualization
 ```
-3. Load the two bigwig files in IGV
+3. Go to the newly created directory
+```bash
+cd 03-Visualization
+```
+4. Generate a scaled bigwig file on the IP
+```bash
+srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
+--outFileName SRR576933_nodup.bw --outFileFormat bigwig --normalizeTo1x 4639675 \
+--skipNonCoveredRegions --extendReads 400 --ignoreDuplicates
+```
+5. Do it for the control (be careful for the control you will need **5G** of memory to process the file)
+6. Load the two bigwig files in IGV
 
 ## Peak calling with MACS <a name="macs"></a>
 **Goal**: Define the peaks, i.e. the region with a high density of reads, where the studied factor was bound
@@ -355,7 +368,7 @@ There are multiple programs to perform the peak-calling step. Some are more dire
 ### 2 - Calling the peaks
 1. Try out MACS
 ```bash
-macs14
+srun macs
 ```
 This prints the help of the program.
 2. Let's see the parameters of MACS before launching the mapping:
@@ -444,6 +457,8 @@ Here, I downloaded the annotation from the UCSC Table browser as "Escherichia_co
 perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' Escherichia_coli_K_12_MG1655.annotation.bed > Escherichia_coli_K_12_MG1655.annotation.fixed.bed
 ```
 This file will work directly in IGV
+
+## References <a name="ref"></a>
 
 [geo]: https://github.com/slegras/EBAI2017/blob/master/images/1_GEO.png "GEO"
 [geo2]: https://github.com/slegras/EBAI2017/blob/master/images/2_GEO.png "GEO2"

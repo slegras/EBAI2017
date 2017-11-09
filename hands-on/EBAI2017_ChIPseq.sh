@@ -129,6 +129,28 @@ srun samtools sort SRR576938.sam | samtools view -Sb > SRR576938.bam
 ## create an index for the bam file
 srun samtools index SRR576938.bam
 
+## Go to the IP directory
+cd ../IP
+
+## Run picard markDuplicates on the IP sample
+srun picard MarkDuplicates \
+CREATE_INDEX=true \
+INPUT=SRR576933.bam \
+OUTPUT=Marked_SRR576933.bam \
+METRICS_FILE=metrics \
+VALIDATION_STRINGENCY=STRICT
+
+## Go to the Control directory
+cd ../Control
+
+## Run picard markDuplicates on the Control sample
+srun picard MarkDuplicates \
+CREATE_INDEX=true \
+INPUT=SRR576938.bam \
+OUTPUT=Marked_SRR576938.bam \
+METRICS_FILE=metrics \
+VALIDATION_STRINGENCY=STRICT
+
 ## Go to home working directory
 cd $home
 
@@ -149,3 +171,40 @@ cd 00-PhantomPeakQualTools
 
 ## Run phantompeakqualtools
 Rscript ../scripts/phantompeakqualtools/run_spp.R -c=../02-Mapping/SRR576933.bam  -savp -out=SRR576933_IP_phantompeaks
+
+## Go to home working directory
+cd $home
+
+###################################################
+################# visualization
+## Create a directory to store visualization files
+mkdir 03-Visualization
+
+## Go to the newly created directory
+cd 03-Visualization
+
+## Test bamCoverage
+srun bamCoverage --help
+
+## Run bamCoverage on IP
+srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
+--outFileName SRR576933_nodup.bw --outFileFormat bigwig --normalizeTo1x 4639675 \
+--skipNonCoveredRegions --extendReads 400 --ignoreDuplicates
+
+## Run bamCoverage on Control
+srun --mem=5G bamCoverage --bam ../02-Mapping/Control/Marked_SRR576938.bam \
+--outFileName SRR576938_nodup.bw --outFileFormat bigwig --normalizeTo1x 4639675 \
+--skipNonCoveredRegions --extendReads 400 --ignoreDuplicates
+
+###################################################
+################# Peak Calling
+## Create a directory to astore peak calling result files
+mkdir 04-PeakCalling
+
+## Go to the newly created file
+cd 04-PeakCalling
+
+## Check macs14 parameters
+macs14
+
+## Run macs14 on the IP and the Control file
