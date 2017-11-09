@@ -34,8 +34,14 @@ cd 01-QualityControl
 ## To be run with srun
 srun fastqc --help
 
-## Run fastqc on IP
+## Run fastqc on the IP
 srun fastqc ../data/SRR576933.fastq.gz -o .
+
+## Run fastqc on the control
+srun fastqc ../data/SRR576938.fastq.gz -o .
+
+## Go to home working directory
+cd $home
 
 ###################################################
 ################# Mapping
@@ -100,4 +106,4 @@ srun bowtie ../index/Escherichia_coli_K12 ../../data/SRR576938.fastq -v 2 -m 1 -
 srun gzip ../../data/SRR576938.fastq
 
 ## Go to home working directory
-cd ../..
+cd $home

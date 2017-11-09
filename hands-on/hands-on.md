@@ -265,10 +265,10 @@ cd ../..
 ```
 
 ## Bonus: checking two ENCODE quality metrics <a name="bonus"></a>
-**Goal**: This optional exercice aims at calculating the NSC and RSC ENCODE quality metrics. These metrics allow to classify the datasets (after mapping, contrary to FASTC that works on raw reads) in regards to the NSC and RSC values observed in the ENCODE datasets (see ENCODE guidelines)
+**Goal**: This optional exercise aims at calculating the NSC and RSC ENCODE quality metrics. These metrics allow to classify the datasets (after mapping, contrary to FASTC that works on raw reads) in regards to the NSC and RSC values observed in the ENCODE datasets (see ENCODE guidelines)
 
 ### 1 - PhantomPeakQualTools
-Warning : this exercice is new and is tested for the first time in a classroom context. Let us know if you encounter any issue.
+Warning : this exercise is new and is tested for the first time in a classroom context. Let us know if you encounter any issue.
 
 The SAM format correspond to large text files, that can be compressed ("zipped") into BAM format. The BAM format are usually sorted and indexed for fast access to the data it contains.
 
