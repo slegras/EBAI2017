@@ -277,9 +277,13 @@ Open the file SRR576938.out. How many reads were mapped ?**
 **At this point, you should have two SAM files, one for the experiment, one for the control. Check the size of your files, how large are they ?**
 
 ### 5 - Estimate the number of duplicated reads
-1. Run Picard markDuplicates to mark duplicated reads (= reads mapping at the exact same location on the genome)
+1. Go to the directory with alignment file of treatment (IP)
 ```bash
-picard MarkDuplicates \
+cd /shared/projects/training/<login>/EBA2017_chipseq/02-Mapping/IP
+```
+2. Run Picard markDuplicates to mark duplicated reads (= reads mapping at the exact same location on the genome)
+```bash
+srun picard MarkDuplicates \
 CREATE_INDEX=true \
 INPUT=SRR576933.bam \
 OUTPUT=Marked_SRR576933.bam \
@@ -287,9 +291,11 @@ METRICS_FILE=metrics \
 VALIDATION_STRINGENCY=STRICT
 ```
 
+**How many duplicates reads are detected? (See MarkDuplicates outputs)**
+
 Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
 ```bash
-## If you are in 02-Mapping/Control
+## If you are in 02-Mapping/IP
 cd ../..
 ```
 
