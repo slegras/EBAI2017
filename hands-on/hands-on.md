@@ -44,7 +44,7 @@ Functional genomic datasets (transcriptomics, genome-wide binding such as ChIP-s
 3. This GEO entry is a mixture of expression analysis and chip-seq. At the bottom of the page, click on the subseries related to the chip-seq datasets. (this subseries has its own identifier: **GSE41187**).
 ![alt text][geo2]
 4. From this page, we will focus on the experiment **FNR IP ChIP-seq Anaerobic A**. At the bottom of the page, click on the link "**GSM1010219** - FNR IP ChIP-seq Anaerobic A".
-5. In the new page, go to the bottom to find the SRA identifier. This is the identifier of the raw dataset stored in the SRA database.
+5. In the new page, go to the bottom to find the SRA identifier. This is the identifier of the raw dataset stored in the SRA database.  
 ![alt text][geo3]
 6. Copy the identifier **SRX189773** (do not click on the link that would take you to the SRA database, see below why)
 
