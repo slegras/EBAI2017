@@ -23,11 +23,10 @@ The aim is to :
 This training gives an introduction to ChIP-seq data analysis, covering the processing steps starting from the reads to the peaks. Among all possible downstream analyses, the practical aspect will focus on motif analyses. A particular emphasis will be put on deciding which downstream analyses to perform depending on the biological question. This training does not cover all methods available today. It does not aim at bringing users to a professional NGS analyst level but provides enough information to allow biologists understand what DNA sequencing practically is and to communicate with NGS experts for more in-depth needs.
 
 ### Dataset description
-For this training, we will use a dataset produced by Myers et al (see on the right of the page for details on the publication) involved in the regulation of gene expression under anaerobic conditions in bacteria. We will focus on one factor: **FNR**.
+For this training, we will use a dataset produced by Myers et al [Pubmed](http://www.ncbi.nlm.nih.gov/pubmed/23818864) involved in the regulation of gene expression under anaerobic conditions in bacteria. We will focus on one factor: **FNR**.
 
 ## Downloading ChIP-seq reads from NCBI <a name="download"></a>
 **Goal**: Identify the dataset corresponding to the studied article and retrieve the data (reads as FASTQ file) corresponding to one experiment and the control.  
-**Related VIB training**: Downloading NGS data from NCBI
 
 ### 1 - Obtaining an identifier for a chosen dataset
 Within an article of interest, search for a sentence mentioning the deposition of the data in a database. Here, the following sentence can be found at the end of the Materials and Methods section:
@@ -40,7 +39,7 @@ Functional genomic datasets (transcriptomics, genome-wide binding such as ChIP-s
 
 ### 2 - Accessing GSE41195 from GEO
 1.  The GEO database hosts processed data files and many details related to the experiments. The SRA (Sequence Read Archive) stores the actual raw sequence data.
-2. Search in google **GSE41195**. Click on the first link to directly access the correct page on the GEO database.
+2. Search in Google **GSE41195**. Click on the first link to directly access the correct page on the GEO database.
 ![alt text][geo]
 3. This GEO entry is a mixture of expression analysis and chip-seq. At the bottom of the page, click on the subseries related to the chip-seq datasets. (this subseries has its own identifier: **GSE41187**).
 ![alt text][geo2]
@@ -54,12 +53,14 @@ Although direct access to the SRA database at the NCBI is doable, SRA does not s
 
 1. Go to the [EBI](http://www.ebi.ac.uk/) website. Paste your SRA identifier (SRX189773) and click on the button "search".
 ![alt text][ebi4]
-2. Click on the first result. On the next page, there is a link to the FASTQ file. For efficiency, this file has already been downloaded and is available in the "data" folder (SRR576933.fastq)
+2. Click on the first result. On the next page, there is a link to the FASTQ file. For efficiency, this file has already been downloaded and is available in the "data" folder (SRR576933.fastq.gz)
+
+=> ICI INSERER NOUVELLE IMAGE
 
 **tip**: To download the control dataset, we should redo the same steps starting from the GEO web page specific to the chip-seq datasets (see step 2.4) and choose **anaerobic INPUT DNA**.  
-The downloaded FASTQ file is available in the data folder (SRR576938.fastq)
+The downloaded FASTQ file is available in the data folder (SRR576938.fastq.gz)
 
-**At this point, you should have two FASTQ files, one for the experiment, one for the control. In which organism are you working ?**
+**At this point, you should have two FASTQ files, one for the experiment, one for the control. 
 
 ## Connect to the server and set up your environment <a name="setup"></a>
 ### 1 - Sign in on the server
@@ -91,9 +92,10 @@ mkdir EBA2017_chipseq
 cd EBA2017_chipseq
 ```
 
+=> ICI AJOUTER LA RECUPERATION DU DOSSIER DATA
+
 ## Quality control of the reads and statistics <a name="qc"></a>
 **Goal**: Get some basic information on the data (read length, number of reads, global quality of dataset)  
-**Related VIB training**: Quality control of NGS data
 
 ### 1 - Getting the FASTQC report
 Before you analyze the data, it is crucial to check the quality of the data. We will use the standard tool for checking the quality of data generated on the Illumina platform: [FASTQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/).
