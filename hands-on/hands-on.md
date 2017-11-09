@@ -281,7 +281,7 @@ METRICS_FILE=metrics \
 VALIDATION_STRINGENCY=STRICT
 ```
 
-Go to working home directory (i.e /shared/projects/training/<login>/EBA2017_chipseq)
+Go to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
 ```bash
 ## If you are in 02-Mapping/Control
 cd ../..
