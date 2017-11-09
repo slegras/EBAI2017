@@ -251,3 +251,21 @@ FNR_Anaerobic_A_peaks.bed \
 
 ## Compress annotation file
 srun gzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
+
+###################################################
+################# Motif analysis
+## Create a directory to store data needed from motif analysis
+mkdir 06-MotifAnalysis
+
+## Go to the newly created directory
+cd 06-MotifAnalysis
+
+## Uncompress the genome file
+srun gunzip ../data/Escherichia_coli_K_12_MG1655.fasta.gz
+
+## Extract fasta sequence from genomic coordinate of peaks
+srun bedtools getfasta -fi ../data/Escherichia_coli_K_12_MG1655.fasta \
+-bed ../04-PeakCalling/FNR_Anaerobic_A_peaks.bed -fo FNR_Anaerobic_A_peaks.fa
+
+## Compress back the genome file
+srun gzip ../data/Escherichia_coli_K_12_MG1655.fasta

@@ -403,31 +403,27 @@ cd ..
 **Goals**: Associate peaks to closest genes
 
 [annotatePeaks.pl](http://homer.ucsd.edu/homer/ngs/annotation.html) from Homer associates peaks with nearby genes.
-1. Try it out
-```bash
-srun annotatePeaks.pl
-```
-2. Create a directory named **05-PeakAnnotation** to store annotatePeaks outputs
+1. Create a directory named **05-PeakAnnotation** to store annotatePeaks outputs
 ```bash
 mkdir 05-PeakAnnotation
 ```
-3. Go to the newly created directory
+2. Go to the newly created directory
 ```bash
 cd 05-PeakAnnotation
 ```
-4. Use the annotation file data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz. First start by uncompress the file
+3. Use the annotation file data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz. First start by uncompress the file
 ```bash
 srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
 ```
-5. Create a file suitable for annotatePeaks.pl
+4. Create a file suitable for annotatePeaks.pl
 ```bash
 awk -F "\t" '{print $0"\t+"}' ../04-PeakCalling/FNR_Anaerobic_A_peaks.bed > FNR_Anaerobic_A_peaks.bed
 ```
-6. Try annotatePeaks.pl
+5. Try annotatePeaks.pl
 ```bash
 srun annotatePeaks.pl
 ```
-7. Annotation peaks with nearby genes with Homer
+6. Annotation peaks with nearby genes with Homer
 ```bash
 srun annotatePeaks.pl \
 FNR_Anaerobic_A_peaks.bed \
@@ -435,17 +431,40 @@ FNR_Anaerobic_A_peaks.bed \
 -gtf ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf \
 > FNR_Anaerobic_A_annotated_peaks.tsv
 ```
-8. Compress back the annotation file
+7. Compress back the annotation file
 srun gzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
+
+Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
+```bash
+## If you are in 04-PeakCalling
+cd ..
+```
 
 ## Motif analysis <a name="motif"></a>
 **Goal**: Define binding motif(s) for the ChIPed transcription factor and identify potential cofactors
 
 ### 1 - Retrieve the peak sequences corresponding to the peak coordinate file (BED)
 
-For the motif analysis, you first need to extract the sequences corresponding the peaks. There are several ways to do this (as usual...). If you work on a UCSC-supported organism, the easiest is to use RSAT fetch-sequences or Galaxy . Here, we will use Bedtools, as we have the genome of our interest on our computer (Escherichia_coli_K_12_MG1655.fasta).
+For the motif analysis, you first need to extract the sequences corresponding the peaks. There are several ways to do this (as usual...). If you work on a UCSC-supported organism, the easiest is to use RSAT fetch-sequences or Galaxy . Here, we will use Bedtools, as we have the genome of interest on our computer (Escherichia_coli_K_12_MG1655.fasta).
+1. Create a directory named **06-MotifAnalysis** to store data needed from motif analysis
 ```bash
-bedtools getfasta -fi Escherichia_coli_K_12_MG1655.fasta -bed macs14_peaks.bed -fo macs14_peaks.fa
+mkdir 06-MotifAnalysis
+```
+2. Go to the newly created directory
+```bash
+cd 06-MotifAnalysis
+```
+3. Extract peak sequence in fasta format
+```bash
+## Uncompress the genome file
+srun gunzip ../data/Escherichia_coli_K_12_MG1655.fasta.gz
+
+## Extract fasta sequence from genomic coordinate of peaks
+srun bedtools getfasta -fi ../data/Escherichia_coli_K_12_MG1655.fasta \
+-bed ../04-PeakCalling/FNR_Anaerobic_A_peaks.bed -fo FNR_Anaerobic_A_peaks.fa
+
+## Compress back the genome file
+srun gzip ../data/Escherichia_coli_K_12_MG1655.fasta
 ```
 
 ### 2 - Motif discovery with RSAT
