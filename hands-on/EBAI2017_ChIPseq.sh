@@ -1,35 +1,103 @@
 #! /bin/env bash
 
-################# définition des variables
+###################################################
+################# Variable definition
 login=slegras
 home=/shared/projects/training/${login}/EBA2017_chipseq
 
-################# Gestion de l'environnement de travail
+###################################################
+################# Working environment
 cd /shared/projects/training/${login}
 
-## création d'un répertoire d'analyse
+## Create a working directory for entire hands-on part
 mkdir EBA2017_chipseq
 cd EBA2017_chipseq
 
-## création d'un répertoire qui va contenir les données brutes
+## Create a directory for raw data
 mkdir data
 cd data
-## copie des fichiers fastq du TP depuis l'ordinateur local.
+## copy fastq/fasta files from local computer
 cd $home
 
-## chargement de l'environnement conda pour le ChIP-Seq
+## Loading conda ChIP-Seq environment
 source activate eba2017_chipseq
 
-################# Lancement de l'analyse de la qualité des données
-## creation du fichier de résultats des analyses de qualité
+###################################################
+################# Quality controls
+## Create a directory for quality control
 mkdir 01-QualityControl
 
-## On va dans le répertoire que l'on vient de créer
+## Go to quality control directory
 cd 01-QualityControl
 
-## test de lancement de fastqc
-## On lance avec srun
+## Test fastqc tool
+## To be run with srun
 srun fastqc --help
 
-## Lancement de fastqc sur l'IP
+## Run fastqc on IP
 srun fastqc ../data/SRR576933.fastq.gz -o .
+
+###################################################
+################# Mapping
+## creating output directory for alignment
+mkdir 02-Mapping
+
+## Go to newly created directory
+cd 02-Mapping
+
+## Create a directory for index files
+mkdir index
+
+## Go to index directory
+cd index
+
+## testing bowtie-build
+srun bowtie-build
+
+## Unzip genome fasta file
+srun gunzip ../../data/Escherichia_coli_K12.fasta.gz
+
+## Creating genome index
+srun bowtie-build ../../data/Escherichia_coli_K12.fasta Escherichia_coli_K12
+
+## Compress back genome fasta file
+srun gzip ../../data/Escherichia_coli_K12.fasta
+
+## Go back to upper directory i.e 02-Mapping
+cd ..
+
+## Create a directory for IP alignment
+mkdir IP
+
+## Go to IP directory
+cd IP
+
+## Unzip fastq IP file
+srun gunzip ../../data/SRR576933.fastq.gz
+
+## Run alignment
+srun bowtie ../index/Escherichia_coli_K12 ../../data/SRR576933.fastq -v 2 -m 1 -3 1 -S 2> SRR576933.out > SRR576933.sam
+
+## Compress back fastq IP file
+srun gzip ../../data/SRR576933.fastq
+
+## Go back to upper directory
+cd ..
+
+## Create a directory for IP alignment
+mkdir Control
+
+## Go to Control directory
+cd Control
+
+## Unzip fastq IP file
+srun gunzip ../../data/SRR576938.fastq.gz
+
+## Run alignment
+srun bowtie ../index/Escherichia_coli_K12 ../../data/SRR576938.fastq -v 2 -m 1 -3 1 -S 2> SRR576938.out > SRR576938.sam
+
+## Compress back fastq IP file
+srun gzip ../../data/SRR576938.fastq
+
+## Go to home working directory
+cd ../..
