@@ -259,6 +259,11 @@ Open the file SRR576938.out. How many reads were mapped ?**
 
 **At this point, you should have two SAM files, one for the experiment, one for the control. Check the size of your files, how large are they ?**
 
+Go to working home directory
+```bash
+cd ../..
+```
+
 ## Bonus: checking two ENCODE quality metrics <a name="bonus"></a>
 **Goal**: This optional exercice aims at calculating the NSC and RSC ENCODE quality metrics. These metrics allow to classify the datasets (after mapping, contrary to FASTC that works on raw reads) in regards to the NSC and RSC values observed in the ENCODE datasets (see ENCODE guidelines)
 
