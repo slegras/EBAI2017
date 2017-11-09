@@ -147,7 +147,7 @@ Knowing your organism size is important to evaluate if your dataset has sufficie
 **How long is the genome ?  
 Do both FASTQ files contain enough reads for a proper analysis ?**
 
-**At this point, you should be confident about the quality of the datasets, and wether it's worth following with analyzing the datasets.**
+**At this point, you should be confident about the quality of the datasets, and whether it's worth following with analyzing the datasets.**
 
 ## Mapping the reads with Bowtie <a name="mapping"></a>
 **Goal**: Obtain the coordinates of each read on the reference genome.  
