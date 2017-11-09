@@ -184,7 +184,7 @@ cd 00-PhantomPeakQualTools
 #   | gzip -c > SRR576933_experiment.tagAlign.gz
 
 ## Run phantompeakqualtools
-Rscript ../scripts/phantompeakqualtools/run_spp.R -c=../02-Mapping/SRR576933.bam  -savp -out=SRR576933_IP_phantompeaks
+srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=../02-Mapping/SRR576933.bam  -savp -out=SRR576933_IP_phantompeaks
 
 ## Go to home working directory
 cd $home

@@ -445,7 +445,7 @@ cd ..
 
 ### 1 - Retrieve the peak sequences corresponding to the peak coordinate file (BED)
 
-For the motif analysis, you first need to extract the sequences corresponding the peaks. There are several ways to do this (as usual...). If you work on a UCSC-supported organism, the easiest is to use RSAT fetch-sequences or Galaxy . Here, we will use Bedtools, as we have the genome of interest on our computer (Escherichia_coli_K_12_MG1655.fasta).
+For the motif analysis, you first need to extract the sequences corresponding to the peaks. There are several ways to do this (as usual...). If you work on a UCSC-supported organism, the easiest is to use RSAT fetch-sequences or Galaxy. Here, we will use Bedtools, as we have the genome of interest on our computer (Escherichia_coli_K_12_MG1655.fasta).
 1. Create a directory named **06-MotifAnalysis** to store data needed from motif analysis
 ```bash
 mkdir 06-MotifAnalysis
