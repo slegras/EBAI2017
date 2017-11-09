@@ -17,6 +17,14 @@ cd EBA2017_chipseq
 mkdir data
 cd data
 ## copy fastq/fasta files from local computer
+## fastq file got downloaded from EBI
+# ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR576/SRR576933/SRR576933.fastq.gz
+# ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR576/SRR576938/SRR576938.fastq.gz
+## genome fasta file got downloaded from NCBI website
+## annotation track (gtf) was downloaded from UCSC table browser
+# http://microbes.ucsc.edu/cgi-bin/hgTables?org=Escherichia+coli+K12&db=eschColi_K12&hgsid=1465191&hgta_doMainPage=1
+srun perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' \
+Escherichia_coli_K_12_MG1655.annotation.gtf > Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
 cd $home
 
 ## Create a directory for scripts
@@ -204,10 +212,10 @@ srun --mem=5G bamCoverage --bam ../02-Mapping/Control/Marked_SRR576938.bam \
 
 ###################################################
 ################# Peak Calling
-## Create a directory to astore peak calling result files
+## Create a directory to store peak calling result files
 mkdir 04-PeakCalling
 
-## Go to the newly created file
+## Go to the newly created directory
 cd 04-PeakCalling
 
 ## Check macs parameters
@@ -216,3 +224,30 @@ srun macs
 ## Run macs on the IP and the Control file
 srun macs -t ../02-Mapping/IP/SRR576933.bam -c ../02-Mapping/Control/SRR576938.bam --format BAM  --gsize 4639675 \
 --name "FNR_Anaerobic_A" --bw 400 --diag &> MACS.out
+
+###################################################
+################# Peak Annotation
+## Create a directory to store peak annotation data
+mkdir 05-PeakAnnotation
+
+## Go to the newly created directory
+cd 05-PeakAnnotation
+
+## Uncompress annotation file
+srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
+
+## Create a BED file with 6 columns
+awk -F "\t" '{print $0"\t+"}' ../04-PeakCalling/FNR_Anaerobic_A_peaks.bed > FNR_Anaerobic_A_peaks.bed
+
+## Try it out
+srun annotatePeaks.pl
+
+## Annotation peaks with Homer
+srun annotatePeaks.pl \
+FNR_Anaerobic_A_peaks.bed \
+../data/Escherichia_coli_K12.fasta \
+-gtf ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf \
+> FNR_Anaerobic_A_annotated_peaks.tsv
+
+## Compress annotation file
+srun gzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf

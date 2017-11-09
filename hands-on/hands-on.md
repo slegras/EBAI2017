@@ -325,7 +325,7 @@ If the data are on your computer, to prevent data transfer, it's easier to visua
 [bamCoverage](https://deeptools.readthedocs.io/en/latest/content/tools/bamCoverage.html) from deepTools generates BigWigs from BAM files
 1. Try it out
 ```bash
-bamCoverage --help
+srun bamCoverage --help
 ```
 2. Create a directory named **03-Visualization** to store bamCoverage outputs
 ```bash
@@ -344,6 +344,12 @@ srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
 5. Do it for the control (be careful for the control you will need **5G** of memory to process the file)
 6. Load the two bigwig files in IGV
 
+Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
+```bash
+## If you are in 03-Visualization
+cd ..
+```
+
 ## Peak calling with MACS <a name="macs"></a>
 **Goal**: Define the peaks, i.e. the region with a high density of reads, where the studied factor was bound
 
@@ -351,12 +357,20 @@ srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
 There are multiple programs to perform the peak-calling step. Some are more directed towards histone marks (broad peaks) while others are specific to narrow peaks (transcription factors). Here we will use MACS version 1.4.2 because it's known to produce generally good results, and it is well-maintained by the developper. A new version (MACS2) is being developped, but still in testing phase so we will not use it today.
 
 ### 2 - Calling the peaks
-1. Try out MACS
+1. Create a directory named **04-PeakCalling** to store annotatePeaks outputs
+```bash
+mkdir 04-PeakCalling
+```
+2. Go to the newly created directory
+```bash
+cd 04-PeakCalling
+```
+3. Try out MACS
 ```bash
 srun macs
 ```
 This prints the help of the program.
-2. Let's see the parameters of MACS before launching the mapping:
+4. Let's see the parameters of MACS before launching the mapping:
   * ChIP-seq tag file (-t) is the name of our experiment (treatment) mapped read file SRR576933.bam
   * ChIP-seq control file (-c) is the name of our input (control) mapped read file SRR576938.bam
   * --format BAM indicates the input file are in BAM format. Other formats can be specified (SAM,BED...)
@@ -371,7 +385,7 @@ This prints the help of the program.
 srun macs -t ../02-Mapping/IP/SRR576933.bam -c ../02-Mapping/Control/SRR576938.bam --format BAM  --gsize 4639675 \
 --name "FNR_Anaerobic_A" --bw 400 --diag &> MACS.out
 ```
-3. This should take about 10 minutes, mainly because of the --diag option. Without, the program runs faster.
+3. This should take a few minutes, mainly because of the --diag option. Without, the program runs faster.
 
 ### 3 - Analyzing the MACS results
 **Look at the files that were created by MACS. Which files contains which information ?**  
@@ -379,14 +393,57 @@ srun macs -t ../02-Mapping/IP/SRR576933.bam -c ../02-Mapping/Control/SRR576938.b
 
 **At this point, you should have a BED file containing the peak coordinates**
 
+Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
+```bash
+## If you are in 04-PeakCalling
+cd ..
+```
+
 ## Peak annotation <a name="annotation"></a>
+**Goals**: Associate peaks to closest genes
+
+[annotatePeaks.pl](http://homer.ucsd.edu/homer/ngs/annotation.html) from Homer associates peaks with nearby genes.
+1. Try it out
+```bash
+srun annotatePeaks.pl
+```
+2. Create a directory named **05-PeakAnnotation** to store annotatePeaks outputs
+```bash
+mkdir 05-PeakAnnotation
+```
+3. Go to the newly created directory
+```bash
+cd 05-PeakAnnotation
+```
+4. Use the annotation file data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz. First start by uncompress the file
+```bash
+srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
+```
+5. Create a file suitable for annotatePeaks.pl
+```bash
+awk -F "\t" '{print $0"\t+"}' ../04-PeakCalling/FNR_Anaerobic_A_peaks.bed > FNR_Anaerobic_A_peaks.bed
+```
+6. Try annotatePeaks.pl
+```bash
+srun annotatePeaks.pl
+```
+7. Annotation peaks with nearby genes with Homer
+```bash
+srun annotatePeaks.pl \
+FNR_Anaerobic_A_peaks.bed \
+../data/Escherichia_coli_K12.fasta \
+-gtf ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf \
+> FNR_Anaerobic_A_annotated_peaks.tsv
+```
+8. Compress back the annotation file
+srun gzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
 
 ## Motif analysis <a name="motif"></a>
 **Goal**: Define binding motif(s) for the ChIPed transcription factor and identify potential cofactors
 
 ### 1 - Retrieve the peak sequences corresponding to the peak coordinate file (BED)
 
-For the motif analysis, you first need to extract the sequences corresponding the the peaks. There are several ways to do this (as usual...). If you work on a UCSC-supported organism, the easiest is to use RSAT fetch-sequences or Galaxy . Here, we will use Bedtools, as we have the genome of our interest on our computer (Escherichia_coli_K_12_MG1655.fasta).
+For the motif analysis, you first need to extract the sequences corresponding the peaks. There are several ways to do this (as usual...). If you work on a UCSC-supported organism, the easiest is to use RSAT fetch-sequences or Galaxy . Here, we will use Bedtools, as we have the genome of our interest on our computer (Escherichia_coli_K_12_MG1655.fasta).
 ```bash
 bedtools getfasta -fi Escherichia_coli_K_12_MG1655.fasta -bed macs14_peaks.bed -fo macs14_peaks.fa
 ```
@@ -438,7 +495,7 @@ perl -lane 'print "gi|49175990|ref|NC_000913.2|\t".($F[0]-50)."\t".($F[0]+50)."\
 
 ### How to obtain the annotation (=Gene) BED file for IGV?
 Annotation files can be found on genome websites, NCBI FTP server, Ensembl, ... However, IGV required GFF format, or BED format, which are often not directly available.
-Here, I downloaded the annotation from the UCSC Table browser as "Escherichia_coli_K_12_MG1655.annotation.bed". Then, I changed the "chr" to the name of our genome with the following PERL command:
+Here, I downloaded the annotation from the [UCSC Table browser](http://microbes.ucsc.edu/cgi-bin/hgTables?org=Escherichia+coli+K12&db=eschColi_K12&hgsid=1465191&hgta_doMainPage=1) as "Escherichia_coli_K_12_MG1655.annotation.bed". Then, I changed the "chr" to the name of our genome with the following PERL command:
 
 ```bash
 perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' Escherichia_coli_K_12_MG1655.annotation.bed > Escherichia_coli_K_12_MG1655.annotation.fixed.bed
