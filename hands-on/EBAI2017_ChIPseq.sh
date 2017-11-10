@@ -21,9 +21,13 @@ cd data
 # ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR576/SRR576933/SRR576933.fastq.gz
 # ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR576/SRR576938/SRR576938.fastq.gz
 ## genome fasta file got downloaded from NCBI website
-## annotation track (gtf) was downloaded from UCSC table browser
+## annotation track (.gtf) was downloaded from UCSC table browser (gtf file)
 ## annotation track (tsv) was downloaded from UCSC table browser (selecting fields to be output)
 # http://microbes.ucsc.edu/cgi-bin/hgTables?org=Escherichia+coli+K12&db=eschColi_K12&hgsid=1465191&hgta_doMainPage=1
+
+## Changing chromosome names
+srun zcat Escherichia_coli_K_12_MG1655.annotation.gtf | perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' | \
+ gzip > Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
 
 cd $home
 
@@ -229,6 +233,7 @@ srun macs
 
 ## Run macs on the IP and the Control file
 srun macs -t ../02-Mapping/IP/SRR576933.bam -c ../02-Mapping/Control/SRR576938.bam --format BAM  --gsize 4639675 \
+--name "FNR_Anaerobic_A" --bw 400 --bdg --single-profile --diag &> MACS.out
 
 ###################################################
 ################# Peak Annotation
@@ -256,6 +261,18 @@ FNR_Anaerobic_A_peaks.bed \
 
 ## Compress annotation file
 srun gzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
+
+## Add gene symbol annotation using R
+R
+d <- read.table("FNR_Anaerobic_A_annotated_peaks.tsv", sep="\t", h=T)
+gene.symbol <- read.table("../data/Escherichia_coli_K_12_MG1655.annotation.tsv.gz", h=F)
+d.annot <- merge(d[,c(seq(1,6,1),8,10,11)], gene.symbol, by.x="Nearest.PromoterID", by.y="V1")
+colnames(d.annot)[2] <- "PeakID"
+colnames(d.annot)[dim(d.annot)[2]] <- "Gene.Symbol"
+write.table(d.annot, "FNR_Anaerobic_A_final_peaks_annotation.tsv", col.names=T, row.names=F, sep="\t", quote=F)
+quit()
+n
+
 
 ###################################################
 ################# Motif analysis
