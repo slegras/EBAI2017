@@ -382,7 +382,7 @@ srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
 8. Set the visualization of the two bigwig files to be autoscaled
   * Click right on the name of the tracks and select **Autoscale**
 
-**Go back to the genes we looked at earlier: b1127, b1108**
+**Go back to the genes we looked at earlier: b1127, b1108. Look at the shape of the signal.**  
 **Keep IGV opened.**
 
 Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
@@ -439,6 +439,11 @@ Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA20
 ## If you are in 04-PeakCalling
 cd ..
 ```
+
+### 4 - Visualize peaks into IGV
+1. Go back to IGV and load the BED file of the peaks. Load the file 04-PeakCalling/FNR_Anaerobic_A_peaks.bed.
+
+**Go back again to the genes we looked at earlier: b1127, b1108. Do you see peaks?**
 
 ## Peak annotation <a name="annotation"></a>
 
