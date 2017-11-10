@@ -262,7 +262,9 @@ Open the file SRR576938.out. How many reads were mapped ?**
 
 **At this point, you should have two SAM files, one for the experiment, one for the control. Check the size of your files, how large are they ?**
 
-### 5 - Estimate the number of duplicated reads
+## Estimating the number of duplicated reads
+**Goal**: Obtain a BAM file with duplicated reads   
+
 1. Go to the directory with alignment file of treatment (IP)
 ```bash
 cd /shared/projects/training/<login>/EBA2017_chipseq/02-Mapping/IP
@@ -276,6 +278,7 @@ OUTPUT=Marked_SRR576933.bam \
 METRICS_FILE=metrics \
 VALIDATION_STRINGENCY=STRICT
 ```
+<!-- Morgane : Does the Marked BAM file has been removed from duplicates  ? -->
 
 **How many duplicates reads are detected? (See MarkDuplicates outputs)**
 
