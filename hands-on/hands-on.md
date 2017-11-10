@@ -127,10 +127,16 @@ ls
 ```
 > SRR576933_fastqc.html  SRR576933_fastqc.zip
 
-7. Download the HTML file SRR576933_fastqc.html on your local machine (either with ssh or the program you used to upload your data on the server). On your machine, open this file in Firefox.
-
-4. Launch the FASTQC program on the control file (SRR576938.fastq)
-
+6. Download the HTML file SRR576933_fastqc.html on your local machine (either with ssh or the program you used to upload your data on the server). Using a bash command it would look like this.
+```bash
+## Go to the location where you want to put the data on your computer
+cd <path>
+## Download the file
+scp <login>@hpc.igbmc.fr:/shared/projects/training/<login>/EBA2017_chipseq/01-QualityControl/SRR576933_fastqc.html .
+# Enter your password
+```
+7. On your machine, open this file in Firefox.  
+8. Launch the FASTQC program on the control file (SRR576938.fastq)
 
 **Analyze the result of the FASTQC program:  
 How many reads are present in the file ?  
