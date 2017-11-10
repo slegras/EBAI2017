@@ -319,7 +319,7 @@ else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
 srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_IP_phantompeaks
 ```
 
-**A PDF file named SRR576933_IP.pdf should have been produced.  
+**A PDF file named SRR576933_experiment.tagAlign.pdf should have been produced.  
 According to the ENCODE guidelines, NSC >= 1.05 ; RSC >= 0.8 is recommended. Qtag values range from -2,-1,0,1,2  
 What is the quality of this dataset ?**
 
@@ -353,7 +353,7 @@ If the data are on your computer, to prevent data transfer, it's easier to visua
   * Select the annotation file. The positions of the genes are now loaded.
 5. Load the two bam files (SRR576933.bam and SRR576938.bam) in IGV.
 
-**Browse around in the genome. Do you see peaks?**
+**Browse around in the genome. Do you see peaks?**  
 **Browse into IGV. Go to the following genes: b1127, b1108**
 
 However, looking at BAM file as such does not allow to directly compare the two samples as data are not normalized. Let's generate normalized data for visualization.
