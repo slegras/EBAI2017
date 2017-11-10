@@ -55,9 +55,8 @@ Although direct access to the SRA database at the NCBI is doable, SRA does not s
 
 1. Go to the [EBI](http://www.ebi.ac.uk/) website. Paste your SRA identifier (SRX189773) and click on the button "search".
 ![alt text][ebi4]
-2. Click on the first result. On the next page, there is a link to the FASTQ file. For efficiency, this file has already been downloaded and is available in the "data" folder (SRR576933.fastq.gz)
-
-=> ICI INSERER NOUVELLE IMAGE
+2. Click on the first result. On the next page, there is a link to the FASTQ file. For efficiency, this file has already been downloaded and is available in the "data" folder (SRR576933.fastq.gz)  
+![alt text][ebi5]
 
 **tip**: To download the control dataset, we should redo the same steps starting from the GEO web page specific to the chip-seq datasets (see step 2.4) and choose **anaerobic INPUT DNA**.  
 The downloaded FASTQ file is available in the data folder (SRR576938.fastq.gz)
@@ -142,7 +141,7 @@ Knowing your organism size is important to evaluate if your dataset has sufficie
 
 1. Go to the [NCBI Genome](http://www.ncbi.nlm.nih.gov/genome) website, and search for the organism **Escherichia coli**
 2. Scroll down up to the **Escherichia coli str. K-12 substr. MG1655** to access statistics on this genome.
-![alt text][genome5]
+![alt text][genome6]
 
 **How long is the genome ?  
 Do both FASTQ files contain enough reads for a proper analysis ?**
@@ -675,4 +674,5 @@ This file will work directly in IGV
 [geo2]: https://github.com/slegras/EBAI2017/blob/master/images/2_GEO.png "GEO2"
 [geo3]: https://github.com/slegras/EBAI2017/blob/master/images/3_GEO.png "GEO3"
 [ebi4]: https://github.com/slegras/EBAI2017/blob/master/images/4_EBI.png "EBI"
-[genome5]: https://github.com/slegras/EBAI2017/blob/master/images/5_Genomes.png "E. Coli K-12"
+[ebi5]: https://github.com/slegras/EBAI2017/blob/master/images/5_EBI.png "EBI"
+[genome6]: https://github.com/slegras/EBAI2017/blob/master/images/6_Genomes.png "E. Coli K-12"
