@@ -289,15 +289,25 @@ cd ../..
 **Goal**: This optional exercise aims at calculating the NSC and RSC ENCODE quality metrics. These metrics allow to classify the datasets (after mapping, contrary to FASTQC that works on raw reads) in regards to the NSC and RSC values observed in the ENCODE datasets (see ENCODE guidelines)
 
 ### 1 - PhantomPeakQualTools
-Warning : this exercise is new and is tested for the first time in a classroom context. Let us know if you encounter any issue.
 
-<!-- 1. convert the BAM file into TagAlign format, specific to the program that calculates the quality metrics
+1. Create a directory named **00-PhantomPeakQualTools** in which to mapping results for IP
 ```bash
-samtools view -F 0x0204 -o - SRR576933.bam | awk 'BEGIN{OFS="\t"}{if (and($2,16) > 0) {print $3,($4-1),($4-1+length($10)),"N","1000","-"} else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' | gzip -c > SRR576933_experiment.tagAlign.gz
-``` -->
-1. Run phantompeakqualtools
+mkdir 00-PhantomPeakQualTools
+```
+2. Go to the newly created directory
 ```bash
-Rscript ../scripts/phantompeakqualtools/run_spp.R -c=../02-Mapping/SRR576933.bam  -savp -out=SRR576933_IP_phantompeaks
+cd 00-PhantomPeakQualTools
+```
+3. convert the BAM file into TagAlign format, specific to the program that calculates the quality metrics
+```bash
+srun samtools view -F 0x0204 -o - ../02-Mapping/IP/SRR576933.bam | \
+gawk 'BEGIN{OFS="\t"}{if (and($2,16) > 0) {print $3,($4-1),($4-1+length($10)),"N","1000","-"}
+else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
+ | gzip -c > SRR576933_experiment.tagAlign.gz
+```
+4. Run phantompeakqualtools
+```bash
+srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_IP_phantompeaks
 ```
 
 **A PDF file named SRR576933_IP.pdf should have been produced.  
@@ -305,6 +315,12 @@ According to the ENCODE guidelines, NSC >= 1.05 ; RSC >= 0.8 is recommended. Qta
 What is the quality of this dataset ?**
 
 **At this point, you should be able to measure the ENCODE RSC and NSC metric values on a given dataset.**
+
+Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
+```bash
+## If you are in 00-PhantomPeakQualTools
+cd ..
+```
 
 ## Visualizing the data in a genome browser <a name="visualize"></a>
 **Goal**: View the data in their genomic context, to check whether the IP worked  
@@ -614,12 +630,12 @@ perl -lane 'print "gi|49175990|ref|NC_000913.2|\t".($F[0]-50)."\t".($F[0]+50)."\
 > gi|49175990|ref|NC_000913.2|	34015	34115
 4. Depending on the available information, the command will be different.
 
-### How to obtain the annotation (=Gene) BED file for IGV?
+### How to obtain the annotation (=Gene) GTF file for IGV?
 Annotation files can be found on genome websites, NCBI FTP server, Ensembl, ... However, IGV required GFF format, or BED format, which are often not directly available.
-Here, I downloaded the annotation from the [UCSC Table browser](http://microbes.ucsc.edu/cgi-bin/hgTables?org=Escherichia+coli+K12&db=eschColi_K12&hgsid=1465191&hgta_doMainPage=1) as "Escherichia_coli_K_12_MG1655.annotation.bed". Then, I changed the "chr" to the name of our genome with the following PERL command:
+Here, I downloaded the annotation from the [UCSC Table browser](http://microbes.ucsc.edu/cgi-bin/hgTables?org=Escherichia+coli+K12&db=eschColi_K12&hgsid=1465191&hgta_doMainPage=1) as "Escherichia_coli_K_12_MG1655.annotation.gtf". Then, I changed the "chr" to the name of our genome with the following PERL command:
 
 ```bash
-perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' Escherichia_coli_K_12_MG1655.annotation.bed > Escherichia_coli_K_12_MG1655.annotation.fixed.bed
+perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' Escherichia_coli_K_12_MG1655.annotation.gtf > Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
 ```
 This file will work directly in IGV
 

@@ -176,15 +176,21 @@ mkdir 00-PhantomPeakQualTools
 ## Go to newly created directory
 cd 00-PhantomPeakQualTools
 
-## Create a TagAlign file from the bam file
-## No need (see documentation)
-# srun samtools view -F 0x0204 -o - SRR576933.bam \
-# | awk 'BEGIN{OFS="\t"}{if (and($2,16) > 0) {print $3,($4-1),($4-1+length($10)),"N","1000","-"}
-# else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
-#   | gzip -c > SRR576933_experiment.tagAlign.gz
+## create an R environment
+# conda create -c r --name R r
+# source activate R
+# conda install -c bioconda r-spp
+# conda install -c bioconda samtools
+# conda install -c bioconda gawk
+
+## convert the BAM file into TagAlign format, specific to the program that calculates the quality metrics
+srun samtools view -F 0x0204 -o - ../02-Mapping/IP/SRR576933.bam | \
+gawk 'BEGIN{OFS="\t"}{if (and($2,16) > 0) {print $3,($4-1),($4-1+length($10)),"N","1000","-"}
+else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
+ | gzip -c > SRR576933_experiment.tagAlign.gz
 
 ## Run phantompeakqualtools
-srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=../02-Mapping/SRR576933.bam  -savp -out=SRR576933_IP_phantompeaks
+srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_IP_phantompeaks
 
 ## Go to home working directory
 cd $home
