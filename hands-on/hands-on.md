@@ -92,8 +92,11 @@ mkdir EBA2017_chipseq
 ```bash
 cd EBA2017_chipseq
 ```
-
-=> ICI AJOUTER LA RECUPERATION DU DOSSIER DATA
+5. Copy directories containing data and scripts needed for the training
+```bash
+srun cp -r /shared/projects/training/slegras/EBA2017_chipseq/data \
+/shared/projects/training/slegras/EBA2017_chipseq/scripts/ .
+```
 
 ## Quality control of the reads and statistics <a name="qc"></a>
 **Goal**: Get some basic information on the data (read length, number of reads, global quality of dataset)  
