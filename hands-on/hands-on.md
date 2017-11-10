@@ -548,6 +548,20 @@ FNR_Anaerobic_A_peaks.bed \
 -gtf ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf \
 > FNR_Anaerobic_A_annotated_peaks.tsv
 ```
+
+5. Add gene symbol annotation using R
+```R
+R
+d <- read.table("FNR_Anaerobic_A_annotated_peaks.tsv", sep="\t", h=T)
+gene.symbol <- read.table("../data/Escherichia_coli_K_12_MG1655.annotation.tsv.gz", h=F)
+d.annot <- merge(d[,c(seq(1,6,1),8,10,11)], gene.symbol, by.x="Nearest.PromoterID", by.y="V1")
+colnames(d.annot)[2] <- "PeakID"
+colnames(d.annot)[dim(d.annot)[2]] <- "Gene.Symbol"
+write.table(d.annot, "FNR_Anaerobic_A_final_peaks_annotation.tsv", col.names=T, row.names=F, sep="\t", quote=F)
+quit()
+n
+```
+
 **What information is listed in each column of the file?**
 
 **In which column number is the official gene symbol of the nearest gene?**
