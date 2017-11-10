@@ -209,12 +209,12 @@ srun bamCoverage --help
 ## Run bamCoverage on IP
 srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
 --outFileName SRR576933_nodup.bw --outFileFormat bigwig --normalizeTo1x 4639675 \
---skipNonCoveredRegions --extendReads 400 --ignoreDuplicates
+--skipNonCoveredRegions --extendReads 200 --ignoreDuplicates
 
 ## Run bamCoverage on Control
 srun --mem=5G bamCoverage --bam ../02-Mapping/Control/Marked_SRR576938.bam \
 --outFileName SRR576938_nodup.bw --outFileFormat bigwig --normalizeTo1x 4639675 \
---skipNonCoveredRegions --extendReads 400 --ignoreDuplicates
+--skipNonCoveredRegions --extendReads 200 --ignoreDuplicates
 
 ###################################################
 ################# Peak Calling

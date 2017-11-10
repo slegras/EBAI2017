@@ -333,12 +333,24 @@ There are several options for genome browsers, divided between the local browser
 If the data are on your computer, to prevent data transfer, it's easier to visualize the data locally (IGV). Note that if you're working on a non-model organism, the local viewer will be the only choice. If the aim is to share the results with your collaborators, view many tracks in the context of many existing annotations, then the online genome browsers are more suitable.
 
 ### 2 - Viewing the raw alignment data in IGV
-1. Open IGV
-<!-- (A voir si on fait en local ou sur le serveur)  -->
-2. Load the genome
-> Load the Escherichia coli K12 MG1655 genome as reference
-> (from the fasta file Escherichia_coli_K_12_MG1655.fasta, used to build the bowtie index file)
-3. Load the two bam files (IP and Control) in IGV.
+1. Download the following files from the server onto your computer
+  * data/Escherichia_coli_K_12_MG1655.fasta.gz
+  * data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
+  * 02-Mapping/IP/SRR576933.bam
+  * 02-Mapping/Control/SRR576938.bam
+2. Open IGV on your computer
+3. Load the genome
+  * Genomes / Load Genome from File...
+  * Select the fasta file Escherichia_coli_K_12_MG1655.fasta.gz located into the data directory
+4. Load an annotation file named Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz into IGV
+  * File / Load from File...
+  * Select the annotation file. The positions of the genes are now loaded.
+5. Load the two bam files (SRR576933.bam and SRR576938.bam) in IGV.
+
+**Browse around in the genome. Do you see peaks?**
+**Browse into IGV. Go to the following genes: b1127, b1108**
+
+However, looking at BAM file as such does not allow to directly compare the two samples as data are not normalized. Let's generate normalized data for visualization.
 
 ### 3 - Viewing scaled data
 [bamCoverage](https://deeptools.readthedocs.io/en/latest/content/tools/bamCoverage.html) from deepTools generates BigWigs from BAM files
@@ -358,10 +370,20 @@ cd 03-Visualization
 ```bash
 srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
 --outFileName SRR576933_nodup.bw --outFileFormat bigwig --normalizeTo1x 4639675 \
---skipNonCoveredRegions --extendReads 400 --ignoreDuplicates
+--skipNonCoveredRegions --extendReads 200 --ignoreDuplicates
 ```
 5. Do it for the control (be careful for the control you will need **5G** of memory to process the file)
-6. Load the two bigwig files in IGV
+6. Download the two bigwig files you have just generated
+  * 03-Visualization/SRR576933_nodup.bw
+  * 03-Visualization/SRR576938_nodup.bw
+7. Load the two bigwig files in IGV
+  * File / Load from File...
+  * Select the two bigwig files.
+8. Set the visualization of the two bigwig files to be autoscaled
+  * Click right on the name of the tracks and select **Autoscale**
+
+**Go back to the genes we looked at earlier: b1127, b1108**
+**Keep IGV opened.**
 
 Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
 ```bash
@@ -463,7 +485,7 @@ The following is a detailed description of the options used to control CEAS.
   *--rel-dist	Relative distance to TSS/TTS in wig profiling. DEFAULT: 3000bp
   *--gn-groups	Gene-groups of particular interest in wig profiling. Each gene group file must have gene names in the 1s column. The file names are separated by commas w/ no space (e.g. --gn-groups=top10.txt,bottom10.txt)
   *--gn-group-names	The names of the gene groups in --gn-groups. The gene group names are separated by commas. (e.g. --gn-group-names='top 10%,bottom 10%'). These group names appear in the legends of the wig profiling plots. If no group names given, the groups are represented as 'Group 1, Group2,...Group n'.
-  *--gname2	Whether or not use the 'name2' column of the gene annotation table when reading the gene IDs in the files given through --gn-groups. This flag is meaningful only with --gn-groups. 
+  *--gname2	Whether or not use the 'name2' column of the gene annotation table when reading the gene IDs in the files given through --gn-groups. This flag is meaningful only with --gn-groups.
 
 4. Run CEAS
 ```bash
@@ -472,11 +494,11 @@ ceas [options] -g gdb -b bed -w wig
 
 Note: To save time, you can run each part of the program (annotated features or metagenes) separately
 
-To run ChIP region annotation and gene-centered annotation only 
+To run ChIP region annotation and gene-centered annotation only
 ```bash
 $ ceas [options] -g gdb -b bed
 ```
-   
+
 To run  average signal profiling only
 ```bash
 $ ceas [options] -g gdb -w wig
