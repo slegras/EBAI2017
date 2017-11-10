@@ -22,9 +22,9 @@ cd data
 # ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR576/SRR576938/SRR576938.fastq.gz
 ## genome fasta file got downloaded from NCBI website
 ## annotation track (gtf) was downloaded from UCSC table browser
+## annotation track (tsv) was downloaded from UCSC table browser (selecting fields to be output)
 # http://microbes.ucsc.edu/cgi-bin/hgTables?org=Escherichia+coli+K12&db=eschColi_K12&hgsid=1465191&hgta_doMainPage=1
-srun perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' \
-Escherichia_coli_K_12_MG1655.annotation.gtf > Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
+
 cd $home
 
 ## Create a directory for scripts
@@ -229,7 +229,6 @@ srun macs
 
 ## Run macs on the IP and the Control file
 srun macs -t ../02-Mapping/IP/SRR576933.bam -c ../02-Mapping/Control/SRR576938.bam --format BAM  --gsize 4639675 \
---name "FNR_Anaerobic_A" --bw 400 --diag &> MACS.out
 
 ###################################################
 ################# Peak Annotation
