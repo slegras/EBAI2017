@@ -170,7 +170,7 @@ srun bowtie
 ```
 This prints the help of the program. However, this is a bit difficult to read ! If you need to know more about the program, it's easier to directly check the manual on the [website](http://bowtie-bio.sourceforge.net/manual.shtml).
 
-2. bowtie needs the reference genome to align each read on it. This genome needs to be in a specific format (=index) for bowtie to be able to use it. Several pre-built indexes are available to download on the bowtie webpage, but our genome is not there. You will need to make this index file.
+2. bowtie needs the reference genome to align each read on it. This genome needs to be in a specific format (=index) for bowtie to be able to use it. Several pre-built indexes are available for download on the bowtie webpage, but our genome is not there. You will need to make this index file.
 
 3. Create a directory named **02-Mapping** in which to output mapping results
 ```bash
@@ -213,7 +213,7 @@ cd ..
 ```
 
 ### 3 - Mapping the experiment
-1. Create a directory named **IP** in which to mapping results for IP
+1. Create a directory named **IP** in which to put mapping results for IP
 ```bash
 mkdir IP
 ```
@@ -242,7 +242,7 @@ srun gzip ../../data/SRR576933.fastq
 ```  
 This should take few minutes as we work with a small genome. For the human genome, we would need either more time and more resources.
 
-The SAM format correspond to large text files, that can be compressed ("zipped") into BAM format. The BAM format are usually sorted and indexed for fast access to the data it contains.
+Bowtie output is a [SAM](https://samtools.github.io/hts-specs/SAMv1.pdf) file. The SAM format correspond to large text files, that can be compressed ("zipped") into BAM format. The BAM files are usually sorted and indexed for fast access to the data it contains. The index of a given bam file is names .bam.bai or .bai file. Some tools require to have the index of the bam file to process it.
 
 4. Sort the sam file and create a bam file using samtools
 ```bash
@@ -260,18 +260,16 @@ gzip SRR576933.sam
 ```
 
 **Analyze the result of the mapped reads:  
-Open the file SRR576933.out (for exemple using the "less" command), which contains some statistics about the mapping. How many reads were mapped ?**
+Open the file SRR576933.out (for example using the "less" command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample?. To quit less press 'q'**
 
 ### 4 - Mapping the control
-1. Repeat the steps above (steps 3-5) for the file SRR576938.fastq.gz.
+1. Repeat the steps above (in 3 - Mapping the experiment) for the file SRR576938.fastq.gz.
 
 **Analyze the result of the mapped reads:  
-Open the file SRR576938.out. How many reads were mapped ?**
-
-**At this point, you should have two SAM files, one for the experiment, one for the control. Check the size of your files, how large are they ?**
+Open the file SRR576938.out. How many reads were mapped?**
 
 ## Estimating the number of duplicated reads
-**Goal**: Obtain a BAM file with duplicated reads   
+**Goal**: Duplicated reads i.e reads mapped at the same positions in the genome are present in ChIP-seq results. They can arise for several reasons including a biased amplification during the PCR step of the library prep, DNA fragment coming from repetitive elements of the genome, sequencing saturation or the same clusters read several times on the flowcell (i.e optical duplicates). As analyzing ChIP-Seq data consist at some point in detecting signal enrichment, we can not keep duplicated reads for subsequent analysis. So let's detect them.   
 
 1. Go to the directory with alignment file of treatment (IP)
 ```bash
