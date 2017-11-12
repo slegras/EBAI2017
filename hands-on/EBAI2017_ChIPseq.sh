@@ -173,13 +173,18 @@ VALIDATION_STRINGENCY=STRICT
 cd $home
 
 ###################################################
-################# Bonus: PhantomPeakQualTools
+################# ChIP Quality Controls
 ## creating output directory for alignment
 mkdir 03-ChIPQualityControls
 
 ## Go to newly created directory
 cd 03-ChIPQualityControls
 
+### Deeptools fingerprint
+## Run deeptools fingerprint
+srun plotFingerprint -b ../02-Mapping/IP/SRR576933.bam ../02-Mapping/Control/SRR576938.bam -plot fingerprint.png
+
+### phantompeakqualtools
 ## create an R environment
 # conda create -c r --name R r
 # source activate R

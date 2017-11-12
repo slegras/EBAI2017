@@ -5,7 +5,7 @@
 3. [Connect to the server and set up your environment](#setup)
 4. [Quality control of the reads and statistics](#qc)
 5. [Mapping the reads with Bowtie](#mapping)
-6. [Bonus: checking two ENCODE quality metrics](#bonus)
+6. [ChIP quality controls](#cqc)
 7. [Visualizing the data in a genome browser](#visualize)
 8. [Peak calling with MACS](#macs)
 9. [Peak annotation](#annotation)
@@ -294,11 +294,10 @@ Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA20
 cd ../..
 ```
 
-## Bonus: checking two ENCODE quality metrics <a name="bonus"></a>
-**Goal**: This optional exercise aims at calculating the NSC and RSC ENCODE quality metrics. These metrics allow to classify the datasets (after mapping, contrary to FASTQC that works on raw reads) in regards to the NSC and RSC values observed in the ENCODE datasets (see ENCODE guidelines)
+## ChIP quality controls <a name="cqc"></a>
+**Goal**: The first exercise aims at plotting the **Lorenz curve** to assess the quality of the chIP. The second exercise aims at calculating the **NSC** and **RSC** ENCODE quality metrics. These metrics allow to classify the datasets (after mapping, contrary to FASTQC that works on raw reads) in regards to the NSC and RSC values observed in the ENCODE datasets (see ENCODE guidelines)
 
-### 1 - PhantomPeakQualTools
-
+### 1 - Plotting the Lorenz curve with Deeptools
 1. Create a directory named **03-ChIPQualityControls** in which to mapping results for IP
 ```bash
 mkdir 03-ChIPQualityControls
@@ -307,14 +306,22 @@ mkdir 03-ChIPQualityControls
 ```bash
 cd 03-ChIPQualityControls
 ```
-3. convert the BAM file into TagAlign format, specific to the program that calculates the quality metrics
+3. Run Deeptools [plotFingerprint](http://deeptools.readthedocs.io/en/latest/content/tools/plotFingerprint.html) to draw the Lorenz curve
+```bash
+srun plotFingerprint -b ../02-Mapping/IP/SRR576933.bam ../02-Mapping/Control/SRR576938.bam -plot fingerprint.png
+```
+
+**Look at the result files fingerprint.png. What do you think of it?**  
+
+### 2 - Checking two ENCODE quality metrics with PhantomPeakQualTools
+1. convert the BAM file into TagAlign format, specific to the program that calculates the quality metrics
 ```bash
 srun samtools view -F 0x0204 -o - ../02-Mapping/IP/SRR576933.bam | \
 gawk 'BEGIN{OFS="\t"}{if (and($2,16) > 0) {print $3,($4-1),($4-1+length($10)),"N","1000","-"}
 else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
  | gzip -c > SRR576933_experiment.tagAlign.gz
 ```
-4. Run phantompeakqualtools
+2. Run phantompeakqualtools
 ```bash
 srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_IP_phantompeaks
 ```
