@@ -473,13 +473,13 @@ cd 06-PeakAnnotation
 ### 1- Map peaks to genomic features and draw metagenes
 CEAS from the Liu lab can be used [http://liulab.dfci.harvard.edu/CEAS/usermanual.html]
 
-1. Get proper format table for the E. coli genome
-
-CEAS provides RefSeq tables in sqlite3 files for several genomes (ce4 and ce6 for worm, dm2 and dm3 for fly, mm8 and mm9 for mouse, hg18 and hg19 for human) but not for E. coli. However, we can generate one from our input wig file.
+CEAS provides RefSeq tables in sqlite3 files for several genomes (ce4 and ce6 for worm, dm2 and dm3 for fly, mm8 and mm9 for mouse, hg18 and hg19 for human). It can be used on other genomes if you create your own reference genome from a deeply sequenced input wig file with the following command. 
 ```bash
 # build_genomeBG [options] -d db -g gt -w wig -o ot
 ```
-2. Select the parameters to use for CEAS
+For the sake of time and intereste of the analysis of the results we will analyse the results obtained on human ChIP-seq data for H3K27ac.
+
+1. Look into CEAS options
 
 srun python ceas  --help
 
@@ -505,28 +505,33 @@ The following is a detailed description of the options used to control CEAS.
   * --gn-group-names	The names of the gene groups in --gn-groups. The gene group names are separated by commas. (e.g. --gn-group-names='top 10%,bottom 10%'). These group names appear in the legends of the wig profiling plots. If no group names given, the groups are represented as 'Group 1, Group2,...Group n'.
   * --gname2	Whether or not use the 'name2' column of the gene annotation table when reading the gene IDs in the files given through --gn-groups. This flag is meaningful only with --gn-groups.
 
-4. Run CEAS
+4. To run CEAS
 ```bash
-# ceas [options] -g gdb -b bed -w wig
+# python ceas [options] -g gdb -b bed -w wig
 ```
 
 Note: To save time, you can run each part of the program (annotated features or metagenes) separately
 
 To run ChIP region annotation and gene-centered annotation only
 ```bash
-#  ceas [options] -g gdb -b bed
+#  python ceas [options] -g gdb -b bed
 ```
 
 To run  average signal profiling only
 ```bash
-#  ceas [options] -g gdb -w wig
+#  python ceas [options] -g gdb -w wig
 ```
 
-**Are there specific chromosomes that show high binding of FNR in your sample?**
+To look at the results obtained for CEAS run on human H3K27ac ChIP-seq data with the foolowing command line:
 
-**Does this transcription factor have a preference for binding at promoters or annotated exons?**
+```bash
+#  python ceas --pf-res 200 --span 5000 --rel-dist 5000 -g hg19.refGene -b H3K27ac.bed -w H3K27ac.wig --name H3K27ac
+```
+open the pdf file in the ceas folder
 
-**In which regions of the genome are most FNR binding peaks found?**
+**Are there specific chromosomes that show high level of H3K27ac?**
+
+**In which genomic regions is it enriched?**
 
 **What is the distribution of the peaks along the genes?**
 
