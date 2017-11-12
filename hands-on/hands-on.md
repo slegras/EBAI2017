@@ -568,12 +568,12 @@ n
 
 **What are all the possible gene types?**
 
-5. Retreive the list of closest genes
+5. Retrieve the list of closest genes
 ```bash
 awk -F\\t '{print $16}' FNR_Anaerobic_A_annotated_peaks.tsv > FNR_Anaerobic_A_annotated_peaks_geneList.tsv
 ```
 
-6. Retreive only the genes that encode for proteins
+6. Retrieve only the genes that encode for proteins
 ```bash
 awk -F\\t '{print $19}' E1_chro_annotatedPeaks.txt | sort | uniq -c
 ```

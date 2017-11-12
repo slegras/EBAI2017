@@ -196,6 +196,9 @@ else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
 ## Run phantompeakqualtools
 srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_IP_phantompeaks
 
+## Source back the chipseq environment
+# source activate eba2017_chipseq
+
 ## Go to home working directory
 cd $home
 
