@@ -583,24 +583,24 @@ n
 
 5. Retrieve the list of closest genes
 ```bash
-# awk -F\\t '{print $16}' FNR_Anaerobic_A_annotated_peaks.tsv > FNR_Anaerobic_A_annotated_peaks_geneList.tsv
+# awk '{print $11}' FNR_Anaerobic_A_final_peaks_annotation.tsv 
 ```
 
 6. Retrieve only the genes that encode for proteins
 ```bash
-# awk -F\\t '{print $19}' E1_chro_annotatedPeaks.txt | sort | uniq -c
+# awk '{print $8}' FNR_Anaerobic_A_final_peaks_annotation.tsv | sort | uniq -c
 ```
 
 **How many protein-coding genes are there in the file?**
 
 ```bash
-# awk -F\\t '{if ($19=="protein-coding") print $16}' FNR_Anaerobic_A_annotated_peaks.tsv > FNR_Anaerobic_A_annotated_peaks_proteinCodingGeneList.tsv
+# awk '{if ($8=="promoter-TSS") print $11}' FNR_Anaerobic_A_final_peaks_annotation.tsv
 ```
 
 **Is the number of genes in your file consistent with the previous reply?**
 
 ```bash
-# cat FNR_Anaerobic_A_annotated_peaks_proteinCodingGeneList.tsv | wc -l
+# awk '{if ($8=="promoter-TSS") print $11}' FNR_Anaerobic_A_final_peaks_annotation.tsv  | wc -l
 
 ```
 
@@ -614,10 +614,12 @@ cd ..
 ```
 
 ### 3- Search for Biological Processes, Molecular Functions or Cellular Compartments enrichment
-This gene list can then be used with Gene Ontology search tools such as DAVID or IPA.
+This gene list can then be used with Gene Ontology search tools such as Database for Annotation, Visualization and Integrated Discovery  (DAVID) or Ingenuity Pathway Analysis (IPA).
+
 Input your gene list on the DAVID website: https://david.ncifcrf.gov/
 
-**What are the biological processes enriched in the list of genes associated to the peaks?**
+**Are there biological processes enriched in the list of genes associated to the peaks?**
+**Are these genes enriched in some KEGG map?**
 
 
 ## Motif analysis <a name="motif"></a>
