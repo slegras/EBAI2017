@@ -285,6 +285,7 @@ mkdir 06-MotifAnalysis
 ## Go to the newly created directory
 cd 06-MotifAnalysis
 
+### Extract fasta sequence of peaks
 ## Uncompress the genome file
 srun gunzip ../data/Escherichia_coli_K12.fasta.gz
 
@@ -294,6 +295,20 @@ srun samtools faidx ../data/Escherichia_coli_K12.fasta
 ## Extract fasta sequence from genomic coordinate of peaks
 srun bedtools getfasta -fi ../data/Escherichia_coli_K12.fasta \
 -bed ../04-PeakCalling/FNR_Anaerobic_A_peaks.bed -fo FNR_Anaerobic_A_peaks.fa
+
+## Compress back the genome file
+srun gzip ../data/Escherichia_coli_K12.fasta
+
+### Extract fasta sequence of peaks
+## Extract genomic coordinates of peaks summit +/- 100bp
+srun bedtools slop -b 100 -i ../04-PeakCalling/FNR_Anaerobic_A_summits.bed \
+-g ../data/Escherichia_coli_K12.fasta.fai > FNR_Anaerobic_A_summits+-100.bed
+
+## Uncompress the genome file
+srun gunzip ../data/Escherichia_coli_K12.fasta.gz
+
+## Extract fasta sequence from genomic coordinate of peaks
+srun bedtools getfasta -fi ../data/Escherichia_coli_K_12_MG1655.fasta -bed FNR_Anaerobic_A_summits+-100.bed -fo FNR_Anaerobic_A_summits+-100.fa
 
 ## Compress back the genome file
 srun gzip ../data/Escherichia_coli_K12.fasta

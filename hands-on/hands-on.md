@@ -481,22 +481,22 @@ This prints the help of the program:
 Usage: ceas [options] -g gdb (-b bed | -w wig )
 
 The following is a detailed description of the options used to control CEAS.
-  *--version	Show program's version number and exit.
-  *-h, --help	Show this help message and exit.
-  *-b, --bed	BED file with ChIP regions.
-  *-w, --wig	WIG file for either wig profiling or genome background annotation. WARNING: CEAS accepts fixedStep and variableStep WIG file. The user must set --bgflag for genome background annotation.
-  *-e, --ebed	BED file of extra regions of interest (e.g. non-coding regions)
-  *-g, --gdb Gene annotation table file (e.g. a refGene table in sqlite3 db format provided through the CEAS web, http://liulab.dfci.harvard.edu/CEAS/download.html). If the sqlite3 file does not have the genome background annotation, the user must turn on --bg and have an input WIG file.
-  *--name	Experiment name. This will be used to name the output files (R script, PDF file and XLS file). If an experiment name is not given, the stem of the input BED file name will be used instead. (e.g. if BED is peaks.bed, 'peaks' will be used as a name.) If a BED file is not given, the input WIG file name will be used.
-  *--sizes	Promoter (also downstream) sizes for ChIP region annotation. Comma-separated three integer numbers or a single number will be accepted. If a single integer is given, it will be segmented into three equal fractions (i.e. 3000 is equivalent to 1000,2000,3000). DEFAULT: 1000,2000,3000. WARNING: numbers > 10000bp are automatically fixed to 10000bp.
-  *--bisizes	Bidirectional-promoter sizes for ChIP region annotation. The user can choose two numbers to define bidirectional promoters. Comma-separated two values or a single value can be given. If a single value is given, it will be segmented into two equal fractions (i.e. 5000 is equivalent to 2500,5000) DEFAULT: 2500,5000bp. WARNING: numbers > 20000bp are automatically fixed to 20000bp.
-  *--bg	Run genome BG annotation. WARNING: this flag is effective only if a WIG file is given through -w (--wig). Otherwise, ignored.
-  *--span	Span from TSS and TTS in the gene-centered annotation. ChIP regions within this range from TSS and TTS are considered when calculating the coverage rates of promoter and downstream by ChIP regions. DEFAULT=3000bp
-  *--pf-res	Wig profiling resolution, DEFAULT: 50bp. WARNING: a number smaller than the wig interval (resolution) may cause aliasing error.
-  *--rel-dist	Relative distance to TSS/TTS in wig profiling. DEFAULT: 3000bp
-  *--gn-groups	Gene-groups of particular interest in wig profiling. Each gene group file must have gene names in the 1s column. The file names are separated by commas w/ no space (e.g. --gn-groups=top10.txt,bottom10.txt)
-  *--gn-group-names	The names of the gene groups in --gn-groups. The gene group names are separated by commas. (e.g. --gn-group-names='top 10%,bottom 10%'). These group names appear in the legends of the wig profiling plots. If no group names given, the groups are represented as 'Group 1, Group2,...Group n'.
-  *--gname2	Whether or not use the 'name2' column of the gene annotation table when reading the gene IDs in the files given through --gn-groups. This flag is meaningful only with --gn-groups.
+  * --version	Show program's version number and exit.
+  * -h, --help	Show this help message and exit.
+  * -b, --bed	BED file with ChIP regions.
+  * -w, --wig	WIG file for either wig profiling or genome background annotation. WARNING: CEAS accepts fixedStep and variableStep WIG file. The user must set --bgflag for genome background annotation.
+  * -e, --ebed	BED file of extra regions of interest (e.g. non-coding regions)
+  * -g, --gdb Gene annotation table file (e.g. a refGene table in sqlite3 db format provided through the CEAS web, http://liulab.dfci.harvard.edu/CEAS/download.html). If the sqlite3 file does not have the genome background annotation, the user must turn on --bg and have an input WIG file.
+  * --name	Experiment name. This will be used to name the output files (R script, PDF file and XLS file). If an experiment name is not given, the stem of the input BED file name will be used instead. (e.g. if BED is peaks.bed, 'peaks' will be used as a name.) If a BED file is not given, the input WIG file name will be used.
+  * --sizes	Promoter (also downstream) sizes for ChIP region annotation. Comma-separated three integer numbers or a single number will be accepted. If a single integer is given, it will be segmented into three equal fractions (i.e. 3000 is equivalent to 1000,2000,3000). DEFAULT: 1000,2000,3000. WARNING: numbers > 10000bp are automatically fixed to 10000bp.
+  * --bisizes	Bidirectional-promoter sizes for ChIP region annotation. The user can choose two numbers to define bidirectional promoters. Comma-separated two values or a single value can be given. If a single value is given, it will be segmented into two equal fractions (i.e. 5000 is equivalent to 2500,5000) DEFAULT: 2500,5000bp. WARNING: numbers > 20000bp are automatically fixed to 20000bp.
+  * --bg	Run genome BG annotation. WARNING: this flag is effective only if a WIG file is given through -w (--wig). Otherwise, ignored.
+  * --span	Span from TSS and TTS in the gene-centered annotation. ChIP regions within this range from TSS and TTS are considered when calculating the coverage rates of promoter and downstream by ChIP regions. DEFAULT=3000bp
+  * --pf-res	Wig profiling resolution, DEFAULT: 50bp. WARNING: a number smaller than the wig interval (resolution) may cause aliasing error.
+  * --rel-dist	Relative distance to TSS/TTS in wig profiling. DEFAULT: 3000bp
+  * --gn-groups	Gene-groups of particular interest in wig profiling. Each gene group file must have gene names in the 1s column. The file names are separated by commas w/ no space (e.g. --gn-groups=top10.txt,bottom10.txt)
+  * --gn-group-names	The names of the gene groups in --gn-groups. The gene group names are separated by commas. (e.g. --gn-group-names='top 10%,bottom 10%'). These group names appear in the legends of the wig profiling plots. If no group names given, the groups are represented as 'Group 1, Group2,...Group n'.
+  * --gname2	Whether or not use the 'name2' column of the gene annotation table when reading the gene IDs in the files given through --gn-groups. This flag is meaningful only with --gn-groups.
 
 4. Run CEAS
 ```bash
@@ -653,16 +653,22 @@ srun gzip ../data/Escherichia_coli_K_12_MG1655.fasta
 7. The Web page also displays a link, You can already click on this link. The report will be progressively updated during the processing of the workflow.
 
 ### 3 - Motif discovery with RSAT (short peaks)
-=> UTILISER BEDTOOLS SLOP (prends en compte les bornes du génome)
-1. Restrict the dataset to the summit of the peaks +/- 100bp
+1. Restrict the dataset to the summit of the peaks +/- 100bp using bedtools slop. Using bedtools slop to extend genomic coordinates allow not to go beyond chromosome boundaries as the user give the size of chromosomes as input (see fai file).
 ```bash
-perl -lane '$start=$F[1]-100 ; $end = $F[2]+100 ; print "$F[0]\t$start\t$end"' macs14_summits.bed > macs14_summits+-100.bed
+srun bedtools slop -b 100 -i ../04-PeakCalling/FNR_Anaerobic_A_summits.bed -g ../data/Escherichia_coli_K12.fasta.fai > FNR_Anaerobic_A_summits+-100.bed
 ```
 2. Extract the sequences for this BED file
 ```bash
-bedtools getfasta -fi Escherichia_coli_K_12_MG1655.fasta -bed macs14_summits+-100.bed -fo macs14_summits+-100.fa
+## Uncompress the genome file
+srun gunzip ../data/Escherichia_coli_K_12_MG1655.fasta.gz
+
+## Extract fasta sequence from genomic coordinate of peaks
+srun bedtools getfasta -fi ../data/Escherichia_coli_K_12_MG1655.fasta -bed FNR_Anaerobic_A_summits+-100.bed -fo FNR_Anaerobic_A_summits+-100.fa
+
+## Compress back the genome file
+srun gzip ../data/Escherichia_coli_K_12_MG1655.fasta
 ```
-3. Run RSAT peak-motifs with the same options, but choosing as input file this new dataset (macs14_summits+-100.fa)
+3. Run RSAT peak-motifs with the same options, but choosing as input file this new dataset (FNR_Anaerobic_A_summits+-100.fa)
 and setting the title box to **FNR Anaerobic A summit +/-100bp**
 
 ## FAQ <a name="faq"></a>
