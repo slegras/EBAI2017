@@ -626,6 +626,9 @@ cd 06-MotifAnalysis
 ## Uncompress the genome file
 srun gunzip ../data/Escherichia_coli_K_12_MG1655.fasta.gz
 
+## Create an index of the genome fasta file
+srun samtools faidx ../data/Escherichia_coli_K12.fasta
+
 ## Extract fasta sequence from genomic coordinate of peaks
 srun bedtools getfasta -fi ../data/Escherichia_coli_K_12_MG1655.fasta \
 -bed ../04-PeakCalling/FNR_Anaerobic_A_peaks.bed -fo FNR_Anaerobic_A_peaks.fa
