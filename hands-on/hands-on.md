@@ -470,7 +470,7 @@ CEAS from the liu lab can be used [http://liulab.dfci.harvard.edu/CEAS/usermanua
 
 CEAS provides RefSeq tables in sqlite3 files for several genomes (ce4 and ce6 for worm, dm2 and dm3 for fly, mm8 and mm9 for mouse, hg18 and hg19 for human) but not for E. coli. However, we can generate one from our input wig file.
 ```bash
-build_genomeBG [options] -d db -g gt -w wig -o ot
+# build_genomeBG [options] -d db -g gt -w wig -o ot
 ```
 2. Select the parameters to use for CEAS
 
@@ -500,19 +500,19 @@ The following is a detailed description of the options used to control CEAS.
 
 4. Run CEAS
 ```bash
-ceas [options] -g gdb -b bed -w wig
+# ceas [options] -g gdb -b bed -w wig
 ```
 
 Note: To save time, you can run each part of the program (annotated features or metagenes) separately
 
 To run ChIP region annotation and gene-centered annotation only
 ```bash
-$ ceas [options] -g gdb -b bed
+#  ceas [options] -g gdb -b bed
 ```
 
 To run  average signal profiling only
 ```bash
-$ ceas [options] -g gdb -w wig
+#  ceas [options] -g gdb -w wig
 ```
 
 **Are there specific chromosomes that show high binding of FNR in your sample?**
@@ -570,24 +570,24 @@ n
 
 5. Retrieve the list of closest genes
 ```bash
-awk -F\\t '{print $16}' FNR_Anaerobic_A_annotated_peaks.tsv > FNR_Anaerobic_A_annotated_peaks_geneList.tsv
+# awk -F\\t '{print $16}' FNR_Anaerobic_A_annotated_peaks.tsv > FNR_Anaerobic_A_annotated_peaks_geneList.tsv
 ```
 
 6. Retrieve only the genes that encode for proteins
 ```bash
-awk -F\\t '{print $19}' E1_chro_annotatedPeaks.txt | sort | uniq -c
+# awk -F\\t '{print $19}' E1_chro_annotatedPeaks.txt | sort | uniq -c
 ```
 
 **How many protein-coding genes are there in the file?**
 
 ```bash
-awk -F\\t '{if ($19=="protein-coding") print $16}' FNR_Anaerobic_A_annotated_peaks.tsv > FNR_Anaerobic_A_annotated_peaks_proteinCodingGeneList.tsv
+# awk -F\\t '{if ($19=="protein-coding") print $16}' FNR_Anaerobic_A_annotated_peaks.tsv > FNR_Anaerobic_A_annotated_peaks_proteinCodingGeneList.tsv
 ```
 
 **Is the number of genes in your file consistent with the previous reply?**
 
 ```bash
-cat FNR_Anaerobic_A_annotated_peaks_proteinCodingGeneList.tsv | wc -l
+# cat FNR_Anaerobic_A_annotated_peaks_proteinCodingGeneList.tsv | wc -l
 
 ```
 
