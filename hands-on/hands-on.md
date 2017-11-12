@@ -567,10 +567,10 @@ FNR_Anaerobic_A_peaks.bed \
 R
 d <- read.table("FNR_Anaerobic_A_annotated_peaks.tsv", sep="\t", h=T)
 gene.symbol <- read.table("../data/Escherichia_coli_K_12_MG1655.annotation.tsv.gz", h=F)
-d.annot <- merge(d[,c(seq(1,6,1),8,10,11)], gene.symbol, by.x="Nearest.PromoterID", by.y="V1")
-colnames(d.annot)[2] <- "PeakID"
-colnames(d.annot)[dim(d.annot)[2]] <- "Gene.Symbol"
-write.table(d.annot, "FNR_Anaerobic_A_final_peaks_annotation.tsv", col.names=T, row.names=F, sep="\t", quote=F)
+d.annot <- merge(d[,c(seq(1,6,1),8,10,11)], gene.symbol, by.x="Nearest.PromoterID", by.y="V1") # to link the two tables by the gene ref
+colnames(d.annot)[2] <- "PeakID"  # name the 2d column of the new file "PeakID"
+colnames(d.annot)[dim(d.annot)[2]] <- "Gene.Symbol" # name the last column of the new file "Gene.Symbol"
+write.table(d.annot, "FNR_Anaerobic_A_final_peaks_annotation.tsv", col.names=T, row.names=F, sep="\t", quote=F) # write a new file containing this table
 quit()
 n
 ```
