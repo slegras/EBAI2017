@@ -474,7 +474,7 @@ cd 06-PeakAnnotation
 ### 1- Map peaks to genomic features and draw metagenes
 CEAS from the Liu lab can be used [http://liulab.dfci.harvard.edu/CEAS/usermanual.html]
 
-CEAS provides RefSeq tables in sqlite3 files for several genomes (ce4 and ce6 for worm, dm2 and dm3 for fly, mm8 and mm9 for mouse, hg18 and hg19 for human). It can be used on other genomes if you create your own reference genome from a deeply sequenced input wig file with the following command. 
+CEAS provides RefSeq tables in sqlite3 files for several genomes (ce4 and ce6 for worm, dm2 and dm3 for fly, mm8 and mm9 for mouse, hg18 and hg19 for human). It can be used on other genomes if you create your own reference genome from a deeply sequenced input wig file with the following command.
 ```bash
 # build_genomeBG [options] -d db -g gt -w wig -o ot
 ```
@@ -541,9 +541,13 @@ open the pdf file in the ceas folder
 
 [annotatePeaks.pl](http://homer.ucsd.edu/homer/ngs/annotation.html) from Homer associates peaks with nearby genes.
 
-1. Use the annotation file data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz. First start by uncompress the file
+1. Use the annotation file data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz and the genome file srun gunzip data/Escherichia_coli_K12.fasta.gz. First start by uncompress the files
 ```bash
+## Uncompress annotation file
 srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
+
+## Uncompress genome file
+srun gunzip ../data/Escherichia_coli_K12.fasta.gz
 ```
 2. Create a file suitable for annotatePeaks.pl
 ```bash
@@ -581,12 +585,12 @@ n
 
 **What are all the possible gene types?**
 
-5. Retrieve the list of closest genes
+6. Retrieve the list of closest genes
 ```bash
 # awk '{print $11}' FNR_Anaerobic_A_final_peaks_annotation.tsv 
 ```
 
-6. Retrieve only the genes that encode for proteins
+7. Retrieve only the genes that encode for proteins
 ```bash
 # awk '{print $8}' FNR_Anaerobic_A_final_peaks_annotation.tsv | sort | uniq -c
 ```
@@ -604,8 +608,14 @@ n
 
 ```
 
-7. Compress back the annotation file
+8. Compress back the annotation file
+```bash
+## Compress annotation file
 srun gzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
+
+## Compress back genome file
+srun gzip ../data/Escherichia_coli_K12.fasta
+```
 
 Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
 ```bash

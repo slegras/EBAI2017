@@ -254,6 +254,9 @@ cd 06-PeakAnnotation
 ## Uncompress annotation file
 srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
 
+## Uncompress genome file
+srun gunzip ../data/Escherichia_coli_K12.fasta.gz
+
 ## Create a BED file with 6 columns
 awk -F "\t" '{print $0"\t+"}' ../05-PeakCalling/FNR_Anaerobic_A_peaks.bed > FNR_Anaerobic_A_peaks.bed
 
@@ -269,6 +272,9 @@ FNR_Anaerobic_A_peaks.bed \
 
 ## Compress annotation file
 srun gzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
+
+## Compress back genome file
+srun gzip ../data/Escherichia_coli_K12.fasta
 
 ## Add gene symbol annotation using R
 # source activate R
