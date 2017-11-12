@@ -5,13 +5,14 @@
 3. [Connect to the server and set up your environment](#setup)
 4. [Quality control of the reads and statistics](#qc)
 5. [Mapping the reads with Bowtie](#mapping)
-6. [ChIP quality controls](#cqc)
-7. [Visualizing the data in a genome browser](#visualize)
-8. [Peak calling with MACS](#macs)
-9. [Peak annotation](#annotation)
-10. [Motif analysis](#motif)
-11. [FAQ](#faq)
-12. [References](#ref)
+6. [Estimating the number of duplicated reads](#dup)
+7. [ChIP quality controls](#cqc)
+8. [Visualizing the data in a genome browser](#visualize)
+9. [Peak calling with MACS](#macs)
+10. [Peak annotation](#annotation)
+11. [Motif analysis](#motif)
+12. [FAQ](#faq)
+13. [References](#ref)
 
 ## Introduction <a name="introduction"></a>
 ### Goal
@@ -212,7 +213,7 @@ srun gzip ../../data/Escherichia_coli_K12.fasta
 cd ..
 ```
 
-### 3 - Mapping the experiment
+### 4 - Mapping the experiment
 1. Create a directory named **IP** in which to put mapping results for IP
 ```bash
 mkdir IP
@@ -262,13 +263,13 @@ gzip SRR576933.sam
 **Analyze the result of the mapped reads:  
 Open the file SRR576933.out (for example using the "less" command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample?. To quit less press 'q'**
 
-### 4 - Mapping the control
+### 5 - Mapping the control
 1. Repeat the steps above (in 3 - Mapping the experiment) for the file SRR576938.fastq.gz.
 
 **Analyze the result of the mapped reads:  
 Open the file SRR576938.out. How many reads were mapped?**
 
-## Estimating the number of duplicated reads
+## Estimating the number of duplicated reads <a name="dup"></a>
 **Goal**: Duplicated reads i.e reads mapped at the same positions in the genome are present in ChIP-seq results. They can arise for several reasons including a biased amplification during the PCR step of the library prep, DNA fragment coming from repetitive elements of the genome, sequencing saturation or the same clusters read several times on the flowcell (i.e optical duplicates). As analyzing ChIP-Seq data consist at some point in detecting signal enrichment, we can not keep duplicated reads for subsequent analysis. So let's detect them.   
 
 1. Go to the directory with alignment file of treatment (IP)
@@ -297,7 +298,7 @@ cd ../..
 ## ChIP quality controls <a name="cqc"></a>
 **Goal**: The first exercise aims at plotting the **Lorenz curve** to assess the quality of the chIP. The second exercise aims at calculating the **NSC** and **RSC** ENCODE quality metrics. These metrics allow to classify the datasets (after mapping, contrary to FASTQC that works on raw reads) in regards to the NSC and RSC values observed in the ENCODE datasets (see ENCODE guidelines)
 
-### 1 - Plotting the Lorenz curve with Deeptools
+### 1 - Plot the Lorenz curve with Deeptools
 1. Create a directory named **03-ChIPQualityControls** in which to mapping results for IP
 ```bash
 mkdir 03-ChIPQualityControls
