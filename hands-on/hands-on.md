@@ -35,7 +35,7 @@ Within an article of interest, search for a sentence mentioning the deposition o
 *"All genome-wide data from this publication have been deposited in NCBI’s Gene Expression Omnibus (**GSE41195**)."*
 We will thus use the **GSE41195** identifier to retrieve the dataset from the **NCBI GEO** (Gene Expression Omnibus) database.
 
-NGS datasets are (usually) made freely accessible for other scientists, by depositing these datasets into specialized databanks. [Sequence Read Archive (SRA)](http://www.ncbi.nlm.nih.gov/sra) located in USA hosted by NCBI, and its european equivalent [European Nucleotide Archive (ENA)](http://www.ebi.ac.uk/ena) located in England hosted by EBI both contains **raw reads**.
+NGS datasets are (usually) made freely accessible for other scientists, by depositing these datasets into specialized databanks. [Sequence Read Archive (SRA)](http://www.ncbi.nlm.nih.gov/sra) located in USA hosted by NCBI, and its European equivalent [European Nucleotide Archive (ENA)](http://www.ebi.ac.uk/ena) located in England hosted by EBI both contains **raw reads**.
 
 Functional genomic datasets (transcriptomics, genome-wide binding such as ChIP-seq,...) are deposited in the databases [Gene Expression Omnibus (GEO)](http://www.ncbi.nlm.nih.gov/geo/) or its European equivalent [ArrayExpress](https://www.ebi.ac.uk/arrayexpress/).
 
@@ -299,13 +299,13 @@ cd ../..
 
 ### 1 - PhantomPeakQualTools
 
-1. Create a directory named **00-PhantomPeakQualTools** in which to mapping results for IP
+1. Create a directory named **03-ChIPQualityControls** in which to mapping results for IP
 ```bash
-mkdir 00-PhantomPeakQualTools
+mkdir 03-ChIPQualityControls
 ```
 2. Go to the newly created directory
 ```bash
-cd 00-PhantomPeakQualTools
+cd 03-ChIPQualityControls
 ```
 3. convert the BAM file into TagAlign format, specific to the program that calculates the quality metrics
 ```bash
@@ -327,7 +327,7 @@ What is the quality of this dataset ?**
 
 Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
 ```bash
-## If you are in 00-PhantomPeakQualTools
+## If you are in 03-ChIPQualityControls
 cd ..
 ```
 
@@ -364,13 +364,13 @@ However, looking at BAM file as such does not allow to directly compare the two 
 ```bash
 srun bamCoverage --help
 ```
-2. Create a directory named **03-Visualization** to store bamCoverage outputs
+2. Create a directory named **04-Visualization** to store bamCoverage outputs
 ```bash
-mkdir 03-Visualization
+mkdir 04-Visualization
 ```
 3. Go to the newly created directory
 ```bash
-cd 03-Visualization
+cd 04-Visualization
 ```
 4. Generate a scaled bigwig file on the IP
 ```bash
@@ -380,8 +380,8 @@ srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
 ```
 5. Do it for the control (be careful for the control you will need **5G** of memory to process the file)
 6. Download the two bigwig files you have just generated
-  * 03-Visualization/SRR576933_nodup.bw
-  * 03-Visualization/SRR576938_nodup.bw
+  * 04-Visualization/SRR576933_nodup.bw
+  * 04-Visualization/SRR576938_nodup.bw
 7. Load the two bigwig files in IGV
   * File / Load from File...
   * Select the two bigwig files.
@@ -393,7 +393,7 @@ srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
 
 Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
 ```bash
-## If you are in 03-Visualization
+## If you are in 04-Visualization
 cd ..
 ```
 
@@ -401,16 +401,16 @@ cd ..
 **Goal**: Define the peaks, i.e. the region with a high density of reads, where the studied factor was bound
 
 ### 1 - Choosing a peak-calling program
-There are multiple programs to perform the peak-calling step. Some are more directed towards histone marks (broad peaks) while others are specific to narrow peaks (transcription factors). Here we will use MACS version 1.4.2 because it's known to produce generally good results, and it is well-maintained by the developper. A new version (MACS2) is being developped, but still in testing phase so we will not use it today.
+There are multiple programs to perform the peak-calling step. Some are more directed towards histone marks (broad peaks) while others are specific to narrow peaks (transcription factors). Here we will use MACS version 1.4.2 because it's known to produce generally good results, and it is well-maintained by the developer. A new version (MACS2) is being developed, but still in testing phase so we will not use it today.
 
 ### 2 - Calling the peaks
-1. Create a directory named **04-PeakCalling** to store annotatePeaks outputs
+1. Create a directory named **05-PeakCalling** to store annotatePeaks outputs
 ```bash
-mkdir 04-PeakCalling
+mkdir 05-PeakCalling
 ```
 2. Go to the newly created directory
 ```bash
-cd 04-PeakCalling
+cd 05-PeakCalling
 ```
 3. Try out MACS
 ```bash
@@ -421,7 +421,7 @@ This prints the help of the program.
   * ChIP-seq tag file (-t) is the name of our experiment (treatment) mapped read file SRR576933.bam
   * ChIP-seq control file (-c) is the name of our input (control) mapped read file SRR576938.bam
   * --format BAM indicates the input file are in BAM format. Other formats can be specified (SAM,BED...)
-  * --gsize Effective genome size: this is the size of the genome considered "usable" for peak calling. This value is given by the MACS developpers on their website. It is smaller than the complete genome because many regions are excluded (telomeres, highly repeated regions...). The default value is for human (2700000000.0), so we need to change it. As the value for E. coli is not provided, we will take the complete genome size 4639675.
+  * --gsize Effective genome size: this is the size of the genome considered "usable" for peak calling. This value is given by the MACS developers on their website. It is smaller than the complete genome because many regions are excluded (telomeres, highly repeated regions...). The default value is for human (2700000000.0), so we need to change it. As the value for E. coli is not provided, we will take the complete genome size 4639675.
   * --name provides a prefix for the output files. We set this to FNR_Anaerobic_A, but it could be any name.
   * --bw The bandwidth is the size of the fragment extracted from the gel electrophoresis or expected from sonication. By default, this value is 300bp. Usually, this value is indicated in the Methods section of publications. In the studied publication, a sentence mentions "400bp fragments (FNR libraries)". We thus set this value to 400.
   * --keep-dup specifies how MACS should treat the reads that are located at the exact same location (duplicates). The manual specifies that keeping only 1 representative of these "stacks" of reads is giving the best results. We doesn't mention it as 1 is the default value.
@@ -442,12 +442,12 @@ srun macs -t ../02-Mapping/IP/SRR576933.bam -c ../02-Mapping/Control/SRR576938.b
 
 Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
 ```bash
-## If you are in 04-PeakCalling
+## If you are in 05-PeakCalling
 cd ..
 ```
 
 ### 4 - Visualize peaks into IGV
-1. Go back to IGV and load the BED file of the peaks. Load the file 04-PeakCalling/FNR_Anaerobic_A_peaks.bed.
+1. Go back to IGV and load the BED file of the peaks. Load the file 05-PeakCalling/FNR_Anaerobic_A_peaks.bed.
 
 **Go back again to the genes we looked at earlier: b1127, b1108. Do you see peaks?**
 
@@ -455,16 +455,16 @@ cd ..
 
 **Goals**: Associate ChIP-seq peaks to genomic features, draw metagenes, identify closest genes and run ontology analyses
 
-1. Create a directory named **05-PeakAnnotation** to store annotatePeaks outputs
+1. Create a directory named **06-PeakAnnotation** to store annotatePeaks outputs
 ```bash
-mkdir 05-PeakAnnotation
+mkdir 06-PeakAnnotation
 ```
 2. Go to the newly created directory
 ```bash
-cd 05-PeakAnnotation
+cd 06-PeakAnnotation
 ```
 ### 1- Map peaks to genomic features and draw metagenes
-CEAS from the liu lab can be used [http://liulab.dfci.harvard.edu/CEAS/usermanual.html]
+CEAS from the Liu lab can be used [http://liulab.dfci.harvard.edu/CEAS/usermanual.html]
 
 1. Get proper format table for the E. coli genome
 
@@ -534,7 +534,7 @@ srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
 ```
 2. Create a file suitable for annotatePeaks.pl
 ```bash
-awk -F "\t" '{print $0"\t+"}' ../04-PeakCalling/FNR_Anaerobic_A_peaks.bed > FNR_Anaerobic_A_peaks.bed
+awk -F "\t" '{print $0"\t+"}' ../05-PeakCalling/FNR_Anaerobic_A_peaks.bed > FNR_Anaerobic_A_peaks.bed
 ```
 3. Try annotatePeaks.pl
 ```bash
@@ -596,7 +596,7 @@ srun gzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
 
 Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
 ```bash
-## If you are in 05-PeakAnnotation
+## If you are in 06-PeakAnnotation
 cd ..
 ```
 
@@ -613,13 +613,13 @@ Input your gene list on the DAVID website: https://david.ncifcrf.gov/
 ### 1 - Retrieve the peak sequences corresponding to the peak coordinate file (BED)
 
 For the motif analysis, you first need to extract the sequences corresponding to the peaks. There are several ways to do this (as usual...). If you work on a UCSC-supported organism, the easiest is to use RSAT fetch-sequences or Galaxy. Here, we will use Bedtools, as we have the genome of interest on our computer (Escherichia_coli_K_12_MG1655.fasta).
-1. Create a directory named **06-MotifAnalysis** to store data needed for motif analysis
+1. Create a directory named **07-MotifAnalysis** to store data needed for motif analysis
 ```bash
-mkdir 06-MotifAnalysis
+mkdir 07-MotifAnalysis
 ```
 2. Go to the newly created directory
 ```bash
-cd 06-MotifAnalysis
+cd 07-MotifAnalysis
 ```
 3. Extract peak sequence in fasta format
 ```bash
@@ -631,7 +631,7 @@ srun samtools faidx ../data/Escherichia_coli_K12.fasta
 
 ## Extract fasta sequence from genomic coordinate of peaks
 srun bedtools getfasta -fi ../data/Escherichia_coli_K_12_MG1655.fasta \
--bed ../04-PeakCalling/FNR_Anaerobic_A_peaks.bed -fo FNR_Anaerobic_A_peaks.fa
+-bed ../05-PeakCalling/FNR_Anaerobic_A_peaks.bed -fo FNR_Anaerobic_A_peaks.fa
 
 ## Compress back the genome file
 srun gzip ../data/Escherichia_coli_K_12_MG1655.fasta
@@ -645,7 +645,7 @@ srun gzip ../data/Escherichia_coli_K_12_MG1655.fasta
 3. The default peak-motifs web form only displays the essential options. There are only two mandatory parameters.
   * The title box, which you will set as FNR Anaerobic A b. The sequences, that you will upload from your computer, by clicking on the buttonChoose file, and select the file macs14_peaks.fa from your computer.
 4. We could launch the analysis like this, but we will now modify some of the advanced options in order to fine-tune the analysis according to your data set.
-  * Open the "Reduce peak sequences" title, and make sure the "Cut peak sequences: +/- " option is set to 0 (we wish to analyse our full dataset)
+  * Open the "Reduce peak sequences" title, and make sure the "Cut peak sequences: +/- " option is set to 0 (we wish to analyze our full dataset)
   * Open the “Motif Discovery parameters” title, and check the oligomer sizes 6 and 7 (but not 8). Check "Discover over-represented spaced word pairs [dyad-analysis]"
   Under “Compare discovered motifs with databases”, uncheck "JASPAR core vertebrates" and check RegulonDB prokaryotes (2012_05) as the studied organism is the bacteria E. coli.
 5. You can indicate your email address in order to receive notification of the task submission and completion. This is particularly useful because the full analysis may take some time for very large datasets.
@@ -655,7 +655,7 @@ srun gzip ../data/Escherichia_coli_K_12_MG1655.fasta
 ### 3 - Motif discovery with RSAT (short peaks)
 1. Restrict the dataset to the summit of the peaks +/- 100bp using bedtools slop. Using bedtools slop to extend genomic coordinates allow not to go beyond chromosome boundaries as the user give the size of chromosomes as input (see fai file).
 ```bash
-srun bedtools slop -b 100 -i ../04-PeakCalling/FNR_Anaerobic_A_summits.bed -g ../data/Escherichia_coli_K12.fasta.fai > FNR_Anaerobic_A_summits+-100.bed
+srun bedtools slop -b 100 -i ../05-PeakCalling/FNR_Anaerobic_A_summits.bed -g ../data/Escherichia_coli_K12.fasta.fai > FNR_Anaerobic_A_summits+-100.bed
 ```
 2. Extract the sequences for this BED file
 ```bash

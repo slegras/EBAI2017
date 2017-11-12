@@ -175,10 +175,10 @@ cd $home
 ###################################################
 ################# Bonus: PhantomPeakQualTools
 ## creating output directory for alignment
-mkdir 00-PhantomPeakQualTools
+mkdir 03-ChIPQualityControls
 
 ## Go to newly created directory
-cd 00-PhantomPeakQualTools
+cd 03-ChIPQualityControls
 
 ## create an R environment
 # conda create -c r --name R r
@@ -205,10 +205,10 @@ cd $home
 ###################################################
 ################# visualization
 ## Create a directory to store visualization files
-mkdir 03-Visualization
+mkdir 04-Visualization
 
 ## Go to the newly created directory
-cd 03-Visualization
+cd 04-Visualization
 
 ## Test bamCoverage
 srun bamCoverage --help
@@ -226,10 +226,10 @@ srun --mem=5G bamCoverage --bam ../02-Mapping/Control/Marked_SRR576938.bam \
 ###################################################
 ################# Peak Calling
 ## Create a directory to store peak calling result files
-mkdir 04-PeakCalling
+mkdir 05-PeakCalling
 
 ## Go to the newly created directory
-cd 04-PeakCalling
+cd 05-PeakCalling
 
 ## Check macs parameters
 srun macs
@@ -241,16 +241,16 @@ srun macs -t ../02-Mapping/IP/SRR576933.bam -c ../02-Mapping/Control/SRR576938.b
 ###################################################
 ################# Peak Annotation
 ## Create a directory to store peak annotation data
-mkdir 05-PeakAnnotation
+mkdir 06-PeakAnnotation
 
 ## Go to the newly created directory
-cd 05-PeakAnnotation
+cd 06-PeakAnnotation
 
 ## Uncompress annotation file
 srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
 
 ## Create a BED file with 6 columns
-awk -F "\t" '{print $0"\t+"}' ../04-PeakCalling/FNR_Anaerobic_A_peaks.bed > FNR_Anaerobic_A_peaks.bed
+awk -F "\t" '{print $0"\t+"}' ../05-PeakCalling/FNR_Anaerobic_A_peaks.bed > FNR_Anaerobic_A_peaks.bed
 
 ## Try it out
 srun annotatePeaks.pl
@@ -281,10 +281,10 @@ n
 ###################################################
 ################# Motif analysis
 ## Create a directory to store data needed from motif analysis
-mkdir 06-MotifAnalysis
+mkdir 07-MotifAnalysis
 
 ## Go to the newly created directory
-cd 06-MotifAnalysis
+cd 07-MotifAnalysis
 
 ### Extract fasta sequence of peaks
 ## Uncompress the genome file
@@ -295,14 +295,14 @@ srun samtools faidx ../data/Escherichia_coli_K12.fasta
 
 ## Extract fasta sequence from genomic coordinate of peaks
 srun bedtools getfasta -fi ../data/Escherichia_coli_K12.fasta \
--bed ../04-PeakCalling/FNR_Anaerobic_A_peaks.bed -fo FNR_Anaerobic_A_peaks.fa
+-bed ../05-PeakCalling/FNR_Anaerobic_A_peaks.bed -fo FNR_Anaerobic_A_peaks.fa
 
 ## Compress back the genome file
 srun gzip ../data/Escherichia_coli_K12.fasta
 
 ### Extract fasta sequence of peaks
 ## Extract genomic coordinates of peaks summit +/- 100bp
-srun bedtools slop -b 100 -i ../04-PeakCalling/FNR_Anaerobic_A_summits.bed \
+srun bedtools slop -b 100 -i ../05-PeakCalling/FNR_Anaerobic_A_summits.bed \
 -g ../data/Escherichia_coli_K12.fasta.fai > FNR_Anaerobic_A_summits+-100.bed
 
 ## Uncompress the genome file
