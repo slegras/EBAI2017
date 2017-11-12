@@ -266,6 +266,7 @@ FNR_Anaerobic_A_peaks.bed \
 srun gzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
 
 ## Add gene symbol annotation using R
+# source activate R
 R
 d <- read.table("FNR_Anaerobic_A_annotated_peaks.tsv", sep="\t", h=T)
 gene.symbol <- read.table("../data/Escherichia_coli_K_12_MG1655.annotation.tsv.gz", h=F)
@@ -275,7 +276,7 @@ colnames(d.annot)[dim(d.annot)[2]] <- "Gene.Symbol"
 write.table(d.annot, "FNR_Anaerobic_A_final_peaks_annotation.tsv", col.names=T, row.names=F, sep="\t", quote=F)
 quit()
 n
-
+# source activate eba2017_chipseq
 
 ###################################################
 ################# Motif analysis
