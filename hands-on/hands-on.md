@@ -472,39 +472,24 @@ mkdir 06-PeakAnnotation
 cd 06-PeakAnnotation
 ```
 ### 1- Map peaks to genomic features and draw metagenes
-CEAS from the Liu lab can be used [http://liulab.dfci.harvard.edu/CEAS/usermanual.html]
+We will use CEAS from the Liu lab  [http://liulab.dfci.harvard.edu/CEAS/usermanual.html]
 
-CEAS provides RefSeq tables in sqlite3 files for several genomes (ce4 and ce6 for worm, dm2 and dm3 for fly, mm8 and mm9 for mouse, hg18 and hg19 for human). It can be used on other genomes if you create your own reference genome from a deeply sequenced input wig file with the following command.
+CEAS is a good program, but does not support microbial genomes. It supports mouse, human, drosophila, so for this exercise, we will analyse the results obtained on human ChIP-seq data for H3K27ac.
+
+1. Try out CEAS
 ```bash
-# build_genomeBG [options] -d db -g gt -w wig -o ot
-```
-For the sake of time and intereste of the analysis of the results we will analyse the results obtained on human ChIP-seq data for H3K27ac.
-
-1. Look into CEAS options
-
 srun python ceas  --help
+```
+This prints the help of the program.
+2. Let's see the parameters of CEAS before launching the analysis:
 
-This prints the help of the program:
-
-Usage: ceas [options] -g gdb (-b bed | -w wig )
-
-The following is a detailed description of the options used to control CEAS.
-  * --version	Show program's version number and exit.
-  * -h, --help	Show this help message and exit.
+  * -g, --gdb Gene annotation table file (e.g. a refGene table in sqlite3 db format provided through the CEAS web, http://liulab.dfci.harvard.edu/CEAS/download.html). If the sqlite3 file does not have the genome background annotation, the user must turn on --bg and have an input WIG file.
   * -b, --bed	BED file with ChIP regions.
   * -w, --wig	WIG file for either wig profiling or genome background annotation. WARNING: CEAS accepts fixedStep and variableStep WIG file. The user must set --bgflag for genome background annotation.
-  * -e, --ebed	BED file of extra regions of interest (e.g. non-coding regions)
-  * -g, --gdb Gene annotation table file (e.g. a refGene table in sqlite3 db format provided through the CEAS web, http://liulab.dfci.harvard.edu/CEAS/download.html). If the sqlite3 file does not have the genome background annotation, the user must turn on --bg and have an input WIG file.
-  * --name	Experiment name. This will be used to name the output files (R script, PDF file and XLS file). If an experiment name is not given, the stem of the input BED file name will be used instead. (e.g. if BED is peaks.bed, 'peaks' will be used as a name.) If a BED file is not given, the input WIG file name will be used.
-  * --sizes	Promoter (also downstream) sizes for ChIP region annotation. Comma-separated three integer numbers or a single number will be accepted. If a single integer is given, it will be segmented into three equal fractions (i.e. 3000 is equivalent to 1000,2000,3000). DEFAULT: 1000,2000,3000. WARNING: numbers > 10000bp are automatically fixed to 10000bp.
-  * --bisizes	Bidirectional-promoter sizes for ChIP region annotation. The user can choose two numbers to define bidirectional promoters. Comma-separated two values or a single value can be given. If a single value is given, it will be segmented into two equal fractions (i.e. 5000 is equivalent to 2500,5000) DEFAULT: 2500,5000bp. WARNING: numbers > 20000bp are automatically fixed to 20000bp.
-  * --bg	Run genome BG annotation. WARNING: this flag is effective only if a WIG file is given through -w (--wig). Otherwise, ignored.
-  * --span	Span from TSS and TTS in the gene-centered annotation. ChIP regions within this range from TSS and TTS are considered when calculating the coverage rates of promoter and downstream by ChIP regions. DEFAULT=3000bp
   * --pf-res	Wig profiling resolution, DEFAULT: 50bp. WARNING: a number smaller than the wig interval (resolution) may cause aliasing error.
+  * --span	Span from TSS and TTS in the gene-centered annotation. ChIP regions within this range from TSS and TTS are considered when calculating the coverage rates of promoter and downstream by ChIP regions. DEFAULT=3000bp
   * --rel-dist	Relative distance to TSS/TTS in wig profiling. DEFAULT: 3000bp
-  * --gn-groups	Gene-groups of particular interest in wig profiling. Each gene group file must have gene names in the 1s column. The file names are separated by commas w/ no space (e.g. --gn-groups=top10.txt,bottom10.txt)
-  * --gn-group-names	The names of the gene groups in --gn-groups. The gene group names are separated by commas. (e.g. --gn-group-names='top 10%,bottom 10%'). These group names appear in the legends of the wig profiling plots. If no group names given, the groups are represented as 'Group 1, Group2,...Group n'.
-  * --gname2	Whether or not use the 'name2' column of the gene annotation table when reading the gene IDs in the files given through --gn-groups. This flag is meaningful only with --gn-groups.
+  * --name	Experiment name. This will be used to name the output files (R script, PDF file and XLS file). If an experiment name is not given, the stem of the input BED file name will be used instead. (e.g. if BED is peaks.bed, 'peaks' will be used as a name.) If a BED file is not given, the input WIG file name will be used.
 
 4. To run CEAS
 ```bash
@@ -528,7 +513,8 @@ To look at the results obtained for CEAS run on human H3K27ac ChIP-seq data with
 ```bash
 #  python ceas --pf-res 200 --span 5000 --rel-dist 5000 -g hg19.refGene -b H3K27ac.bed -w H3K27ac.wig --name H3K27ac
 ```
-open the pdf file in the ceas folder
+6. Download the resulting PDF file on your computer to visualize it.
+  * 06-PeakAnnotation/XXXXXXXXXXX
 
 **Are there specific chromosomes that show high level of H3K27ac?**
 
@@ -539,9 +525,9 @@ open the pdf file in the ceas folder
 
 ### 2-Associate peaks to closest genes
 
-[annotatePeaks.pl](http://homer.ucsd.edu/homer/ngs/annotation.html) from Homer associates peaks with nearby genes.
+[annotatePeaks.pl](http://homer.ucsd.edu/homer/ngs/annotation.html) from the Homer suite associates peaks with nearby genes.
 
-1. Use the annotation file data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz and the genome file srun gunzip data/Escherichia_coli_K12.fasta.gz. First start by uncompress the files
+1. Use the annotation file data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz and the genome file data/Escherichia_coli_K12.fasta.gz. First start by uncompress the files
 ```bash
 ## Uncompress annotation file
 srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
@@ -549,7 +535,7 @@ srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
 ## Uncompress genome file
 srun gunzip ../data/Escherichia_coli_K12.fasta.gz
 ```
-2. Create a file suitable for annotatePeaks.pl
+2. Create a file suitable for annotatePeaks.pl => ??????
 ```bash
 awk -F "\t" '{print $0"\t+"}' ../05-PeakCalling/FNR_Anaerobic_A_peaks.bed > FNR_Anaerobic_A_peaks.bed
 ```
@@ -557,6 +543,15 @@ awk -F "\t" '{print $0"\t+"}' ../05-PeakCalling/FNR_Anaerobic_A_peaks.bed > FNR_
 ```bash
 srun annotatePeaks.pl
 ```
+Let's see the parameters:
+
+annotatePeaks.pl <peak/BED file> <genome>   > <output file>
+	User defined annotation files (default is UCSC refGene annotation):
+		annotatePeaks.pl accepts GTF (gene transfer formatted) files to annotate positions relative
+		to custom annotations, such as those from de novo transcript discovery or Gencode.
+		-gtf <gtf format file> (Use -gff and -gff3 if appropriate, but GTF is better)
+
+
 4. Annotation peaks with nearby genes with Homer
 ```bash
 srun annotatePeaks.pl \
@@ -566,7 +561,7 @@ FNR_Anaerobic_A_peaks.bed \
 > FNR_Anaerobic_A_annotated_peaks.tsv
 ```
 
-5. Add gene symbol annotation using R
+5. Add gene symbol annotation using R => TO EXPLAIN MORE
 ```R
 R
 d <- read.table("FNR_Anaerobic_A_annotated_peaks.tsv", sep="\t", h=T)
