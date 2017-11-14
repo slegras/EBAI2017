@@ -537,7 +537,7 @@ Look at the pdf files:
 
 **Compare with the output for H3K36me3**
 
-Look at the Excel files
+Look at the Excel files:
 
 **What information is listed in each column?**
 
@@ -648,6 +648,7 @@ tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{print $11}'
 
 8. Retrieve only the genes that encode for proteins
 ```bash
+# sort | uniq -c to list and count occurences of each item 
 tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{print $8}' | sort | uniq -c
 ```
 
@@ -686,6 +687,7 @@ This gene list can then be used with Gene Ontology search tools such as Database
 Input your gene list in FNR_Anaerobic_A_final_peaks_annotation_officialGeneSymbols.tsv on the DAVID website: https://david.ncifcrf.gov/
 
 **Are there biological processes enriched in the list of genes associated to the peaks?**
+
 **Are these genes enriched in some KEGG map?**
 
 
