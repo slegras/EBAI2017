@@ -228,7 +228,7 @@ srun gunzip ../../data/Escherichia_coli_K12.fasta.gz
 srun bowtie-build ../../data/Escherichia_coli_K12.fasta Escherichia_coli_K12
 
 ## Compress back the genome fasta file
-srun gunzip ../../data/Escherichia_coli_K12.fasta.gz
+srun gzip ../../data/Escherichia_coli_K12.fasta
 ```
 6. Go back to upper directory i.e 02-Mapping
 ```bash
