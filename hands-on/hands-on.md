@@ -470,7 +470,14 @@ Your directory structure should be like this:
 ```
 
 
-4. Generate a scaled bigwig file on the IP
+4. Generate a scaled bigwig file on the IP with bamCoverage
+  * --bam: BAM file to process
+  * --outFileName: output file name
+  * --outFileFormat: Output file type
+  * --normalizeTo1x EFFECTIVE GENOME SIZE LENGTH: Report read coverage normalized to 1x sequencing depth. Effective genome size length here is the length of the genome
+  * --skipNonCoveredRegions: skip non-covered regions
+  * --extendReads 200: Extend reads to fragment size
+  * --ignoreDuplicates: reads that have the same orientation and start position will be considered only once
 ```bash
 srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
 --outFileName SRR576933_nodup.bw --outFileFormat bigwig --normalizeTo1x 4639675 \
