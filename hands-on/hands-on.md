@@ -334,7 +334,7 @@ cd ../..
 **Goal**: The first exercise aims at plotting the **Lorenz curve** to assess the quality of the chIP. The second exercise aims at calculating the **NSC** and **RSC** ENCODE quality metrics. These metrics allow to classify the datasets (after mapping, contrary to FASTQC that works on raw reads) in regards to the NSC and RSC values observed in the ENCODE datasets (see ENCODE guidelines)
 
 ### 1 - Plot the Lorenz curve with Deeptools
-1. Create a directory named **03-ChIPQualityControls** in which to mapping results for IP
+1. Create a directory named **03-ChIPQualityControls**
 ```bash
 mkdir 03-ChIPQualityControls
 ```
@@ -343,21 +343,23 @@ mkdir 03-ChIPQualityControls
 cd 03-ChIPQualityControls
 ```
 3. Run Deeptools [plotFingerprint](http://deeptools.readthedocs.io/en/latest/content/tools/plotFingerprint.html) to draw the Lorenz curve
+It will run simultaneously on the IP and control BAM files 
 ```bash
 srun plotFingerprint -b ../02-Mapping/IP/SRR576933.bam ../02-Mapping/Control/SRR576938.bam -plot fingerprint.png
 ```
+4. Download the image  fingerprint.png on your computer.
 
 **Look at the result files fingerprint.png. What do you think of it?**  
 
 ### 2 - Checking two ENCODE quality metrics with PhantomPeakQualTools
-1. convert the BAM file into TagAlign format, specific to the program that calculates the quality metrics
+1. convert the IP BAM file into TagAlign format, specific to the program that calculates the quality metrics
 ```bash
 srun samtools view -F 0x0204 -o - ../02-Mapping/IP/SRR576933.bam | \
 gawk 'BEGIN{OFS="\t"}{if (and($2,16) > 0) {print $3,($4-1),($4-1+length($10)),"N","1000","-"}
 else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
  | gzip -c > SRR576933_experiment.tagAlign.gz
 ```
-2. Run phantompeakqualtools
+2. Run phantompeakqualtools on the TagAlign formatted file 
 ```bash
 srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_IP_phantompeaks
 ```
@@ -415,13 +417,33 @@ mkdir 04-Visualization
 ```bash
 cd 04-Visualization
 ```
+Your directory structure should be like this:
+```
+/shared/projects/training/<login>/EBA2017_chipseq
+│
+└───data
+│   
+└───scripts
+│   
+└───01-QualityControl
+│   
+└───02-Mapping 
+|    └───index 
+|    └───IP 
+│   
+└───03-ChIPQualityControls
+│   
+└───04-Visualization <- you should be in this folder
+```
+
+
 4. Generate a scaled bigwig file on the IP
 ```bash
 srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
 --outFileName SRR576933_nodup.bw --outFileFormat bigwig --normalizeTo1x 4639675 \
 --skipNonCoveredRegions --extendReads 200 --ignoreDuplicates
 ```
-5. Do it for the control (be careful for the control you will need **5G** of memory to process the file)
+5. Do it for the control (be careful for the control you will need **5G** of memory to process the file, use ` --mem=5G `)
 6. Download the two bigwig files you have just generated
   * 04-Visualization/SRR576933_nodup.bw
   * 04-Visualization/SRR576938_nodup.bw
@@ -444,7 +466,7 @@ cd ..
 **Goal**: Define the peaks, i.e. the region with a high density of reads, where the studied factor was bound
 
 ### 1 - Choosing a peak-calling program
-There are multiple programs to perform the peak-calling step. Some are more directed towards histone marks (broad peaks) while others are specific to narrow peaks (transcription factors). Here we will use MACS version 1.4.2 because it's known to produce generally good results, and it is well-maintained by the developer. A new version (MACS2) is being developed, but still in testing phase so we will not use it today.
+There are multiple programs to perform the peak-calling step. Some are more directed towards histone marks (broad peaks) while others are specific to narrow peaks (transcription factors). Here we will use MACS version 1.4.2 because it's known to produce generally good results, and it is well-maintained by the developer. A new version (MACS2) is available, but with different options.
 
 ### 2 - Calling the peaks
 1. Create a directory named **05-PeakCalling** to store annotatePeaks outputs
@@ -490,7 +512,8 @@ cd ..
 ```
 
 ### 4 - Visualize peaks into IGV
-1. Go back to IGV and load the BED file of the peaks. Load the file 05-PeakCalling/FNR_Anaerobic_A_peaks.bed.
+1. Download the BED file 05-PeakCalling/FNR_Anaerobic_A_peaks.bed on your computer
+2. Load the BED file of the peaks in IGV.
 
 **Go back again to the genes we looked at earlier: b1127, b1108. Do you see peaks?**
 
