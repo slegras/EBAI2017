@@ -354,7 +354,9 @@ If the data are on your computer, to prevent data transfer, it's easier to visua
   * data/Escherichia_coli_K12.fasta.gz
   * data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
   * 02-Mapping/IP/SRR576933.bam
+  * 02-Mapping/IP/SRR576933.bam.bai  
   * 02-Mapping/Control/SRR576938.bam
+  * 02-Mapping/Control/SRR576938.bam.bai
 2. Open IGV on your computer
 3. Load the genome
   * Genomes / Load Genome from File...
