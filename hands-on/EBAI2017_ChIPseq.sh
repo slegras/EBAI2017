@@ -117,7 +117,7 @@ sbatch bowtie ../index/Escherichia_coli_K12 ../../data/SRR576933.fastq -v 2 -m 1
 srun gzip ../../data/SRR576933.fastq
 
 ## Create a sorted bam file
-srun samtools sort SRR576933.sam | samtools view -Sb > SRR576933.bam
+srun samtools sort SRR576933.sam | samtools view -b > SRR576933.bam
 
 ## create an index for the bam file
 srun samtools index SRR576933.bam
@@ -144,7 +144,7 @@ sbatch bowtie ../index/Escherichia_coli_K12 ../../data/SRR576938.fastq -v 2 -m 1
 srun gzip ../../data/SRR576938.fastq
 
 ## Create a sorted bam file
-srun samtools sort SRR576938.sam | samtools view -Sb > SRR576938.bam
+srun samtools sort SRR576938.sam | samtools view -b > SRR576938.bam
 
 ## create an index for the bam file
 srun samtools index SRR576938.bam

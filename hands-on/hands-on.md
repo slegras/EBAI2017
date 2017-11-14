@@ -286,8 +286,9 @@ This should take few minutes as we work with a small genome. For the human genom
 Bowtie output is a [SAM](https://samtools.github.io/hts-specs/SAMv1.pdf) file. The SAM format correspond to large text files, that can be compressed ("zipped") into BAM format. The BAM files are usually sorted and indexed for fast access to the data it contains. The index of a given BAM file has names .bam.bai or .bai file. Some tools require to have the index of the bam file to process it.
 
 4. Sort the sam file and create a bam file using samtools
+  * -b: output BAM
 ```bash
-srun samtools sort SRR576933.sam | samtools view -Sb > SRR576933.bam
+srun samtools sort SRR576933.sam | samtools view -b > SRR576933.bam
 ```
 
 5. Create an index for the bam file (will produce automatically a file named SRR576933.bam.bai)
