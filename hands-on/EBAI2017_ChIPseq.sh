@@ -2,19 +2,18 @@
 
 ###################################################
 ################# Variable definition
-login=slegras
+login=slegras ## To be changed with your login!!
 home=/shared/projects/training/${login}/EBA2017_chipseq
 
 ###################################################
 ################# Working environment
-cd ${home}
 
 ## Create a working directory for entire hands-on part
-mkdir EBA2017_chipseq
-cd EBA2017_chipseq
+mkdir $home
+cd $home
 
 ## Create a directory for raw data
-mkdir data
+# mkdir data
 cd data
 ## copy fastq/fasta files from local computer
 ## fastq file got downloaded from EBI
@@ -44,7 +43,7 @@ cd $home
 # git clone https://github.com/crazyhottommy/phantompeakqualtools.git
 
 ## go back to home working directory
-cd $home
+# cd $home
 
 ## Loading conda ChIP-Seq environment
 source activate eba2017_chipseq
