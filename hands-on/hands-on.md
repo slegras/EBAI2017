@@ -612,7 +612,7 @@ FNR_Anaerobic_A_peaks.bed \
 srun --pty bash
 ```
 
-6. Load a new conda environment to run phantompeakqualtools
+6. Load a new conda environment to run R
 ```bash
 source activate eba2017_spp
 ```
