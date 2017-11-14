@@ -130,8 +130,13 @@ ls
 
 6. Download the HTML file SRR576933_fastqc.html on your local machine (either with ssh or the program you used to upload your data on the server). Using a bash command it would look like this.
 ```bash
-## Go to the location where you want to put the data on your computer
-cd <path>
+### OPEN A NEW TERMINAL
+## Create a directory where to put generated files on your computer
+mkdir ~/Desktop/EBA2017_chipseq
+
+## Go to the location on your computer, where you want to put the data
+cd ~/Desktop/EBA2017_chipseq
+
 ## Download the file
 scp <login>@hpc.igbmc.fr:/shared/projects/training/<login>/EBA2017_chipseq/01-QualityControl/SRR576933_fastqc.html .
 # Enter your password
@@ -205,8 +210,6 @@ srun gunzip ../../data/Escherichia_coli_K12.fasta.gz
 ## Creating genome index
 srun bowtie-build ../../data/Escherichia_coli_K12.fasta Escherichia_coli_K12
 
-## Compress back genome fasta file
-srun gzip ../../data/Escherichia_coli_K12.fasta
 ```
 6. Go back to upper directory i.e 02-Mapping
 ```bash
@@ -261,7 +264,7 @@ gzip SRR576933.sam
 ```
 
 **Analyze the result of the mapped reads:  
-Open the file SRR576933.out (for example using the "less" command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample?. To quit less press 'q'**
+Open the file SRR576933.out (for example using the "less" command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample? To quit less press 'q'**
 
 ### 5 - Mapping the control
 1. Repeat the steps above (in 3 - Mapping the experiment) for the file SRR576938.fastq.gz.
