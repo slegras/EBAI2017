@@ -267,7 +267,7 @@ gzip SRR576933.sam
 Open the file SRR576933.out (for example using the "less" command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample? To quit less press 'q'**
 
 ### 5 - Mapping the control
-1. Repeat the steps above (in 3 - Mapping the experiment) for the file SRR576938.fastq.gz.
+1. Repeat the steps above (in 3 - Mapping the experiment) for the file SRR576938.fastq.gz in a directory named "**Control**".
 
 **Analyze the result of the mapped reads:  
 Open the file SRR576938.out. How many reads were mapped?**
@@ -650,7 +650,7 @@ tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{print $11}'
 
 8. Retrieve only the genes that encode for proteins
 ```bash
-# sort | uniq -c to list and count occurences of each item 
+# sort | uniq -c to list and count occurences of each item
 tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{print $8}' | sort | uniq -c
 ```
 
