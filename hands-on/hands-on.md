@@ -732,6 +732,8 @@ tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{if ($8=="promoter-
 
 ```bash
 tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{if ($8=="promoter-TSS") print $11}' | wc -l
+tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{if ($8=="promoter-TSS") print $11}' \
+> FNR_Anaerobic_A_final_peaks_annotation_officialGeneSymbols.tsv
 ```
 
 11. Compress back the annotation file
