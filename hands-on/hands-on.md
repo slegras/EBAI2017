@@ -162,25 +162,6 @@ Do both FASTQ files contain enough reads for a proper analysis ?**
 ## Mapping the reads with Bowtie <a name="mapping"></a>
 **Goal**: Obtain the coordinates of each read on the reference genome.  
 
-```
-project
-│   README.md
-│   file001.txt    
-│
-└───folder1
-│   │   file011.txt
-│   │   file012.txt
-│   │
-│   └───subfolder1
-│       │   file111.txt
-│       │   file112.txt
-│       │   ...
-│   
-└───folder2
-    │   file021.txt
-    │   file022.txt
-```
-
 ### 1 - Choosing a mapping program
 There are multiple programs to perform the mapping step. For reads produced by an Illumina machine for ChIP-seq, the currently "standard" programs are BWA and Bowtie (versions 1 and 2), and STAR is getting popular. We will use **Bowtie version 1.2.1.1** for this exercise, as this program remains effective for short reads (< 50bp).
 
@@ -213,6 +194,22 @@ mkdir index
 ```bash
 cd index
 ```
+
+Your directory structure should be like this:
+```
+/shared/projects/training/<login>/EBA2017_chipseq
+│
+└───data
+│   
+└───scripts
+│   
+└───01-QualityControl
+│   
+└───02-Mapping
+    │   
+    └───index <- you should be in this folder
+```
+
 4. Try out bowtie-build
 ```bash
 srun bowtie-build
@@ -222,7 +219,7 @@ srun bowtie-build
 ## Unzip genome fasta file
 srun gunzip ../../data/Escherichia_coli_K12.fasta.gz
 
-## Creating genome index
+## Creating genome index : provide the path to the genome file and the name of the index (Escherichia_coli_K12)
 srun bowtie-build ../../data/Escherichia_coli_K12.fasta Escherichia_coli_K12
 
 ## Compress back genome fasta file
@@ -242,6 +239,24 @@ mkdir IP
 ```bash
 cd IP
 ```
+
+Your directory structure should be like this:
+```
+/shared/projects/training/<login>/EBA2017_chipseq
+│
+└───data
+│   
+└───scripts
+│   
+└───01-QualityControl
+│   
+└───02-Mapping
+    │   
+    └───index
+    │   
+    └───IP <- you should be in this folder
+```
+
 3. Let's see the parameters of bowtie before launching the mapping:
   * Escherichia_coli_K12 is the name of our genome index file
   * Number of mismatches for SOAP-like alignment policy (-v): to 2, which will allow two mismatches anywhere in the read, when aligning the read to the genome sequence.
@@ -261,30 +276,30 @@ srun bowtie ../index/Escherichia_coli_K12 ../../data/SRR576933.fastq -v 2 -m 1 -
 srun gzip ../../data/SRR576933.fastq
 
 ```  
-This should take few minutes as we work with a small genome. For the human genome, we would need either more time and more resources.
+This should take few minutes as we work with a small genome. For the human genome, we would need either more time or more resources (run in parallel on multiple nodes).
 
-Bowtie output is a [SAM](https://samtools.github.io/hts-specs/SAMv1.pdf) file. The SAM format correspond to large text files, that can be compressed ("zipped") into BAM format. The BAM files are usually sorted and indexed for fast access to the data it contains. The index of a given bam file is names .bam.bai or .bai file. Some tools require to have the index of the bam file to process it.
+Bowtie output is a [SAM](https://samtools.github.io/hts-specs/SAMv1.pdf) file. The SAM format correspond to large text files, that can be compressed ("zipped") into BAM format. The BAM files are usually sorted and indexed for fast access to the data it contains. The index of a given BAM file has names .bam.bai or .bai file. Some tools require to have the index of the bam file to process it.
 
 4. Sort the sam file and create a bam file using samtools
 ```bash
 srun samtools sort SRR576933.sam | samtools view -Sb > SRR576933.bam
 ```
 
-5. Create an index for the bam file
+5. Create an index for the bam file (will produce automatically a file named SRR576933.bam.bai)
 ```bash
 srun samtools index SRR576933.bam
 ```
 
-6. Compress the .sam file
+6. Compress the .sam file to limit the space you use on the server
 ```bash
 gzip SRR576933.sam
 ```
 
 **Analyze the result of the mapped reads:  
-Open the file SRR576933.out (for example using the "less" command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample?. To quit less press 'q'**
+Open the file SRR576933.out (for example using the ` less ` command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample?. To quit less press ` q `**
 
 ### 5 - Mapping the control
-1. Repeat the steps above (in 3 - Mapping the experiment) for the file SRR576938.fastq.gz.
+1. Repeat the steps above (in 4 - Mapping the experiment) for the file SRR576938.fastq.gz, making a directory named "Control".
 
 **Analyze the result of the mapped reads:  
 Open the file SRR576938.out. How many reads were mapped?**
