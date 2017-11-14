@@ -723,7 +723,7 @@ n
 
 **What are all the possible gene types?**
 
-8. Exit the node you're connected to, and go back to the master server
+8. Exit the node you're connected to and go back to the master node
 ```bash
 exit
 ```
