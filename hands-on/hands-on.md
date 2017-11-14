@@ -113,7 +113,8 @@ mkdir 01-QualityControl
 ```bash
 cd 01-QualityControl
 ```
-3. Check the help page of the program to see its usage and parameters.
+3. Check the help page of the program to see its usage and parameters. 
+WARNING : remember, we don't use qlogin on the Strasbourg server, but srun in front of each command, so that it ` runs  on a computing node.
 ```bash
 srun fastqc --help
 ```
@@ -128,7 +129,7 @@ ls
 ```
 > SRR576933_fastqc.html  SRR576933_fastqc.zip
 
-6. Download the HTML file SRR576933_fastqc.html on your local machine (either with ssh or the program you used to upload your data on the server). Using a bash command it would look like this.
+6. Download the HTML file SRR576933_fastqc.html on your local machine (either with ` scp ` or Cyberduck). Using ` scp ` it would look like this:
 ```bash
 ## Go to the location where you want to put the data on your computer
 cd <path>
