@@ -62,7 +62,7 @@ Although direct access to the SRA database at the NCBI is doable, SRA does not s
 **tip**: To download the control dataset, we should redo the same steps starting from the GEO web page specific to the chip-seq datasets (see step 2.4) and choose **anaerobic INPUT DNA**.  
 The downloaded FASTQ file is available in the data folder (SRR576938.fastq.gz)
 
-**At this point, you should have two FASTQ files, one for the experiment, one for the control.
+**At this point, you have two FASTQ files, one for the experiment, one for the control.**
 
 ## Connect to the server and set up your environment <a name="setup"></a>
 ### 1 - Sign in on the server
@@ -114,6 +114,10 @@ mkdir 01-QualityControl
 cd 01-QualityControl
 ```
 3. Check the help page of the program to see its usage and parameters.
+<<<<<<< HEAD
+=======
+WARNING : remember, we don't use qlogin on the Strasbourg server, but ` srun ` in front of each command, so that it  runs  on a computing node.
+>>>>>>> origin/master
 ```bash
 srun fastqc --help
 ```
@@ -134,7 +138,7 @@ ls
 ## Create a directory where to put generated files on your computer
 mkdir ~/Desktop/EBA2017_chipseq
 
-## Go to the location on your computer, where you want to put the data
+## Go to the location on your computer, where you want to put the data, for example:
 cd ~/Desktop/EBA2017_chipseq
 
 ## Download the file
@@ -167,7 +171,7 @@ Do both FASTQ files contain enough reads for a proper analysis ?**
 **Goal**: Obtain the coordinates of each read on the reference genome.  
 
 ### 1 - Choosing a mapping program
-There are multiple programs to perform the mapping step. For reads produced by an Illumina machine for ChIP-seq, the currently "standard" programs are BWA and Bowtie (versions 1 and 2), and STAR is getting popular. We will use **Bowtie version 1.2.1.1** for this exercise, as this program remains effective for short reads (< 50bp).
+There are multiple programs to perform the mapping step. For reads produced by an Illumina machine for ChIP-seq, the currently "standard" programs are BWA and Bowtie (versions 1 and 2), and STAR is getting popular. We will use **Bowtie version 1.2.1.1** (Langmead B et al., Genome Biol, 2009) for this exercise, as this program remains effective for short reads (< 50bp).
 
 ### 2 - Bowtie
 1. Try out bowtie
@@ -207,7 +211,7 @@ srun bowtie-build
 ## Unzip genome fasta file
 srun gunzip ../../data/Escherichia_coli_K12.fasta.gz
 
-## Creating genome index
+## Creating genome index : provide the path to the genome file and the name to give to the index (Escherichia_coli_K12)
 srun bowtie-build ../../data/Escherichia_coli_K12.fasta Escherichia_coli_K12
 
 ## Compress back the genome fasta file
@@ -267,10 +271,10 @@ gzip SRR576933.sam
 ```
 
 **Analyze the result of the mapped reads:  
-Open the file SRR576933.out (for example using the "less" command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample? To quit less press 'q'**
+Open the file SRR576933.out (for example using the ` less ` command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample? To quit less press 'q'**
 
 ### 5 - Mapping the control
-1. Repeat the steps above (in 3 - Mapping the experiment) for the file SRR576938.fastq.gz in a directory named "**Control**" in the directory 02-Mapping.
+1. Repeat the steps above (in 4 - Mapping the experiment) for the file SRR576938.fastq.gz in a directory named "**Control**" within the directory 02-Mapping.
 
 **Analyze the result of the mapped reads:  
 Open the file SRR576938.out. How many reads were mapped?**
@@ -416,6 +420,26 @@ mkdir 04-Visualization
 ```bash
 cd 04-Visualization
 ```
+
+Your directory structure should be like this:
+```
+/shared/projects/training/<login>/EBA2017_chipseq
+│
+└───data
+│   
+└───scripts
+│   
+└───01-QualityControl
+│   
+└───02-Mapping
+|    └───index
+|    └───IP
+│   
+└───03-ChIPQualityControls
+│   
+└───04-Visualization <- you should be in this folder
+```
+
 4. Generate a scaled bigwig file on the IP
 ```bash
 srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
@@ -461,6 +485,7 @@ cd 05-PeakCalling
 srun macs
 ```
 This prints the help of the program.
+
 4. Let's see the parameters of MACS before launching the mapping:
   * ChIP-seq tag file (-t) is the name of our experiment (treatment) mapped read file SRR576933.bam
   * ChIP-seq control file (-c) is the name of our input (control) mapped read file SRR576938.bam
@@ -491,7 +516,8 @@ cd ..
 ```
 
 ### 4 - Visualize peaks into IGV
-1. Go back to IGV and load the BED file of the peaks. Load the file 05-PeakCalling/FNR_Anaerobic_A_peaks.bed.
+
+1. Download the BED file 05-PeakCalling/FNR_Anaerobic_A_peaks.bed to visualise in IGV.
 
 **Go back again to the genes we looked at earlier: b1127, b1108. Do you see peaks?**
 
@@ -499,7 +525,7 @@ cd ..
 
 **Goals**: Associate ChIP-seq peaks with genomic features, draw metagenes, identify closest genes and run ontology analyses
 
-1. Create a directory named **06-PeakAnnotation** to store annotatePeaks outputs
+1. Create a directory named **06-PeakAnnotation**
 ```bash
 mkdir 06-PeakAnnotation
 ```
@@ -507,79 +533,12 @@ mkdir 06-PeakAnnotation
 ```bash
 cd 06-PeakAnnotation
 ```
-### 1- Map peaks to genomic features and draw metagenes
-We will use CEAS from the Liu lab  [http://liulab.dfci.harvard.edu/CEAS/usermanual.html]
 
-CEAS is a good program, but does not support microbial genomes. It supports mouse, human, drosophila, so for this exercise, we will analyse the results obtained on human ChIP-seq data for H3K27ac.
-
-1. CEAS options
-```bash
-srun ceas  --help
-```
-This prints the help of the program.
-2. Let's see the parameters of CEAS before launching the analysis:
-
-  * -g, --gdb Gene annotation table file (e.g. a refGene table in sqlite3 db format provided through the CEAS web, http://liulab.dfci.harvard.edu/CEAS/download.html). If the sqlite3 file does not have the genome background annotation, the user must turn on --bg and have an input WIG file.
-  * -b, --bed	BED file with ChIP regions.
-  * -w, --wig	WIG file for either wig profiling or genome background annotation. WARNING: CEAS accepts fixedStep and variableStep WIG file. The user must set --bgflag for genome background annotation.
-  * --pf-res	Wig profiling resolution, DEFAULT: 50bp. WARNING: a number smaller than the wig interval (resolution) may cause aliasing error.
-  * --span	Span from TSS and TTS in the gene-centered annotation. ChIP regions within this range from TSS and TTS are considered when calculating the coverage rates of promoter and downstream by ChIP regions. DEFAULT=3000bp
-  * --rel-dist	Relative distance to TSS/TTS in wig profiling. DEFAULT: 3000bp
-  * --name	Experiment name. This will be used to name the output files (R script, PDF file and XLS file). If an experiment name is not given, the stem of the input BED file name will be used instead. (e.g. if BED is peaks.bed, 'peaks' will be used as a name.) If a BED file is not given, the input WIG file name will be used.
-
-4. To run CEAS
-```bash
-# ceas [options] -g gdb -b bed -w wig
-```
-The bed and the wig files correspond respectively to the list of peaks positions in the genome and their signal intensities. Both can be generated by runing macs with option -w -S.
-
-Note: To save time, you can run each part of the program (annotated features or metagenes) separately
-
-To run ChIP region annotation and gene-centered annotation only
-```bash
-# ceas [options] -g gdb -b bed
-```
-
-To run  average signal profiling only
-```bash
-# ceas [options] -g gdb -w wig
-```
-
-5- Look at the results obtained for CEAS run on human H3K27ac ChIP-seq data with the folowing command line:
-
-```bash
-# ceas --pf-res 200 --span 5000 --rel-dist 5000 -g hg19.refGene -b H3K27ac.bed -w H3K27ac.wig --name H3K27ac
-```
-Download the resulting PDF file on your computer to visualize it on your local machine (either with ssh or the program you used to upload your data on the server). Using a bash command it would look like this.
-
-```bash
-## Go to the location where you want to put the data on your computer
-cd ~/Desktop/EBA2017_chipseq
-
-## Download the file
-scp <login>@hpc.igbmc.fr:/shared/projects/training/slegras/EBA2017_chipseq/06-PeakAnnotation/ceas/* .
-# Enter your password
-```
-Look at the pdf files:
-
-**Are there specific chromosomes that show high level of H3K27ac?**
-
-**In which genomic regions is this histone mark enriched?**
-
-**What is the distribution of the peaks along the genes?**
-
-**Compare with the output for H3K36me3**
-
-Look at the Excel files:
-
-**What information is listed in each column?**
-
-
-### 2-Associate peaks to closest genes
+### 1-Associate peaks to closest genes
 
 [annotatePeaks.pl](http://homer.ucsd.edu/homer/ngs/annotation.html) from the Homer suite associates peaks with nearby genes.
 
-1. Use the annotation file data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz and the genome file data/Escherichia_coli_K12.fasta.gz. First start by uncompress the files
+1. We will need the annotation file data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz and the genome file data/Escherichia_coli_K12.fasta.gz. First start by uncompress the files
 ```bash
 ## Uncompress annotation file
 srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
@@ -597,10 +556,11 @@ srun annotatePeaks.pl
 ```
 Let's see the parameters:
 
-annotatePeaks.pl <peak/BED file> <genome>   > <output file>
+annotatePeaks.pl peak/BEDfile genome > outputfile
 	User defined annotation files (default is UCSC refGene annotation):
 		annotatePeaks.pl accepts GTF (gene transfer formatted) files to annotate positions relative
 		to custom annotations, such as those from de novo transcript discovery or Gencode.
+
 		-gtf <gtf format file> (Use -gff and -gff3 if appropriate, but GTF is better)
 
 
@@ -613,7 +573,7 @@ FNR_Anaerobic_A_peaks.bed \
 > FNR_Anaerobic_A_annotated_peaks.tsv
 ```
 
-5. Run srun in an interactive mode
+5. Run ` srun ` in an interactive mode
 ```bash
 srun --pty bash
 ```
@@ -722,10 +682,10 @@ Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA20
 cd ..
 ```
 
-### 3- Search for Biological Processes, Molecular Functions or Cellular Compartments enrichment
+### 2- Search for Biological Processes, Molecular Functions or Cellular Compartments enrichment
 This gene list can then be used with Gene Ontology search tools such as Database for Annotation, Visualization and Integrated Discovery  (DAVID) or Ingenuity Pathway Analysis (IPA).
 
-Input your gene list in FNR_Anaerobic_A_final_peaks_annotation_officialGeneSymbols.tsv on the DAVID website: https://david.ncifcrf.gov/
+Input your gene list (filename :  FNR_Anaerobic_A_final_peaks_annotation_officialGeneSymbols.tsv) on the DAVID website: https://david.ncifcrf.gov/
 
 **Are there biological processes enriched in the list of genes associated to the peaks?**
 
@@ -813,6 +773,74 @@ Here, I downloaded the annotation from the [UCSC Table browser](http://microbes.
 perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' Escherichia_coli_K_12_MG1655.annotation.gtf > Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
 ```
 This file will work directly in IGV
+
+### How to map peaks to genomic features and draw metagenes?
+We will use CEAS from the Liu lab  [http://liulab.dfci.harvard.edu/CEAS/usermanual.html]
+
+CEAS is a good program, but does not support microbial genomes. It supports mouse, human, drosophila, so for this exercise, we will analyse the results obtained on human ChIP-seq data for H3K27ac.
+
+1. CEAS options
+```bash
+srun ceas  --help
+```
+This prints the help of the program.
+2. Let's see the parameters of CEAS before launching the analysis:
+
+  * -g, --gdb Gene annotation table file (e.g. a refGene table in sqlite3 db format provided through the CEAS web, http://liulab.dfci.harvard.edu/CEAS/download.html). If the sqlite3 file does not have the genome background annotation, the user must turn on --bg and have an input WIG file.
+  * -b, --bed	BED file with ChIP regions.
+  * -w, --wig	WIG file for either wig profiling or genome background annotation. WARNING: CEAS accepts fixedStep and variableStep WIG file. The user must set --bgflag for genome background annotation.
+  * --pf-res	Wig profiling resolution, DEFAULT: 50bp. WARNING: a number smaller than the wig interval (resolution) may cause aliasing error.
+  * --span	Span from TSS and TTS in the gene-centered annotation. ChIP regions within this range from TSS and TTS are considered when calculating the coverage rates of promoter and downstream by ChIP regions. DEFAULT=3000bp
+  * --rel-dist	Relative distance to TSS/TTS in wig profiling. DEFAULT: 3000bp
+  * --name	Experiment name. This will be used to name the output files (R script, PDF file and XLS file). If an experiment name is not given, the stem of the input BED file name will be used instead. (e.g. if BED is peaks.bed, 'peaks' will be used as a name.) If a BED file is not given, the input WIG file name will be used.
+
+4. To run CEAS
+```bash
+# ceas [options] -g gdb -b bed -w wig
+```
+The bed and the wig files correspond respectively to the list of peaks positions in the genome and their signal intensities. Both can be generated by runing macs with option -w -S.
+
+Note: To save time, you can run each part of the program (annotated features or metagenes) separately
+
+To run ChIP region annotation and gene-centered annotation only
+```bash
+# ceas [options] -g gdb -b bed
+```
+
+To run  average signal profiling only
+```bash
+# ceas [options] -g gdb -w wig
+```
+
+5- Look at the results obtained for CEAS run on human H3K27ac ChIP-seq data with the folowing command line:
+
+```bash
+# ceas --pf-res 200 --span 5000 --rel-dist 5000 -g hg19.refGene -b H3K27ac.bed -w H3K27ac.wig --name H3K27ac
+```
+Download the resulting PDF file on your computer to visualize it on your local machine (either with ssh or the program you used to upload your data on the server). Using a bash command it would look like this.
+
+```bash
+## Go to the location where you want to put the data on your computer
+cd ~/Desktop/EBA2017_chipseq
+
+## Download the file
+scp <login>@hpc.igbmc.fr:/shared/projects/training/slegras/EBA2017_chipseq/06-PeakAnnotation/ceas/* .
+# Enter your password
+```
+Look at the pdf files:
+
+**Are there specific chromosomes that show high level of H3K27ac?**
+
+**In which genomic regions is this histone mark enriched?**
+
+**What is the distribution of the peaks along the genes?**
+
+**Compare with the output for H3K36me3**
+
+Look at the Excel files:
+
+**What information is listed in each column?**
+
 
 ## References <a name="ref"></a>
 
