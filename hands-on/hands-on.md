@@ -598,7 +598,7 @@ write.table(d.annot, "FNR_Anaerobic_A_final_peaks_annotation.tsv", col.names=T, 
 ## Leave R
 quit()
 
-## Doesn't save the environment
+## Do not save the environment
 n
 ```
 
