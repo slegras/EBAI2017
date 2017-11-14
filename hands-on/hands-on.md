@@ -311,7 +311,7 @@ Open the file SRR576933.out (for example using the ` less ` command), which cont
 Open the file SRR576938.out. How many reads were mapped?**
 
 ## Estimating the number of duplicated reads <a name="dup"></a>
-**Goal**: Duplicated reads i.e reads mapped at the same positions in the genome are present in ChIP-seq results. They can arise for several reasons including a biased amplification during the PCR step of the library prep, DNA fragment coming from repetitive elements of the genome, sequencing saturation or the same clusters read several times on the flowcell (i.e optical duplicates). As analyzing ChIP-Seq data consist at some point in detecting signal enrichment, we can not keep duplicated reads for subsequent analysis. So let's detect them.   
+**Goal**: Duplicated reads i.e reads mapped at the same positions in the genome are present in ChIP-seq results. They can arise for several reasons including a biased amplification during the PCR step of the library prep, DNA fragment coming from repetitive elements of the genome, sequencing saturation or the same clusters read several times on the flowcell (i.e optical duplicates). As analyzing ChIP-Seq data consist at some point in detecting signal enrichment, we can not keep duplicated reads for subsequent analysis. So let's detect them using [Picard](http://broadinstitute.github.io/picard/)   
 
 1. Go to the directory with alignment file of treatment (IP)
 ```bash
@@ -331,7 +331,6 @@ OUTPUT=Marked_SRR576933.bam \
 METRICS_FILE=metrics \
 VALIDATION_STRINGENCY=STRICT
 ```
-<!-- Morgane : Does the Marked BAM file has been removed from duplicates  ? -->
 
 **How many duplicates reads are detected? (See MarkDuplicates outputs)**
 
@@ -353,13 +352,13 @@ mkdir 03-ChIPQualityControls
 ```bash
 cd 03-ChIPQualityControls
 ```
-3. Run Deeptools [plotFingerprint](http://deeptools.readthedocs.io/en/latest/content/tools/plotFingerprint.html) to draw the Lorenz curve
+3. Run Deeptools [plotFingerprint](http://deeptools.readthedocs.io/en/latest/content/tools/plotFingerprint.html) (Fidel et al, NAR, 2016) to draw the Lorenz curve
   * -b: List of indexed BAM files
   * -plot: File name of the output figure (extension can be either “png”, “eps”, “pdf” or “svg”)
 ```bash
 srun plotFingerprint -b ../02-Mapping/IP/SRR576933.bam ../02-Mapping/Control/SRR576938.bam -plot fingerprint.png
 ```
-4. Download the file fingerprint.png on your local machine (either with ssh or the program you used to upload your data on the server). Using a bash command it would look like this.
+4. Download the file fingerprint.png on your local machine (either with ` scp ` or Cyberduck). Using ` scp ` it would look like this.
 ```bash
 ### OPEN A NEW TERMINAL
 ## Go to the location on your computer, where you want to put the data
@@ -380,7 +379,7 @@ gawk 'BEGIN{OFS="\t"}{if (and($2,16) > 0) {print $3,($4-1),($4-1+length($10)),"N
 else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
  | gzip -c > SRR576933_experiment.tagAlign.gz
 ```
-2. Load a new conda environment to run phantompeakqualtools
+2. Load a new conda environment to run [phantompeakqualtools](https://github.com/crazyhottommy/phantompeakqualtools)
 ```bash
 source activate eba2017_spp
 ```
@@ -391,16 +390,17 @@ source activate eba2017_spp
 ```bash
 srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_IP_phantompeaks
 ```
-4. Load the conda environment for ChIP-Seq
-```bash
-source activate eba2017_chipseq
-```
 
 **A PDF file named SRR576933_experiment.tagAlign.pdf should have been produced.  
 According to the ENCODE guidelines, NSC >= 1.05 ; RSC >= 0.8 is recommended. Qtag values range from -2,-1,0,1,2  
 What is the quality of this dataset ?**
 
 **At this point, you should be able to measure the ENCODE RSC and NSC metric values on a given dataset.**
+
+4. Load the previous conda environment for ChIP-Seq to continue the tutorial
+```bash
+source activate eba2017_chipseq
+```
 
 Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA2017_chipseq)
 ```bash
@@ -420,7 +420,9 @@ If the data are on your computer, to prevent data transfer, it's easier to visua
   * data/Escherichia_coli_K12.fasta.gz
   * data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
   * 02-Mapping/IP/SRR576933.bam
+  * 02-Mapping/IP/SRR576933.bam.bai
   * 02-Mapping/Control/SRR576938.bam
+  * 02-Mapping/Control/SRR576938.bai
 2. Open IGV on your computer
 3. Load the genome
   * Genomes / Load Genome from File...
@@ -585,10 +587,10 @@ srun annotatePeaks.pl
 Let's see the parameters:
 
 annotatePeaks.pl peak/BEDfile genome > outputfile
-	User defined annotation files (default is UCSC refGene annotation):
-		annotatePeaks.pl accepts GTF (gene transfer formatted) files to annotate positions relative
+	
+	User defined annotation files (default is UCSC refGene annotation):annotatePeaks.pl accepts GTF (gene transfer formatted) files to annotate positions relative
 		to custom annotations, such as those from de novo transcript discovery or Gencode.
-
+		
 		-gtf <gtf format file> (Use -gff and -gff3 if appropriate, but GTF is better)
 
 
@@ -659,7 +661,7 @@ n
 
 **What are all the possible gene types?**
 
-8. Exit the node you're connected to and go back to the master non-model
+8. Exit the node you're connected to and go back to the master server
 ```bash
 exit
 ```
@@ -726,6 +728,33 @@ mkdir 07-MotifAnalysis
 ```bash
 cd 07-MotifAnalysis
 ```
+
+Your directory structure should be like this:
+```
+/shared/projects/training/<login>/EBA2017_chipseq
+│
+└───data
+│   
+└───scripts
+│   
+└───01-QualityControl
+│   
+└───02-Mapping
+|    └───index
+|    └───IP
+│   
+└───03-ChIPQualityControls
+│   
+└───04-Visualization 
+│   
+└───05-PeakCalling 
+│   
+└───06-PeakAnnotation 
+│   
+└───07-MotifAnalysis <- you should be in this folder
+```
+
+
 3. Extract peak sequence in fasta format
 ```bash
 ## Create an index of the genome fasta file
@@ -738,15 +767,15 @@ srun bedtools getfasta -fi ../data/Escherichia_coli_K12.fasta \
 
 ### 2 - Motif discovery with RSAT
 1. Open a connection to a Regulatory Sequence Analysis Tools server. You can choose between various website mirrors.
-  * Server at Roscoff (recommended for this training) rsat.sb-roscoff.fr
+  * Server at Roscoff (recommended for this training) [rsat.sb-roscoff.fr](http://rsat.sb-roscoff.fr)
   * Main server (currently in Brussels) www.rsat.eu
 2. In the left menu, click on **NGS ChIP-seq** and then click on **peak-motifs**. A new page opens, with a form
 3. The default peak-motifs web form only displays the essential options. There are only two mandatory parameters.
-  * The title box, which you will set as FNR Anaerobic A b. The sequences, that you will upload from your computer, by clicking on the buttonChoose file, and select the file macs14_peaks.fa from your computer.
+  * The title box, which you will set as FNR Anaerobic A b. The sequences, that you will upload from your computer, by clicking on the button Choose file, and select the file macs14_peaks.fa from your computer.
 4. We could launch the analysis like this, but we will now modify some of the advanced options in order to fine-tune the analysis according to your data set.
   * Open the "Reduce peak sequences" title, and make sure the "Cut peak sequences: +/- " option is set to 0 (we wish to analyze our full dataset)
   * Open the “Motif Discovery parameters” title, and check the oligomer sizes 6 and 7 (but not 8). Check "Discover over-represented spaced word pairs [dyad-analysis]"
-  Under “Compare discovered motifs with databases”, uncheck "JASPAR core vertebrates" and check RegulonDB prokaryotes (2012_05) as the studied organism is the bacteria E. coli.
+  Under “Compare discovered motifs with databases”, remove "JASPAR core vertebrates" and add RegulonDB prokaryotes (2015_08) as the studied organism is the bacteria E. coli.
 5. You can indicate your email address in order to receive notification of the task submission and completion. This is particularly useful because the full analysis may take some time for very large datasets.
 6. Click “GO”. As soon as the query has been launched, you should receive an email indicating confirming the task submission, and providing a link to the future result page.
 7. The Web page also displays a link, You can already click on this link. The report will be progressively updated during the processing of the workflow.
