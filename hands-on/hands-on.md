@@ -590,15 +590,14 @@ awk -F "\t" '{print $0"\t+"}' ../05-PeakCalling/FNR_Anaerobic_A_peaks.bed > FNR_
 ```bash
 srun annotatePeaks.pl
 ```
-Let's see the parameters:
+<!-- Let's see the parameters:
 
 annotatePeaks.pl peak/BEDfile genome > outputfile
 	User defined annotation files (default is UCSC refGene annotation):
 		annotatePeaks.pl accepts GTF (gene transfer formatted) files to annotate positions relative
 		to custom annotations, such as those from de novo transcript discovery or Gencode.
 
-		-gtf <gtf format file> (Use -gff and -gff3 if appropriate, but GTF is better)
-
+		-gtf <gtf format file> (Use -gff and -gff3 if appropriate, but GTF is better) -->
 
 4. Annotation peaks with nearby genes with Homer
 ```bash
