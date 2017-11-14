@@ -267,7 +267,7 @@ gzip SRR576933.sam
 Open the file SRR576933.out (for example using the "less" command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample? To quit less press 'q'**
 
 ### 5 - Mapping the control
-1. Repeat the steps above (in 3 - Mapping the experiment) for the file SRR576938.fastq.gz in a directory named "**Control**".
+1. Repeat the steps above (in 3 - Mapping the experiment) for the file SRR576938.fastq.gz in a directory named "**Control**" in the directory 02-Mapping.
 
 **Analyze the result of the mapped reads:  
 Open the file SRR576938.out. How many reads were mapped?**
@@ -314,6 +314,16 @@ cd 03-ChIPQualityControls
 ```bash
 srun plotFingerprint -b ../02-Mapping/IP/SRR576933.bam ../02-Mapping/Control/SRR576938.bam -plot fingerprint.png
 ```
+4. Download the file fingerprint.png on your local machine (either with ssh or the program you used to upload your data on the server). Using a bash command it would look like this.
+```bash
+### OPEN A NEW TERMINAL
+## Go to the location on your computer, where you want to put the data
+cd ~/Desktop/EBA2017_chipseq
+
+## Download the file
+scp <login>@hpc.igbmc.fr:/shared/projects/training/<login>/EBA2017_chipseq/03-ChIPQualityControls/fingerprint.png .
+# Enter your password
+```
 
 **Look at the result files fingerprint.png. What do you think of it?**  
 
@@ -325,9 +335,17 @@ gawk 'BEGIN{OFS="\t"}{if (and($2,16) > 0) {print $3,($4-1),($4-1+length($10)),"N
 else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
  | gzip -c > SRR576933_experiment.tagAlign.gz
 ```
-2. Run phantompeakqualtools
+2. Load a new conda environment to run phantompeakqualtools
+```bash
+source activate eba2017_spp
+```
+3. Run phantompeakqualtools
 ```bash
 srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_IP_phantompeaks
+```
+4. Load the conda environment for ChIP-Seq
+```bash
+source activate eba2017_chipseq
 ```
 
 **A PDF file named SRR576933_experiment.tagAlign.pdf should have been produced.  
