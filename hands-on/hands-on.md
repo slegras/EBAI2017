@@ -113,7 +113,7 @@ mkdir 01-QualityControl
 ```bash
 cd 01-QualityControl
 ```
-3. Check the help page of the program to see its usage and parameters. 
+3. Check the help page of the program to see its usage and parameters.
 WARNING : remember, we don't use qlogin on the Strasbourg server, but srun in front of each command, so that it ` runs  on a computing node.
 ```bash
 srun fastqc --help
@@ -131,8 +131,13 @@ ls
 
 6. Download the HTML file SRR576933_fastqc.html on your local machine (either with ` scp ` or Cyberduck). Using ` scp ` it would look like this:
 ```bash
-## Go to the location where you want to put the data on your computer
-cd <path>
+### OPEN A NEW TERMINAL
+## Create a directory where to put generated files on your computer
+mkdir ~/Desktop/EBA2017_chipseq
+
+## Go to the location on your computer, where you want to put the data
+cd ~/Desktop/EBA2017_chipseq
+
 ## Download the file
 scp <login>@hpc.igbmc.fr:/shared/projects/training/<login>/EBA2017_chipseq/01-QualityControl/SRR576933_fastqc.html .
 # Enter your password
@@ -222,8 +227,6 @@ srun gunzip ../../data/Escherichia_coli_K12.fasta.gz
 ## Creating genome index : provide the path to the genome file and the name of the index (Escherichia_coli_K12)
 srun bowtie-build ../../data/Escherichia_coli_K12.fasta Escherichia_coli_K12
 
-## Compress back genome fasta file
-srun gzip ../../data/Escherichia_coli_K12.fasta
 ```
 6. Go back to upper directory i.e 02-Mapping
 ```bash
@@ -296,7 +299,7 @@ gzip SRR576933.sam
 ```
 
 **Analyze the result of the mapped reads:  
-Open the file SRR576933.out (for example using the ` less ` command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample?. To quit less press ` q `**
+Open the file SRR576933.out (for example using the "less" command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample? To quit less press 'q'**
 
 ### 5 - Mapping the control
 1. Repeat the steps above (in 4 - Mapping the experiment) for the file SRR576938.fastq.gz, making a directory named "Control".
@@ -343,7 +346,7 @@ mkdir 03-ChIPQualityControls
 cd 03-ChIPQualityControls
 ```
 3. Run Deeptools [plotFingerprint](http://deeptools.readthedocs.io/en/latest/content/tools/plotFingerprint.html) to draw the Lorenz curve
-It will run simultaneously on the IP and control BAM files 
+It will run simultaneously on the IP and control BAM files
 ```bash
 srun plotFingerprint -b ../02-Mapping/IP/SRR576933.bam ../02-Mapping/Control/SRR576938.bam -plot fingerprint.png
 ```
@@ -359,7 +362,7 @@ gawk 'BEGIN{OFS="\t"}{if (and($2,16) > 0) {print $3,($4-1),($4-1+length($10)),"N
 else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
  | gzip -c > SRR576933_experiment.tagAlign.gz
 ```
-2. Run phantompeakqualtools on the TagAlign formatted file 
+2. Run phantompeakqualtools on the TagAlign formatted file
 ```bash
 srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_IP_phantompeaks
 ```
@@ -427,9 +430,9 @@ Your directory structure should be like this:
 │   
 └───01-QualityControl
 │   
-└───02-Mapping 
-|    └───index 
-|    └───IP 
+└───02-Mapping
+|    └───index
+|    └───IP
 │   
 └───03-ChIPQualityControls
 │   
