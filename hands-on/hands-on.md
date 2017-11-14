@@ -561,7 +561,12 @@ FNR_Anaerobic_A_peaks.bed \
 > FNR_Anaerobic_A_annotated_peaks.tsv
 ```
 
-5. Add gene symbol annotation using R
+5. Run srun in an interactive mode
+```bash
+srun --pty bash
+```
+
+6. Add gene symbol annotation using R
 ```R
 ## Launch R
 R
@@ -608,12 +613,12 @@ n
 
 **What are all the possible gene types?**
 
-6. Retrieve the list of closest genes
+7. Retrieve the list of closest genes
 ```bash
 # awk '{print $11}' FNR_Anaerobic_A_final_peaks_annotation.tsv
 ```
 
-7. Retrieve only the genes that encode for proteins
+8. Retrieve only the genes that encode for proteins
 ```bash
 # awk '{print $8}' FNR_Anaerobic_A_final_peaks_annotation.tsv | sort | uniq -c
 ```
@@ -631,7 +636,7 @@ n
 
 ```
 
-8. Compress back the annotation file
+9. Compress back the annotation file
 ```bash
 ## Compress annotation file
 srun gzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf

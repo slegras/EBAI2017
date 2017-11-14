@@ -279,8 +279,12 @@ srun gzip ../data/Escherichia_coli_K12.fasta
 ## Add gene symbol annotation using R
 # source activate R
 
+## Run srun in an interactive mode
+srun --pty bash
+
 ## Launch R
 R
+
 ## read the file with peaks annotated with homer
 ## data are loaded into a data frame
 ## sep="\t": this is a tab separated file
