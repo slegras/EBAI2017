@@ -251,8 +251,9 @@ This should take few minutes as we work with a small genome. For the human genom
 Bowtie output is a [SAM](https://samtools.github.io/hts-specs/SAMv1.pdf) file. The SAM format correspond to large text files, that can be compressed ("zipped") into BAM format. The BAM files are usually sorted and indexed for fast access to the data it contains. The index of a given bam file is names .bam.bai or .bai file. Some tools require to have the index of the bam file to process it.
 
 4. Sort the sam file and create a bam file using samtools
+  * -b: output BAM
 ```bash
-srun samtools sort SRR576933.sam | samtools view -Sb > SRR576933.bam
+srun samtools sort SRR576933.sam | samtools view -b > SRR576933.bam
 ```
 
 5. Create an index for the bam file
@@ -282,6 +283,11 @@ Open the file SRR576938.out. How many reads were mapped?**
 cd /shared/projects/training/<login>/EBA2017_chipseq/02-Mapping/IP
 ```
 2. Run Picard markDuplicates to mark duplicated reads (= reads mapping at the exact same location on the genome)
+  * CREATE_INDEX: Create .bai file for the result bam file with marked duplicate reads
+  * INPUT: input file name to mark for duplicate reads
+  * OUTPUT: output file name
+  * METRICS: file with duplicates marking statistics
+  * VALIDATION_STRINGENCY: Validation stringency for all SAM files read by picard.
 ```bash
 srun picard MarkDuplicates \
 CREATE_INDEX=true \
@@ -313,6 +319,8 @@ mkdir 03-ChIPQualityControls
 cd 03-ChIPQualityControls
 ```
 3. Run Deeptools [plotFingerprint](http://deeptools.readthedocs.io/en/latest/content/tools/plotFingerprint.html) to draw the Lorenz curve
+  * -b: List of indexed BAM files
+  * -plot: File name of the output figure (extension can be either “png”, “eps”, “pdf” or “svg”)
 ```bash
 srun plotFingerprint -b ../02-Mapping/IP/SRR576933.bam ../02-Mapping/Control/SRR576938.bam -plot fingerprint.png
 ```
@@ -342,6 +350,9 @@ else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
 source activate eba2017_spp
 ```
 3. Run phantompeakqualtools
+  * c=<ChIP_alignFile>, full path and name (or URL) of tagAlign/BAM file (can be gzipped)(FILE EXTENSION MUST BE tagAlign.gz, tagAlign, bam or bam.gz) MANDATORY ARGUMENTS FOR PEAK CALLING
+  * -savp=<plotdatafile> OR -savp, save cross-correlation plot
+  * -out=<resultfile>, append peakshift/phantomPeak results to a file
 ```bash
 srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_IP_phantompeaks
 ```
@@ -497,6 +508,7 @@ mkdir 06-PeakAnnotation
 ```bash
 cd 06-PeakAnnotation
 ```
+<<<<<<< HEAD
 ### 1- Map peaks to genomic features and draw metagenes
 We will use CEAS from the Liu lab  [http://liulab.dfci.harvard.edu/CEAS/usermanual.html]
 
@@ -562,8 +574,7 @@ Look at the Excel files:
 
 **What information is listed in each column?**
 
-
-### 2-Associate peaks to closest genes
+### 1-Associate peaks to closest genes
 
 [annotatePeaks.pl](http://homer.ucsd.edu/homer/ngs/annotation.html) from the Homer suite associates peaks with nearby genes.
 
@@ -711,7 +722,7 @@ Go back to working home directory (i.e /shared/projects/training/\<login\>/EBA20
 cd ..
 ```
 
-### 3- Search for Biological Processes, Molecular Functions or Cellular Compartments enrichment
+### 2- Search for Biological Processes, Molecular Functions or Cellular Compartments enrichment
 This gene list can then be used with Gene Ontology search tools such as Database for Annotation, Visualization and Integrated Discovery  (DAVID) or Ingenuity Pathway Analysis (IPA).
 
 Input your gene list (filename :  FNR_Anaerobic_A_final_peaks_annotation_officialGeneSymbols.tsv) on the DAVID website: https://david.ncifcrf.gov/
@@ -802,6 +813,74 @@ Here, I downloaded the annotation from the [UCSC Table browser](http://microbes.
 perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' Escherichia_coli_K_12_MG1655.annotation.gtf > Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
 ```
 This file will work directly in IGV
+
+### How to map peaks to genomic features and draw metagenes?
+We will use CEAS from the Liu lab  [http://liulab.dfci.harvard.edu/CEAS/usermanual.html]
+
+CEAS is a good program, but does not support microbial genomes. It supports mouse, human, drosophila, so for this exercise, we will analyse the results obtained on human ChIP-seq data for H3K27ac.
+
+1. CEAS options
+```bash
+srun ceas  --help
+```
+This prints the help of the program.
+2. Let's see the parameters of CEAS before launching the analysis:
+
+  * -g, --gdb Gene annotation table file (e.g. a refGene table in sqlite3 db format provided through the CEAS web, http://liulab.dfci.harvard.edu/CEAS/download.html). If the sqlite3 file does not have the genome background annotation, the user must turn on --bg and have an input WIG file.
+  * -b, --bed	BED file with ChIP regions.
+  * -w, --wig	WIG file for either wig profiling or genome background annotation. WARNING: CEAS accepts fixedStep and variableStep WIG file. The user must set --bgflag for genome background annotation.
+  * --pf-res	Wig profiling resolution, DEFAULT: 50bp. WARNING: a number smaller than the wig interval (resolution) may cause aliasing error.
+  * --span	Span from TSS and TTS in the gene-centered annotation. ChIP regions within this range from TSS and TTS are considered when calculating the coverage rates of promoter and downstream by ChIP regions. DEFAULT=3000bp
+  * --rel-dist	Relative distance to TSS/TTS in wig profiling. DEFAULT: 3000bp
+  * --name	Experiment name. This will be used to name the output files (R script, PDF file and XLS file). If an experiment name is not given, the stem of the input BED file name will be used instead. (e.g. if BED is peaks.bed, 'peaks' will be used as a name.) If a BED file is not given, the input WIG file name will be used.
+
+4. To run CEAS
+```bash
+# ceas [options] -g gdb -b bed -w wig
+```
+The bed and the wig files correspond respectively to the list of peaks positions in the genome and their signal intensities. Both can be generated by runing macs with option -w -S.
+
+Note: To save time, you can run each part of the program (annotated features or metagenes) separately
+
+To run ChIP region annotation and gene-centered annotation only
+```bash
+# ceas [options] -g gdb -b bed
+```
+
+To run  average signal profiling only
+```bash
+# ceas [options] -g gdb -w wig
+```
+
+5- Look at the results obtained for CEAS run on human H3K27ac ChIP-seq data with the folowing command line:
+
+```bash
+# ceas --pf-res 200 --span 5000 --rel-dist 5000 -g hg19.refGene -b H3K27ac.bed -w H3K27ac.wig --name H3K27ac
+```
+Download the resulting PDF file on your computer to visualize it on your local machine (either with ssh or the program you used to upload your data on the server). Using a bash command it would look like this.
+
+```bash
+## Go to the location where you want to put the data on your computer
+cd ~/Desktop/EBA2017_chipseq
+
+## Download the file
+scp <login>@hpc.igbmc.fr:/shared/projects/training/slegras/EBA2017_chipseq/06-PeakAnnotation/ceas/* .
+# Enter your password
+```
+Look at the pdf files:
+
+**Are there specific chromosomes that show high level of H3K27ac?**
+
+**In which genomic regions is this histone mark enriched?**
+
+**What is the distribution of the peaks along the genes?**
+
+**Compare with the output for H3K36me3**
+
+Look at the Excel files:
+
+**What information is listed in each column?**
+
 
 ## References <a name="ref"></a>
 
