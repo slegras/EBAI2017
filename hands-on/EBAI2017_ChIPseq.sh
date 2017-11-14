@@ -26,19 +26,22 @@ cd data
 # http://microbes.ucsc.edu/cgi-bin/hgTables?org=Escherichia+coli+K12&db=eschColi_K12&hgsid=1465191&hgta_doMainPage=1
 
 ## Changing chromosome names
-srun zcat Escherichia_coli_K_12_MG1655.annotation.gtf | perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' | \
- gzip > Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
+# srun zcat Escherichia_coli_K_12_MG1655.annotation.gtf | perl -pe 's/^chr/gi\|49175990\|ref\|NC_000913.2\|/' | \
+#  gzip > Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
 
+## Copy data
+srun cp -r /shared/projects/training/slegras/EBA2017_chipseq/data \
+/shared/projects/training/slegras/EBA2017_chipseq/scripts/ .
 cd $home
 
-## Create a directory for scripts
-mkdir scripts
-
-## Go to the newly created directory
-cd scripts
-
-## Clone phantompeakqualtools repository
-git clone https://github.com/crazyhottommy/phantompeakqualtools.git
+# ## Create a directory for scripts
+# mkdir scripts
+#
+# ## Go to the newly created directory
+# cd scripts
+#
+# ## Clone phantompeakqualtools repository
+# git clone https://github.com/crazyhottommy/phantompeakqualtools.git
 
 ## go back to home working directory
 cd $home
@@ -63,6 +66,9 @@ srun fastqc ../data/SRR576933.fastq.gz -o .
 
 ## Run fastqc on the control
 srun fastqc ../data/SRR576938.fastq.gz -o .
+
+## List output file
+ls
 
 ## Go to home working directory
 cd $home
