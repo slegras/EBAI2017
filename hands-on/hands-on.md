@@ -348,7 +348,8 @@ mkdir 03-ChIPQualityControls
 cd 03-ChIPQualityControls
 ```
 3. Run Deeptools [plotFingerprint](http://deeptools.readthedocs.io/en/latest/content/tools/plotFingerprint.html) to draw the Lorenz curve
-It will run simultaneously on the IP and control BAM files
+  * -b: List of indexed BAM files
+  * -plot: File name of the output figure (extension can be either “png”, “eps”, “pdf” or “svg”)
 ```bash
 srun plotFingerprint -b ../02-Mapping/IP/SRR576933.bam ../02-Mapping/Control/SRR576938.bam -plot fingerprint.png
 ```
@@ -378,6 +379,9 @@ else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
 source activate eba2017_spp
 ```
 3. Run phantompeakqualtools
+  * c=<ChIP_alignFile>, full path and name (or URL) of tagAlign/BAM file (can be gzipped)(FILE EXTENSION MUST BE tagAlign.gz, tagAlign, bam or bam.gz) MANDATORY ARGUMENTS FOR PEAK CALLING
+  * -savp=<plotdatafile> OR -savp, save cross-correlation plot
+  * -out=<resultfile>, append peakshift/phantomPeak results to a file
 ```bash
 srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_IP_phantompeaks
 ```
