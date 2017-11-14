@@ -191,24 +191,26 @@ cd 03-ChIPQualityControls
 srun plotFingerprint -b ../02-Mapping/IP/SRR576933.bam ../02-Mapping/Control/SRR576938.bam -plot fingerprint.png
 
 ### phantompeakqualtools
-## create an R environment
-# conda create -c r --name R r
-# source activate R
-# conda install -c bioconda r-spp
-# conda install -c bioconda samtools
-# conda install -c bioconda gawk
-
 ## convert the BAM file into TagAlign format, specific to the program that calculates the quality metrics
 srun samtools view -F 0x0204 -o - ../02-Mapping/IP/SRR576933.bam | \
 gawk 'BEGIN{OFS="\t"}{if (and($2,16) > 0) {print $3,($4-1),($4-1+length($10)),"N","1000","-"}
 else {print $3,($4-1),($4-1+length($10)),"N","1000","+"} }' \
  | gzip -c > SRR576933_experiment.tagAlign.gz
 
+ ## create an R environment and load it
+ # conda create -c r --name eba2017_spp r
+ # source activate eba2017_spp
+ # conda install -c bioconda r-spp
+ # conda install -c bioconda samtools
+ # conda install -c bioconda gawk
+
+ source activate eba2017_spp
+
 ## Run phantompeakqualtools
 srun Rscript ../scripts/phantompeakqualtools/run_spp.R -c=SRR576933_experiment.tagAlign.gz  -savp -out=SRR576933_IP_phantompeaks
 
 ## Source back the chipseq environment
-# source activate eba2017_chipseq
+source activate eba2017_chipseq
 
 ## Go to home working directory
 cd $home
@@ -247,7 +249,7 @@ srun macs
 
 ## Run macs on the IP and the Control file
 srun macs -t ../02-Mapping/IP/SRR576933.bam -c ../02-Mapping/Control/SRR576938.bam --format BAM  --gsize 4639675 \
---name "FNR_Anaerobic_A" --bw 400 --bdg --single-profile --diag &> MACS.out
+--name "FNR_Anaerobic_A" --bw 400 --diag &> MACS.out
 
 ###################################################
 ################# Peak Annotation
@@ -257,6 +259,10 @@ mkdir 06-PeakAnnotation
 ## Go to the newly created directory
 cd 06-PeakAnnotation
 
+### CEAS
+srun ceas  --help
+
+### Homer annotatePeaks
 ## Uncompress annotation file
 srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
 
@@ -279,14 +285,11 @@ FNR_Anaerobic_A_peaks.bed \
 ## Compress annotation file
 srun gzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf
 
-## Compress back genome file
-srun gzip ../data/Escherichia_coli_K12.fasta
-
-## Add gene symbol annotation using R
-# source activate R
-
 ## Run srun in an interactive mode
 srun --pty bash
+
+## Load the environment with R
+source activate eba2017_spp
 
 ## Launch R
 R
@@ -327,7 +330,24 @@ quit()
 ## Do not save the environment
 n
 
-# source activate eba2017_chipseq
+## exit node and go back to master node
+exit
+
+## Retrieve the list of closest genes
+tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{print $11}'
+
+## Retrieve only the genes that encode for proteins
+tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{print $8}' | sort | uniq -c
+
+## How many protein-coding genes are there in the file?
+tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{if ($8=="promoter-TSS") print $11}'
+
+## Is the number of genes in your file consistent with the previous reply?
+tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{if ($8=="promoter-TSS") print $11}' | wc -l
+tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{if ($8=="promoter-TSS") print $11}' \
+> FNR_Anaerobic_A_final_peaks_annotation_officialGeneSymbols.tsv
+
+cd $home
 
 ###################################################
 ################# Motif analysis
@@ -338,8 +358,6 @@ mkdir 07-MotifAnalysis
 cd 07-MotifAnalysis
 
 ### Extract fasta sequence of peaks
-## Uncompress the genome file
-srun gunzip ../data/Escherichia_coli_K12.fasta.gz
 
 ## Create an index of fasta file
 srun samtools faidx ../data/Escherichia_coli_K12.fasta
@@ -348,16 +366,10 @@ srun samtools faidx ../data/Escherichia_coli_K12.fasta
 srun bedtools getfasta -fi ../data/Escherichia_coli_K12.fasta \
 -bed ../05-PeakCalling/FNR_Anaerobic_A_peaks.bed -fo FNR_Anaerobic_A_peaks.fa
 
-## Compress back the genome file
-srun gzip ../data/Escherichia_coli_K12.fasta
-
 ### Extract fasta sequence of peaks
 ## Extract genomic coordinates of peaks summit +/- 100bp
 srun bedtools slop -b 100 -i ../05-PeakCalling/FNR_Anaerobic_A_summits.bed \
 -g ../data/Escherichia_coli_K12.fasta.fai > FNR_Anaerobic_A_summits+-100.bed
-
-## Uncompress the genome file
-srun gunzip ../data/Escherichia_coli_K12.fasta.gz
 
 ## Extract fasta sequence from genomic coordinate of peaks
 srun bedtools getfasta -fi ../data/Escherichia_coli_K12.fasta -bed FNR_Anaerobic_A_summits+-100.bed -fo FNR_Anaerobic_A_summits+-100.fa
