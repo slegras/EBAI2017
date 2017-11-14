@@ -617,7 +617,7 @@ n
 7. Retrieve the list of closest genes
 
 ```bash
-tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{print $8}'
+tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{print $11}'
 ```
 
 8. Retrieve only the genes that encode for proteins
