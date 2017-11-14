@@ -462,6 +462,7 @@ Your directory structure should be like this:
 └───02-Mapping
 |    └───index
 |    └───IP
+|    └───Control
 │   
 └───03-ChIPQualityControls
 │   
@@ -545,7 +546,7 @@ cd ..
 ```
 
 ### 4 - Visualize peaks into IGV
-1. Download the BED file 05-PeakCalling/FNR_Anaerobic_A_peaks.bed to visualise in IGV.
+1. Download the BED file 05-PeakCalling/FNR_Anaerobic_A_peaks.bed to visualize in IGV.
 
 **Go back again to the genes we looked at earlier: b1127, b1108. Do you see peaks?**
 
