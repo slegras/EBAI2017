@@ -411,7 +411,7 @@ srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
 --outFileName SRR576933_nodup.bw --outFileFormat bigwig --normalizeTo1x 4639675 \
 --skipNonCoveredRegions --extendReads 200 --ignoreDuplicates
 ```
-5. Do it for the control (be careful for the control you will need **5G** of memory to process the file)
+5. Do it for the control (be careful for the control you will need **5G** of memory to process the file, use ` --mem=5G `)
 6. Download the two bigwig files you have just generated
   * 04-Visualization/SRR576933_nodup.bw
   * 04-Visualization/SRR576938_nodup.bw
@@ -450,6 +450,7 @@ cd 05-PeakCalling
 srun macs
 ```
 This prints the help of the program.
+
 4. Let's see the parameters of MACS before launching the mapping:
   * ChIP-seq tag file (-t) is the name of our experiment (treatment) mapped read file SRR576933.bam
   * ChIP-seq control file (-c) is the name of our input (control) mapped read file SRR576938.bam
@@ -480,7 +481,7 @@ cd ..
 ```
 
 ### 4 - Visualize peaks into IGV
-1. Go back to IGV and load the BED file of the peaks. Load the file 05-PeakCalling/FNR_Anaerobic_A_peaks.bed.
+1. Download the BED file 05-PeakCalling/FNR_Anaerobic_A_peaks.bed to visualise in IGV.
 
 **Go back again to the genes we looked at earlier: b1127, b1108. Do you see peaks?**
 
@@ -488,7 +489,7 @@ cd ..
 
 **Goals**: Associate ChIP-seq peaks with genomic features, draw metagenes, identify closest genes and run ontology analyses
 
-1. Create a directory named **06-PeakAnnotation** to store annotatePeaks outputs
+1. Create a directory named **06-PeakAnnotation**
 ```bash
 mkdir 06-PeakAnnotation
 ```
@@ -506,6 +507,7 @@ CEAS is a good program, but does not support microbial genomes. It supports mous
 srun ceas  --help
 ```
 This prints the help of the program.
+
 2. Let's see the parameters of CEAS before launching the analysis:
 
   * -g, --gdb Gene annotation table file (e.g. a refGene table in sqlite3 db format provided through the CEAS web, http://liulab.dfci.harvard.edu/CEAS/download.html). If the sqlite3 file does not have the genome background annotation, the user must turn on --bg and have an input WIG file.
@@ -539,12 +541,9 @@ To run  average signal profiling only
 ```bash
 # ceas --pf-res 200 --span 5000 --rel-dist 5000 -g hg19.refGene -b H3K27ac.bed -w H3K27ac.wig --name H3K27ac
 ```
-Download the resulting PDF file on your computer to visualize it on your local machine (either with ssh or the program you used to upload your data on the server). Using a bash command it would look like this.
+Download the resulting PDF file on your computer to visualize it on your local machine. Using a ` scp ` command it would look like this.
 
 ```bash
-## Go to the location where you want to put the data on your computer
-cd ~/Desktop/EBA2017_chipseq
-
 ## Download the file
 scp <login>@hpc.igbmc.fr:/shared/projects/training/slegras/EBA2017_chipseq/06-PeakAnnotation/ceas/* .
 # Enter your password
@@ -568,7 +567,7 @@ Look at the Excel files:
 
 [annotatePeaks.pl](http://homer.ucsd.edu/homer/ngs/annotation.html) from the Homer suite associates peaks with nearby genes.
 
-1. Use the annotation file data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz and the genome file data/Escherichia_coli_K12.fasta.gz. First start by uncompress the files
+1. We will need the annotation file data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz and the genome file data/Escherichia_coli_K12.fasta.gz. First start by uncompress the files
 ```bash
 ## Uncompress annotation file
 srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
@@ -586,10 +585,11 @@ srun annotatePeaks.pl
 ```
 Let's see the parameters:
 
-annotatePeaks.pl <peak/BED file> <genome>   > <output file>
+annotatePeaks.pl peak/BEDfile genome > outputfile
 	User defined annotation files (default is UCSC refGene annotation):
 		annotatePeaks.pl accepts GTF (gene transfer formatted) files to annotate positions relative
 		to custom annotations, such as those from de novo transcript discovery or Gencode.
+		
 		-gtf <gtf format file> (Use -gff and -gff3 if appropriate, but GTF is better)
 
 
@@ -602,12 +602,12 @@ FNR_Anaerobic_A_peaks.bed \
 > FNR_Anaerobic_A_annotated_peaks.tsv
 ```
 
-5. Run srun in an interactive mode
+5. Run ` srun ` in an interactive mode
 ```bash
 srun --pty bash
 ```
 
-6. Load a new conda environment to run phantompeakqualtools
+6. Load a new conda environment (necessary to run R)
 ```bash
 source activate eba2017_spp
 ```
@@ -665,7 +665,7 @@ head FNR_Anaerobic_A_final_peaks_annotation.tsv
 
 **What are all the possible gene types?**
 
-8. Exit the node you're connected to and go back to the master non-model
+8. Exit the node you're connected to, and go back to the master server
 ```bash
 exit
 ```
@@ -714,7 +714,7 @@ cd ..
 ### 3- Search for Biological Processes, Molecular Functions or Cellular Compartments enrichment
 This gene list can then be used with Gene Ontology search tools such as Database for Annotation, Visualization and Integrated Discovery  (DAVID) or Ingenuity Pathway Analysis (IPA).
 
-Input your gene list in FNR_Anaerobic_A_final_peaks_annotation_officialGeneSymbols.tsv on the DAVID website: https://david.ncifcrf.gov/
+Input your gene list (filename :  FNR_Anaerobic_A_final_peaks_annotation_officialGeneSymbols.tsv) on the DAVID website: https://david.ncifcrf.gov/
 
 **Are there biological processes enriched in the list of genes associated to the peaks?**
 
