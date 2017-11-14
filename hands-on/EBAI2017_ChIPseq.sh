@@ -320,7 +320,7 @@ srun bedtools slop -b 100 -i ../05-PeakCalling/FNR_Anaerobic_A_summits.bed \
 srun gunzip ../data/Escherichia_coli_K12.fasta.gz
 
 ## Extract fasta sequence from genomic coordinate of peaks
-srun bedtools getfasta -fi ../data/Escherichia_coli_K_12_MG1655.fasta -bed FNR_Anaerobic_A_summits+-100.bed -fo FNR_Anaerobic_A_summits+-100.fa
+srun bedtools getfasta -fi ../data/Escherichia_coli_K12.fasta -bed FNR_Anaerobic_A_summits+-100.bed -fo FNR_Anaerobic_A_summits+-100.fa
 
 ## Compress back the genome file
 srun gzip ../data/Escherichia_coli_K12.fasta

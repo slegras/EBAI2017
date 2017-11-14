@@ -348,14 +348,14 @@ If the data are on your computer, to prevent data transfer, it's easier to visua
 
 ### 2 - Viewing the raw alignment data in IGV
 1. Download the following files from the server onto your computer
-  * data/Escherichia_coli_K_12_MG1655.fasta.gz
+  * data/Escherichia_coli_K12.fasta.gz
   * data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
   * 02-Mapping/IP/SRR576933.bam
   * 02-Mapping/Control/SRR576938.bam
 2. Open IGV on your computer
 3. Load the genome
   * Genomes / Load Genome from File...
-  * Select the fasta file Escherichia_coli_K_12_MG1655.fasta.gz located into the data directory
+  * Select the fasta file Escherichia_coli_K12.fasta.gz located into the data directory
 4. Load an annotation file named Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz into IGV
   * File / Load from File...
   * Select the annotation file. The positions of the genes are now loaded.
@@ -582,7 +582,7 @@ n
 
 6. Retrieve the list of closest genes
 ```bash
-# awk '{print $11}' FNR_Anaerobic_A_final_peaks_annotation.tsv 
+# awk '{print $11}' FNR_Anaerobic_A_final_peaks_annotation.tsv
 ```
 
 7. Retrieve only the genes that encode for proteins
@@ -632,7 +632,7 @@ Input your gene list on the DAVID website: https://david.ncifcrf.gov/
 
 ### 1 - Retrieve the peak sequences corresponding to the peak coordinate file (BED)
 
-For the motif analysis, you first need to extract the sequences corresponding to the peaks. There are several ways to do this (as usual...). If you work on a UCSC-supported organism, the easiest is to use RSAT fetch-sequences or Galaxy. Here, we will use Bedtools, as we have the genome of interest on our computer (Escherichia_coli_K_12_MG1655.fasta).
+For the motif analysis, you first need to extract the sequences corresponding to the peaks. There are several ways to do this (as usual...). If you work on a UCSC-supported organism, the easiest is to use RSAT fetch-sequences or Galaxy. Here, we will use Bedtools, as we have the genome of interest on our computer (Escherichia_coli_K12.fasta).
 1. Create a directory named **07-MotifAnalysis** to store data needed for motif analysis
 ```bash
 mkdir 07-MotifAnalysis
@@ -644,17 +644,17 @@ cd 07-MotifAnalysis
 3. Extract peak sequence in fasta format
 ```bash
 ## Uncompress the genome file
-srun gunzip ../data/Escherichia_coli_K_12_MG1655.fasta.gz
+srun gunzip ../data/Escherichia_coli_K12.fasta.gz
 
 ## Create an index of the genome fasta file
 srun samtools faidx ../data/Escherichia_coli_K12.fasta
 
 ## Extract fasta sequence from genomic coordinate of peaks
-srun bedtools getfasta -fi ../data/Escherichia_coli_K_12_MG1655.fasta \
+srun bedtools getfasta -fi ../data/Escherichia_coli_K12.fasta \
 -bed ../05-PeakCalling/FNR_Anaerobic_A_peaks.bed -fo FNR_Anaerobic_A_peaks.fa
 
 ## Compress back the genome file
-srun gzip ../data/Escherichia_coli_K_12_MG1655.fasta
+srun gzip ../data/Escherichia_coli_K12.fasta
 ```
 
 ### 2 - Motif discovery with RSAT
@@ -680,13 +680,13 @@ srun bedtools slop -b 100 -i ../05-PeakCalling/FNR_Anaerobic_A_summits.bed -g ..
 2. Extract the sequences for this BED file
 ```bash
 ## Uncompress the genome file
-srun gunzip ../data/Escherichia_coli_K_12_MG1655.fasta.gz
+srun gunzip ../data/Escherichia_coli_K12.fasta.gz
 
 ## Extract fasta sequence from genomic coordinate of peaks
-srun bedtools getfasta -fi ../data/Escherichia_coli_K_12_MG1655.fasta -bed FNR_Anaerobic_A_summits+-100.bed -fo FNR_Anaerobic_A_summits+-100.fa
+srun bedtools getfasta -fi ../data/Escherichia_coli_K12.fasta -bed FNR_Anaerobic_A_summits+-100.bed -fo FNR_Anaerobic_A_summits+-100.fa
 
 ## Compress back the genome file
-srun gzip ../data/Escherichia_coli_K_12_MG1655.fasta
+srun gzip ../data/Escherichia_coli_K12.fasta
 ```
 3. Run RSAT peak-motifs with the same options, but choosing as input file this new dataset (FNR_Anaerobic_A_summits+-100.fa)
 and setting the title box to **FNR Anaerobic A summit +/-100bp**
