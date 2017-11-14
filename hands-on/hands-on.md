@@ -535,7 +535,7 @@ srun gunzip ../data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
 ## Uncompress genome file
 srun gunzip ../data/Escherichia_coli_K12.fasta.gz
 ```
-2. Create a file suitable for annotatePeaks.pl => ??????
+2. Create a file suitable for annotatePeaks.pl.
 ```bash
 awk -F "\t" '{print $0"\t+"}' ../05-PeakCalling/FNR_Anaerobic_A_peaks.bed > FNR_Anaerobic_A_peaks.bed
 ```
@@ -570,6 +570,7 @@ srun --pty bash
 ```R
 ## Launch R
 R
+
 ## read the file with peaks annotated with homer
 ## data are loaded into a data frame
 ## sep="\t": this is a tab separated file
@@ -587,11 +588,11 @@ gene.symbol <- read.table("../data/Escherichia_coli_K_12_MG1655.annotation.tsv.g
 ## by.y gives the columns name in which the common field is for the gene.symbol data frame
 ## d contains several columns with no information. We select only interesting columns
 ## -> d[,c(seq(1,6,1),8,10,11)]
-d.annot <- merge(d[,c(seq(1,6,1),8,10,11)], gene.symbol, by.x="Nearest.PromoterID", by.y="V1") # to link the two tables by the gene ref
+d.annot <- merge(d[,c(seq(1,6,1),8,10,11)], gene.symbol, by.x="Nearest.PromoterID", by.y="V1")
 
 ## Change column names of the resulting data frame
 colnames(d.annot)[2] <- "PeakID"  # name the 2d column of the new file "PeakID"
-colnames(d.annot)[dim(d.annot)[2]] <- "Gene.Symbol" # name the last column of the new file "Gene.Symbol"
+colnames(d.annot)[dim(d.annot)[2]] <- "Gene.Symbol"
 
 ## output the merged data frame to a file named "FNR_Anaerobic_A_final_peaks_annotation.tsv"
 ## col.names=T: output column names
