@@ -561,16 +561,44 @@ FNR_Anaerobic_A_peaks.bed \
 > FNR_Anaerobic_A_annotated_peaks.tsv
 ```
 
-5. Add gene symbol annotation using R => TO EXPLAIN MORE
+5. Add gene symbol annotation using R
 ```R
+## Launch R
 R
+## read the file with peaks annotated with homer
+## data are loaded into a data frame
+## sep="\t": this is a tab separated file
+## h=T: there is a line with headers (ie. column names)
 d <- read.table("FNR_Anaerobic_A_annotated_peaks.tsv", sep="\t", h=T)
+
+## Load a 2-columns files which contains in the first column gene IDs
+## and in the second column gene symbols
+## data are loaded into a data frame
+## h=F: there is no header line
 gene.symbol <- read.table("../data/Escherichia_coli_K_12_MG1655.annotation.tsv.gz", h=F)
+
+## Merge the 2 data frames based on a common field
+## by.x gives the columns name in which the common field is for the d data frame
+## by.y gives the columns name in which the common field is for the gene.symbol data frame
+## d contains several columns with no information. We select only interesting columns
+## -> d[,c(seq(1,6,1),8,10,11)]
 d.annot <- merge(d[,c(seq(1,6,1),8,10,11)], gene.symbol, by.x="Nearest.PromoterID", by.y="V1") # to link the two tables by the gene ref
+
+## Change column names of the resulting data frame
 colnames(d.annot)[2] <- "PeakID"  # name the 2d column of the new file "PeakID"
 colnames(d.annot)[dim(d.annot)[2]] <- "Gene.Symbol" # name the last column of the new file "Gene.Symbol"
-write.table(d.annot, "FNR_Anaerobic_A_final_peaks_annotation.tsv", col.names=T, row.names=F, sep="\t", quote=F) # write a new file containing this table
+
+## output the merged data frame to a file named "FNR_Anaerobic_A_final_peaks_annotation.tsv"
+## col.names=T: output column names
+## row.names=F: don't output row names
+## sep="\t": table fields are separated by tabs
+## quote=F: don't put quote around text.
+write.table(d.annot, "FNR_Anaerobic_A_final_peaks_annotation.tsv", col.names=T, row.names=F, sep="\t", quote=F)
+
+## Leave R
 quit()
+
+## Doesn't save the environment
 n
 ```
 
