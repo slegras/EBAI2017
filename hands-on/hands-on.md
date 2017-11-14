@@ -615,26 +615,26 @@ n
 **What are all the possible gene types?**
 
 7. Retrieve the list of closest genes
+
 ```bash
-# awk '{print $11}' FNR_Anaerobic_A_final_peaks_annotation.tsv
+tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk -F "\t" '{print $8}'
 ```
 
 8. Retrieve only the genes that encode for proteins
 ```bash
-# awk '{print $8}' FNR_Anaerobic_A_final_peaks_annotation.tsv | sort | uniq -c
+# tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk -F "\t" '{print $8}' | sort | uniq -c
 ```
 
 **How many protein-coding genes are there in the file?**
 
 ```bash
-# awk '{if ($8=="promoter-TSS") print $11}' FNR_Anaerobic_A_final_peaks_annotation.tsv
+# tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{if ($8=="promoter-TSS") print $11}'
 ```
 
 **Is the number of genes in your file consistent with the previous reply?**
 
 ```bash
-# awk '{if ($8=="promoter-TSS") print $11}' FNR_Anaerobic_A_final_peaks_annotation.tsv  | wc -l
-
+# tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{if ($8=="promoter-TSS") print $11}' | wc -l
 ```
 
 9. Compress back the annotation file
