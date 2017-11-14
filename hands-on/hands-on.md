@@ -676,7 +676,7 @@ head FNR_Anaerobic_A_final_peaks_annotation.tsv
 
 **What are all the possible gene types?**
 
-8. Exit the node you're connected to and go back to the master non-model
+8. Exit the node you're connected to and go back to the master node
 ```bash
 exit
 ```
