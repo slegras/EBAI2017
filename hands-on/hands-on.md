@@ -26,7 +26,7 @@ The aim is to :
 This training gives an introduction to ChIP-seq data analysis, covering the processing steps starting from the reads to the peaks. Among all possible downstream analyses, the practical aspect will focus on motif analyses. A particular emphasis will be put on deciding which downstream analyses to perform depending on the biological question. This training does not cover all methods available today. It does not aim at bringing users to a professional NGS analyst level but provides enough information to allow biologists understand what DNA sequencing practically is and to communicate with NGS experts for more in-depth needs.
 
 ### Dataset description
-For this training, we will use a dataset produced by Myers et al [Pubmed](http://www.ncbi.nlm.nih.gov/pubmed/23818864) involved in the regulation of gene expression under anaerobic conditions in bacteria. We will focus on one factor: **FNR**.
+For this training, we will use a dataset produced by Myers et al [(Pubmed)](http://www.ncbi.nlm.nih.gov/pubmed/23818864) involved in the regulation of gene expression under anaerobic conditions in bacteria. We will focus on one factor: **FNR**.
 
 ## Downloading ChIP-seq reads from NCBI <a name="download"></a>
 **Goal**: Identify the dataset corresponding to the studied article and retrieve the data (reads as FASTQ file) corresponding to one experiment and the control.  
@@ -56,16 +56,16 @@ Although direct access to the SRA database at the NCBI is doable, SRA does not s
 
 1. Go to the [EBI](http://www.ebi.ac.uk/) website. Paste your SRA identifier (SRX189773) and click on the button "search".
 ![alt text][ebi4]
-2. Click on the first result. On the next page, there is a link to the FASTQ file. For efficiency, this file has already been downloaded and is available in the "data" folder (SRR576933.fastq.gz)  
+2. Click on the first result. On the next page, there is a link to the FASTQ file. For efficiency, this file has already been downloaded and will be available for you on the server in the "data" folder (filename : SRR576933.fastq.gz)  
 ![alt text][ebi5]
 
 **tip**: To download the control dataset, we should redo the same steps starting from the GEO web page specific to the chip-seq datasets (see step 2.4) and choose **anaerobic INPUT DNA**.  
-The downloaded FASTQ file is available in the data folder (SRR576938.fastq.gz)
+The downloaded FASTQ file will also be available in the data folder (filename : SRR576938.fastq.gz)
 
-**At this point, you should have two FASTQ files, one for the experiment, one for the control.
+**At this point, you have two FASTQ files, one for the experiment, one for the control.
 
 ## Connect to the server and set up your environment <a name="setup"></a>
-### 1 - Sign in on the server
+### 1 - Sign in on the server (located in Strasbourg, not Roscoff !)
   * On MobaXterm
 > Session : ssh  
 > Host : hpc.igbmc.fr  
