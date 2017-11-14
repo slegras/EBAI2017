@@ -391,9 +391,7 @@ If the data are on your computer, to prevent data transfer, it's easier to visua
   * data/Escherichia_coli_K12.fasta.gz
   * data/Escherichia_coli_K_12_MG1655.annotation.fixed.gtf.gz
   * 02-Mapping/IP/SRR576933.bam
-  * 02-Mapping/IP/SRR576933.bam.bai  
   * 02-Mapping/Control/SRR576938.bam
-  * 02-Mapping/Control/SRR576938.bam.bai
 2. Open IGV on your computer
 3. Load the genome
   * Genomes / Load Genome from File...
@@ -585,15 +583,12 @@ To look at the results obtained for CEAS run on human H3K27ac ChIP-seq data with
 
 **What is the distribution of the peaks along the genes?**
 
-<<<<<<< HEAD
-=======
 **Compare with the output for H3K36me3**
 
 Look at the Excel files:
 
 **What information is listed in each column?**
 
->>>>>>> 630a6a6... added comments
 
 ### 2-Associate peaks to closest genes
 
@@ -694,7 +689,7 @@ tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{print $11}'
 
 8. Retrieve only the genes that encode for proteins
 ```bash
-# sort | uniq -c to list and count occurences of each item 
+# sort | uniq -c to list and count occurences of each item
 tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{print $8}' | sort | uniq -c
 ```
 
