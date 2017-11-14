@@ -62,7 +62,7 @@ Although direct access to the SRA database at the NCBI is doable, SRA does not s
 **tip**: To download the control dataset, we should redo the same steps starting from the GEO web page specific to the chip-seq datasets (see step 2.4) and choose **anaerobic INPUT DNA**.  
 The downloaded FASTQ file will also be available in the data folder (filename : SRR576938.fastq.gz)
 
-**At this point, you have two FASTQ files, one for the experiment, one for the control.
+**At this point, you have two FASTQ files, one for the experiment, one for the control.**
 
 ## Connect to the server and set up your environment <a name="setup"></a>
 ### 1 - Sign in on the server (located in Strasbourg, not Roscoff !)
@@ -114,7 +114,7 @@ mkdir 01-QualityControl
 cd 01-QualityControl
 ```
 3. Check the help page of the program to see its usage and parameters.
-WARNING : remember, we don't use qlogin on the Strasbourg server, but srun in front of each command, so that it ` runs  on a computing node.
+WARNING : remember, we don't use qlogin on the Strasbourg server, but ` srun ` in front of each command, so that it  runs  on a computing node.
 ```bash
 srun fastqc --help
 ```
@@ -135,7 +135,7 @@ ls
 ## Create a directory where to put generated files on your computer
 mkdir ~/Desktop/EBA2017_chipseq
 
-## Go to the location on your computer, where you want to put the data
+## Go to the location on your computer, where you want to put the data, for example:
 cd ~/Desktop/EBA2017_chipseq
 
 ## Download the file
@@ -168,7 +168,7 @@ Do both FASTQ files contain enough reads for a proper analysis ?**
 **Goal**: Obtain the coordinates of each read on the reference genome.  
 
 ### 1 - Choosing a mapping program
-There are multiple programs to perform the mapping step. For reads produced by an Illumina machine for ChIP-seq, the currently "standard" programs are BWA and Bowtie (versions 1 and 2), and STAR is getting popular. We will use **Bowtie version 1.2.1.1** for this exercise, as this program remains effective for short reads (< 50bp).
+There are multiple programs to perform the mapping step. For reads produced by an Illumina machine for ChIP-seq, the currently "standard" programs are BWA and Bowtie (versions 1 and 2), and STAR is getting popular. We will use **Bowtie version 1.2.1.1** (Langmead B et al., Genome Biol, 2009) for this exercise, as this program remains effective for short reads (< 50bp).
 
 ### 2 - Bowtie
 1. Try out bowtie
@@ -224,7 +224,7 @@ srun bowtie-build
 ## Unzip genome fasta file
 srun gunzip ../../data/Escherichia_coli_K12.fasta.gz
 
-## Creating genome index : provide the path to the genome file and the name of the index (Escherichia_coli_K12)
+## Creating genome index : provide the path to the genome file and the name to give to the index (Escherichia_coli_K12)
 srun bowtie-build ../../data/Escherichia_coli_K12.fasta Escherichia_coli_K12
 
 ## Compress back the genome fasta file
@@ -302,10 +302,10 @@ gzip SRR576933.sam
 ```
 
 **Analyze the result of the mapped reads:  
-Open the file SRR576933.out (for example using the "less" command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample? To quit less press 'q'**
+Open the file SRR576933.out (for example using the ` less ` command), which contains some statistics about the mapping. How many reads were mapped? How many multi-mapped reads were originally present in the sample? To quit less press 'q'**
 
 ### 5 - Mapping the control
-1. Repeat the steps above (in 3 - Mapping the experiment) for the file SRR576938.fastq.gz in a directory named "**Control**" in the directory 02-Mapping.
+1. Repeat the steps above (in 4 - Mapping the experiment) for the file SRR576938.fastq.gz in a directory named "**Control**" within the directory 02-Mapping.
 
 **Analyze the result of the mapped reads:  
 Open the file SRR576938.out. How many reads were mapped?**
