@@ -583,6 +583,15 @@ To look at the results obtained for CEAS run on human H3K27ac ChIP-seq data with
 
 **What is the distribution of the peaks along the genes?**
 
+<<<<<<< HEAD
+=======
+**Compare with the output for H3K36me3**
+
+Look at the Excel files:
+
+**What information is listed in each column?**
+
+>>>>>>> 630a6a6... added comments
 
 ### 2-Associate peaks to closest genes
 
@@ -683,6 +692,7 @@ tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{print $11}'
 
 8. Retrieve only the genes that encode for proteins
 ```bash
+# sort | uniq -c to list and count occurences of each item 
 tail -n +2 FNR_Anaerobic_A_final_peaks_annotation.tsv | awk '{print $8}' | sort | uniq -c
 ```
 
@@ -719,6 +729,7 @@ This gene list can then be used with Gene Ontology search tools such as Database
 Input your gene list on the DAVID website: https://david.ncifcrf.gov/
 
 **Are there biological processes enriched in the list of genes associated to the peaks?**
+
 **Are these genes enriched in some KEGG map?**
 
 
