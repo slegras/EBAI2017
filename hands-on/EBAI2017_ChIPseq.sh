@@ -111,7 +111,7 @@ cd IP
 srun gunzip ../../data/SRR576933.fastq.gz
 
 ## Run alignment
-sbatch bowtie ../index/Escherichia_coli_K12 ../../data/SRR576933.fastq -v 2 -m 1 -3 1 -S 2> SRR576933.out > SRR576933.sam
+srun bowtie ../index/Escherichia_coli_K12 ../../data/SRR576933.fastq -v 2 -m 1 -3 1 -S 2> SRR576933.out > SRR576933.sam
 
 ## Compress back fastq IP file
 srun gzip ../../data/SRR576933.fastq
@@ -138,7 +138,7 @@ cd Control
 srun gunzip ../../data/SRR576938.fastq.gz
 
 ## Run alignment
-sbatch bowtie ../index/Escherichia_coli_K12 ../../data/SRR576938.fastq -v 2 -m 1 -3 1 -S 2> SRR576938.out > SRR576938.sam
+srun bowtie ../index/Escherichia_coli_K12 ../../data/SRR576938.fastq -v 2 -m 1 -3 1 -S 2> SRR576938.out > SRR576938.sam
 
 ## Compress back fastq IP file
 srun gzip ../../data/SRR576938.fastq
