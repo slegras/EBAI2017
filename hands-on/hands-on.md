@@ -93,7 +93,8 @@ mkdir EBA2017_chipseq
 ```bash
 cd EBA2017_chipseq
 ```
-5. Copy directories containing data and scripts needed for the training
+5. Copy directories containing data and scripts needed for the training. WARNING : remember, we don't use qlogin on the Strasbourg server, but ` srun ` in front of each command, so that it  runs  on a computing node.
+
 ```bash
 srun cp -r /shared/projects/training/slegras/EBA2017_chipseq/data \
 /shared/projects/training/slegras/EBA2017_chipseq/scripts/ .
@@ -114,7 +115,6 @@ mkdir 01-QualityControl
 cd 01-QualityControl
 ```
 3. Check the help page of the program to see its usage and parameters.
-WARNING : remember, we don't use qlogin on the Strasbourg server, but ` srun ` in front of each command, so that it  runs  on a computing node.
 
 ```bash
 srun fastqc --help
