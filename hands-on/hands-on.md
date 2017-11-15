@@ -122,7 +122,7 @@ srun fastqc --help
 4. Launch the FASTQC program on the experiment file (SRR576933.fastq.gz)
   * -o: creates all output files in the specified output directory. '.' means current directory.
 ```bash
-srun fastqc ../data/SRR576933.fastq.gz -o .
+srun --mem=5G fastqc ../data/SRR576933.fastq.gz -o .
 ```  
 5. Wait until the analysis is finished. Check the files output by the program.
 ```bash
@@ -265,7 +265,7 @@ srun samtools index SRR576933.bam
 
 6. Compress the .sam file
 ```bash
-gzip SRR576933.sam
+srun gzip SRR576933.sam
 ```
 
 **Analyze the result of the mapped reads:  
