@@ -432,13 +432,21 @@ Your directory structure should be like this:
 └───02-Mapping
 |    └───index
 |    └───IP
+|    └───Control
 │   
 └───03-ChIPQualityControls
 │   
 └───04-Visualization <- you should be in this folder
 ```
 
-4. Generate a scaled bigwig file on the IP
+4. Generate a scaled bigwig file on the IP with bamCoverage
+  * --bam: BAM file to process
+  * --outFileName: output file name
+  * --outFileFormat: Output file type
+  * --normalizeTo1x EFFECTIVE GENOME SIZE LENGTH: Report read coverage normalized to 1x sequencing depth. Effective genome size length here is the length of the genome
+  * --skipNonCoveredRegions: skip non-covered regions
+  * --extendReads 200: Extend reads to fragment size
+  * --ignoreDuplicates: reads that have the same orientation and start position will be considered only once
 ```bash
 srun --mem=3G bamCoverage --bam ../02-Mapping/IP/Marked_SRR576933.bam \
 --outFileName SRR576933_nodup.bw --outFileFormat bigwig --normalizeTo1x 4639675 \
@@ -558,9 +566,9 @@ annotatePeaks.pl peak/BEDfile genome > outputfile
 	
 	User defined annotation files (default is UCSC refGene annotation):annotatePeaks.pl accepts GTF (gene transfer formatted) files to annotate positions relative
 		to custom annotations, such as those from de novo transcript discovery or Gencode.
+
 		
 		-gtf <gtf format file> (Use -gff and -gff3 if appropriate, but GTF is better)
-
 
 4. Annotation peaks with nearby genes with Homer
 ```bash
