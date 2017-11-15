@@ -755,7 +755,7 @@ srun bedtools getfasta -fi ../data/Escherichia_coli_K12.fasta \
   * Main server (currently in Brussels) www.rsat.eu
 2. In the left menu, click on **NGS ChIP-seq** and then click on **peak-motifs**. A new page opens, with a form
 3. The default peak-motifs web form only displays the essential options. There are only two mandatory parameters.
-  * The title box, which you will set as FNR Anaerobic A b. The sequences, that you will upload from your computer, by clicking on the button Choose file, and select the file macs14_peaks.fa from your computer.
+  * The title box, which you will set as FNR Anaerobic A. The sequences, that you will upload from your computer, by clicking on the button Choose file, and select the file FNR_Anaerobic_A_peaks.fa from your computer.
 4. We could launch the analysis like this, but we will now modify some of the advanced options in order to fine-tune the analysis according to your data set.
   * Open the "Reduce peak sequences" title, and make sure the "Cut peak sequences: +/- " option is set to 0 (we wish to analyze our full dataset)
   * Open the “Motif Discovery parameters” title, and check the oligomer sizes 6 and 7 (but not 8). Check "Discover over-represented spaced word pairs [dyad-analysis]"
