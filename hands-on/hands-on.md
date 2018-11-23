@@ -1,4 +1,4 @@
-# ChIP-seq Hands-on
+# ChIP-seq Hands-on Roscoff 2018
 
 1. [Introduction](#introduction)  
 2. [Downloading ChIP-seq reads from NCBI](#download)
