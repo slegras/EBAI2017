@@ -802,6 +802,35 @@ mkdir 08-mousePeaks
 1. Search for the dataset **GSE13845** either using Google or from the front page of [GEO](https://www.ncbi.nlm.nih.gov/geo/)
 2. On the description page, find the three GSM files, and click on each of then
 3. On each page, select and download the `GSMxxxxx_p300_peaks.txt.gz` file to the newly created folder (where `xxxxx` represents the GSM number)
+*Make sure to check which genome version was used to call the peaks (remember: this is mouse data!)*
+
+### 2 - Performing the analysis in R
+
+Now, we will open **RStudio**, on perform the rest of the analysis in R. For the analysis, we will need to install some R libraries, in particular [ChIPSeeker](https://bioconductor.org/packages/release/bioc/html/ChIPseeker.html)
+
+1. Open your **RStudio** tool
+2. Install 
+   * [ChIPSeeker](https://bioconductor.org/packages/release/bioc/html/ChIPseeker.html) 
+   * [mouse gene annotation](http://bioconductor.org/packages/release/data/annotation/html/TxDb.Mmusculus.UCSC.mm9.knownGene.html)
+following the instruction of the corresponding websites
+3. load the peak files
+```r
+# load the required libraries
+library(ChIPSeeker)
+library(TxDb.Mmusculus.UCSC.mm9.knownGene)
+txdb = TxDb.Mmusculus.UCSC.mm9.knownGene
+#
+# find the peak files
+peak.files = list.files(<directory containing the peak files>,pattern='*.txt')
+# read the peaks
+peaks = lapply(peak.files,readPeakFile)
+names(peaks) = c('Forebrain', 'Midbrain','Limb')
+```
+
+The peaks are stored as **GenomicRanges** object; this is an R format which ressembles the bed format, but is optimized in terms of memory requirements and speed of exectution.
+
+
+
 
 
 
