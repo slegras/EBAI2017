@@ -812,6 +812,8 @@ Now, we will open **RStudio**, on perform the rest of the analysis in R. For the
 2. Install 
    * [ChIPSeeker](https://bioconductor.org/packages/release/bioc/html/ChIPseeker.html) 
    * [mouse gene annotation](http://bioconductor.org/packages/release/data/annotation/html/TxDb.Mmusculus.UCSC.mm9.knownGene.html)
+   * [mouse functional annotation](http://bioconductor.org/packages/release/data/annotation/html/org.Mm.eg.db.html)
+   * [Reactome pathway database](https://bioconductor.org/packages/release/bioc/html/ReactomePA.html)
 following the instruction of the corresponding websites.
 3. Install the fantastic [RColorBrewer] package to make nice plots
 ```r
@@ -823,6 +825,7 @@ install.packages('RColorBrewer')
 library(RColorBrewer)
 library(ChIPSeeker)
 library(TxDb.Mmusculus.UCSC.mm9.knownGene)
+library(org.Mm.eg.db)
 # define the annotation of the mouse genome
 txdb = TxDb.Mmusculus.UCSC.mm9.knownGene
 # define colors
