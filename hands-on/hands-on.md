@@ -815,11 +815,11 @@ Now, we will open **RStudio**, on perform the rest of the analysis in R. For the
    * [mouse functional annotation](http://bioconductor.org/packages/release/data/annotation/html/org.Mm.eg.db.html)
    * [clusterProfiler: Gene set annotation tool](http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
 following the instruction of the corresponding websites.
-3. Install the fantastic [RColorBrewer] package to make nice plots
+3. Install the fantastic [RColorBrewer](https://www.rdocumentation.org/packages/RColorBrewer/versions/1.1-2/topics/RColorBrewer) package to make nice plots
 ```r
 install.packages('RColorBrewer')
 ```
-4. load the peak files
+4. load the required packages
 ```r
 # load the required libraries
 library(RColorBrewer)
@@ -830,13 +830,18 @@ library(org.Mm.eg.db)
 txdb = TxDb.Mmusculus.UCSC.mm9.knownGene
 # define colors
 col = brewer.pal(9,'Set1')
-#
+````
+
+We now read the peak files for the three datasets:
+```r
 # set the working directiry to the folder in which the peaks are stored
 setwd(<directory containing the peak files>)
+#
 # read the peaks for each dataset
 peaks.forebrain = readPeakFile('GSM348064_p300_peaks.txt')
 peaks.midbrain = readPeakFile('GSM348065_p300_peaks.txt')
 peaks.limb = readPeakFile('GSM348066_p300_peaks.txt')
+#
 # create a list containing all the peak sets
 all.peaks = list(forebrain=peaks.forebrain,
 midbrain=peaks.midbrain,
