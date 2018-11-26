@@ -795,9 +795,13 @@ In this part, we will use a different set of peaks obtained using a peak caller 
 ### 1 - Obtain the bed files from GEO
 
 We will download the already called peak files in bed format from GEO.
+0. Create a new folder for this analysis
+```bash
+mkdir 08-mousePeaks
+```
 1. Search for the dataset **GSE13845** either using Google or from the front page of [GEO](https://www.ncbi.nlm.nih.gov/geo/)
 2. On the description page, find the three GSM files, and click on each of then
-3. On each page, select and download the `GSMxxxxx_p300_peaks.txt.gz` file
+3. On each page, select and download the `GSMxxxxx_p300_peaks.txt.gz` file to the newly created folder (where `xxxxx` represents the GSM number)
 
 
 
