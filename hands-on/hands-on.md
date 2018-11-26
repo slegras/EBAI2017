@@ -905,14 +905,18 @@ tagHeatmap(tagMatrix, xlim=c(-5000, 5000), color="red")
 
 ### 3 - Functional annotation of the peaks
 
-We can now annotate the peaks to the closest genes and genomic compartments (introns, exons, promoters, distal regions, etc...)
-We need to run the function which annotates the peaks, using the mouse genomic annotation (where are the introns, promoters,...?)
+We can now assign the peaks to the closest genes and genomic compartments (introns, exons, promoters, distal regions, etc...)
+This is done using the function `annotatePeak` which compares the peak files with the annotation file of the mouse genome. This function returns
+a complex object which contains all this information.
 
 ```r
 peakAnno.forebrain = annotatePeak(peaks.forebrain, tssRegion=c(-3000, 3000), TxDb=txdb, annoDb="org.Mm.eg.db")
 peakAnno.midbrain = annotatePeak(peaks.midbrain, tssRegion=c(-3000, 3000), TxDb=txdb, annoDb="org.Mm.eg.db")
 peakAnno.limb = annotatePeak(peaks.limb, tssRegion=c(-3000, 3000), TxDb=txdb, annoDb="org.Mm.eg.db")
 ```
+
+#### genomic localization
+
 We can now analyze more in details the localization of the peaks (introns, exons, promoters, distal regions,...)
 
 ```r
@@ -923,6 +927,9 @@ plotAnnoBar(list(forebrain=peakAnno.forebrain, midbrain=peakAnno.midbrain,limb=p
 ```
 *Question: do you see differences between the three peak sets?*
 
+
+#### functional annotation 
+
 An important step in ChIP-seq analysis is to interpret genes that are located close to the ChIP peaks. Hence, we need to 
 1. assign genes to peaks
 2. compute functional enrichments of the target genes.
@@ -930,7 +937,7 @@ An important step in ChIP-seq analysis is to interpret genes that are located cl
 **Beware:**
 By doing so, we assume that the target gene of the peak is always the closest one. Hi-C/4C analysis have shown that in higher eukaryotes, this is not always the case. However, in the absence of data on the real target gene of ChIP-peaks, we can work with this approximation.
 
-We will compute the enrichment of the Gene Ontoogy "Biological Process" categories in the set of putative target genes.
+We will compute the enrichment of the Gene Ontology "Biological Process" categories in the set of putative target genes.
 
 ```r
 library(clusterProfiler)
