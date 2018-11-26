@@ -12,11 +12,10 @@
 9. [Peak calling with MACS](#macs)
 10. [Peak annotation](#annotation)
 11. [Motif analysis](#motif)
-12. [FAQ](#faq)
-13. [References](#ref)
+12. [Peak annotation using R](#peakr)
+13. [FAQ](#faq)
+14. [References](#ref)
 
-
-Modification Matthieu et Carl
 
 
 ## Introduction <a name="introduction"></a>
@@ -788,7 +787,7 @@ srun gzip ../data/Escherichia_coli_K12.fasta
 and setting the title box to **FNR Anaerobic A summit +/-100bp**
 
 
-## Annotation of ChIP-peaks using R tools
+## Annotation of ChIP-peaks using R tools <a name="peakr"></a>
 
 In this part, we will use a different set of peaks obtained using a peak caller from a set of p300 ChIP-seq experiments in different mouse embryonic tissues (nirdbrain, forebrain and limb). 
 
