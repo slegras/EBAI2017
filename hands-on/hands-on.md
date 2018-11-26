@@ -801,11 +801,12 @@ mkdir 08-mousePeaks
 1. Search for the dataset **GSE13845** either using Google or from the front page of [GEO](https://www.ncbi.nlm.nih.gov/geo/)
 2. On the description page, find the three GSM files, and click on each of then
 3. On each page, select and download the `GSMxxxxx_p300_peaks.txt.gz` file to the newly created folder (where `xxxxx` represents the GSM number)
-*Make sure to check which genome version was used to call the peaks (remember: this is mouse data!)*
 
-### 2 - Performing first evaluation of peak sets using R
+*Beware: Make sure to check which genome version was used to call the peaks (remember: this is mouse data!)*
 
-Now, we will open **RStudio**, on perform the rest of the analysis in R. For the analysis, we will need to install some R libraries, in particular [ChIPSeeker](https://bioconductor.org/packages/release/bioc/html/ChIPseeker.html)
+### 2 - Performing a first evaluation of peak sets using R
+
+Now, we will use **RStudio** to perform the rest of the analysis in R. For the analysis, we will need to install some R libraries, in particular [ChIPSeeker](https://bioconductor.org/packages/release/bioc/html/ChIPseeker.html)
 
 1. Open your **RStudio** tool
 2. Install 
@@ -813,8 +814,9 @@ Now, we will open **RStudio**, on perform the rest of the analysis in R. For the
    * [mouse gene annotation](http://bioconductor.org/packages/release/data/annotation/html/TxDb.Mmusculus.UCSC.mm9.knownGene.html)
    * [mouse functional annotation](http://bioconductor.org/packages/release/data/annotation/html/org.Mm.eg.db.html)
    * [clusterProfiler: Gene set annotation tool](http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
+
 following the instruction of the corresponding websites.
-3. Install the fantastic [RColorBrewer](https://www.rdocumentation.org/packages/RColorBrewer/versions/1.1-2/topics/RColorBrewer) package to make nice plots
+3. Install the  [RColorBrewer](https://www.rdocumentation.org/packages/RColorBrewer/versions/1.1-2/topics/RColorBrewer) package to produce nice plots
 ```r
 install.packages('RColorBrewer')
 ```
@@ -852,7 +854,7 @@ The peaks are stored as **GenomicRanges** object; this is an R format which ress
 
 We can start by computing some basic statistics on the peak sets.
 
-#### Number of peaks
+#### How many peaks?
 
 ```r
 # check the number of peaks for the forebrain dataset
@@ -863,7 +865,7 @@ sapply(all.peaks,length)
 barplot(sapply(all.peaks,length),col=col)
 ```
 
-#### Size distribution of the peaks
+#### How large are these peaks?
 ```r
 # statistics on the peak length for forebrain
 summary(width(peaks.forebrain))
@@ -874,21 +876,20 @@ lapply(peaks.width,summary)
 boxplot(peaks.width,col=col)
 ```
 
-#### Distribution of peak scores
+#### What is the score of these peaks?
 
 Can you adapt the previous code to display a boxplot of the peak score distribution for the Forebrain peak set (column `Maximum.Peak.Height`)?
 
-#### Genomic localization of peaks
+#### Where are the peaks located?
 
-We can now display the genomic distribution of the peaks, including the peak scores, using the `covplot` function from `ChIPSeeker`:
+We can now display the genomic distribution of the peaks along the chromosomes, including the peak scores, using the `covplot` function from `ChIPSeeker`:
 ```r
 # genome wide distribution
 covplot(peaks.forebrain, weightCol="Maximum.Peak.Height")
-#
-# Exercise: use the option "lower" in covplot to display only the peaks with a score (Max.Peak.Height) above 10
 ```
+**Exercice: use the option "lower" in covplot to display only the peaks with a score (Max.Peak.Height) above 10**
 
-#### Profile of the peaks around the TSS
+#### How does the signal look like at TSS?
 
 In addition to the genome wide plot, we can check if there is a tendency for the peaks to be located close to gene promoters.
 ```r
