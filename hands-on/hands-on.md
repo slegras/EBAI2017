@@ -828,11 +828,16 @@ txdb = TxDb.Mmusculus.UCSC.mm9.knownGene
 # define colors
 col = brewer.pal(9,'Set1')
 #
-# find the peak files
-peak.files = list.files(<directory containing the peak files>,pattern='*.txt')
-# read the peaks
-peaks = lapply(peak.files,readPeakFile)
-names(peaks) = c('Forebrain', 'Midbrain','Limb')
+# set the working directiry to the folder in which the peaks are stored
+setwd(<directory containing the peak files>)
+# read the peaks for each dataset
+peaks.forebrain = readPeakFile('GSM348064_p300_peaks.txt')
+peaks.midbrain = readPeakFile('GSM348065_p300_peaks.txt')
+peaks.limb = readPeakFile('GSM348066_p300_peaks.txt')
+# create a list containing all the peak sets
+all.peaks = list(forebrain=peaks.forebrain,
+midbrain=peaks.midbrain,
+limb=peaks.limb)
 ```
 
 The peaks are stored as **GenomicRanges** object; this is an R format which ressembles the bed format, but is optimized in terms of memory requirements and speed of exectution.
@@ -842,20 +847,52 @@ We can start by computing some basic statistics on the peak sets.
 #### Number of peaks
 
 ```r
-# compute the number of peaks for each peak set
-sapply(peaks,length)
+# check the number of peaks for the forebrain dataset
+length(peaks.forebrain)
+# compute the number of peaks for all datasets using the list object
+sapply(all.peaks,length)
 # display this as a barplot
-barplot(sapply(peaks,length),col=col)
+barplot(sapply(all.peaks,length),col=col)
 ```
 
 #### Size distribution of the peaks
 ```r
+# statistics on the peak length for forebrain
+summary(width(peaks.forebrain))
 # size distribution of the peaks
-lapply(lapply(peaks,width),summary)
+peaks.width = lapply(all.peaks,width)
+lapply(peaks.width,summary)
 # boxplot of the sizes
-boxplot(lapply(peaks,width),col=col)
+boxplot(peaks.width,col=col)
 ```
 
+#### Distribution of peak scores
+
+Can you adapt the previous code to display a boxplot of the peak score distribution for the Forebrain peak set (column `Maximum.Peak.Height`)?
+
+#### Genomic localization of peaks
+
+We can now display the genomic distribution of the peaks, including the peak scores, using the `covplot` function from `ChIPSeeker`:
+```r
+# genome wide distribution
+covplot(peaks.forebrain, weightCol="Maximum.Peak.Height")
+#
+# Exercise: use the option "lower" in covplot to display only the peaks with a score (Max.Peak.Height) above 10
+```
+
+#### Profile of the peaks around the TSS
+
+In addition to the genome wide plot, we can check if there is a tendency for the peaks to be located close to gene promoters.
+```r
+# define gene promoters
+promoter = getPromoters(TxDb=txdb, upstream=5000, downstream=5000)
+
+# compute the density of peaks within the promoter regions
+tagMatrix = getTagMatrix(peaks.limb, windows=promoter)
+
+# plot the density
+tagHeatmap(tagMatrix, xlim=c(-5000, 5000), color="red")
+```
 
 
 
