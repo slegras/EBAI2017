@@ -838,12 +838,12 @@ col = brewer.pal(9,'Set1')
 ```r
 # set the working directiry to the folder in which the peaks are stored
 setwd(<directory containing the peak files>)
-#
+
 # read the peaks for each dataset
 peaks.forebrain = readPeakFile('GSM348064_p300_peaks.txt')
 peaks.midbrain = readPeakFile('GSM348065_p300_peaks.txt')
 peaks.limb = readPeakFile('GSM348066_p300_peaks.txt')
-#
+
 # create a list containing all the peak sets
 all.peaks = list(forebrain=peaks.forebrain,
 midbrain=peaks.midbrain,
@@ -859,8 +859,10 @@ We can start by computing some basic statistics on the peak sets.
 ```r
 # check the number of peaks for the forebrain dataset
 length(peaks.forebrain)
+
 # compute the number of peaks for all datasets using the list object
 sapply(all.peaks,length)
+
 # display this as a barplot
 barplot(sapply(all.peaks,length),col=col)
 ```
@@ -869,9 +871,11 @@ barplot(sapply(all.peaks,length),col=col)
 ```r
 # statistics on the peak length for forebrain
 summary(width(peaks.forebrain))
+
 # size distribution of the peaks
 peaks.width = lapply(all.peaks,width)
 lapply(peaks.width,summary)
+
 # boxplot of the sizes
 boxplot(peaks.width,col=col)
 ```
@@ -922,7 +926,8 @@ We can now analyze more in details the localization of the peaks (introns, exons
 ```r
 # distribution of genomic compartments for forebrain peaks
 plotAnnoPie(peakAnno.forebrain)
-## for all the peaks
+
+# for all the peaks
 plotAnnoBar(list(forebrain=peakAnno.forebrain, midbrain=peakAnno.midbrain,limb=peakAnno.limb))
 ```
 *Question: do you see differences between the three peak sets?*
@@ -940,9 +945,12 @@ By doing so, we assume that the target gene of the peak is always the closest on
 We will compute the enrichment of the Gene Ontology "Biological Process" categories in the set of putative target genes.
 
 ```r
+# load the library
 library(clusterProfiler)
+
 # define the list of all mouse genes as a universe for the enrichment analysis
 universe = mappedkeys(org.Mm.egACCNUM)
+
 ## extract the gene IDs of the forebrain target genes
 genes.forebrain = peakAnno.forebrain@anno$geneId
 ego.forebrain = enrichGO(gene          = genes.forebrain,
@@ -953,6 +961,7 @@ ego.forebrain = enrichGO(gene          = genes.forebrain,
                 pvalueCutoff  = 0.01,
                 qvalueCutoff  = 0.05,
         readable      = TRUE)
+        
 # display the results as barplots        
 barplot(ego.forebrain,showCategory=10)
 ```
