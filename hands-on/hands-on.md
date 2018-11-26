@@ -804,7 +804,7 @@ mkdir 08-mousePeaks
 3. On each page, select and download the `GSMxxxxx_p300_peaks.txt.gz` file to the newly created folder (where `xxxxx` represents the GSM number)
 *Make sure to check which genome version was used to call the peaks (remember: this is mouse data!)*
 
-### 2 - Performing the analysis in R
+### 2 - Performing first evaluation of peak sets using R
 
 Now, we will open **RStudio**, on perform the rest of the analysis in R. For the analysis, we will need to install some R libraries, in particular [ChIPSeeker](https://bioconductor.org/packages/release/bioc/html/ChIPseeker.html)
 
@@ -813,7 +813,7 @@ Now, we will open **RStudio**, on perform the rest of the analysis in R. For the
    * [ChIPSeeker](https://bioconductor.org/packages/release/bioc/html/ChIPseeker.html) 
    * [mouse gene annotation](http://bioconductor.org/packages/release/data/annotation/html/TxDb.Mmusculus.UCSC.mm9.knownGene.html)
    * [mouse functional annotation](http://bioconductor.org/packages/release/data/annotation/html/org.Mm.eg.db.html)
-   * [Reactome pathway database](https://bioconductor.org/packages/release/bioc/html/ReactomePA.html)
+   * [clusterProfiler: Gene set annotation tool](http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
 following the instruction of the corresponding websites.
 3. Install the fantastic [RColorBrewer] package to make nice plots
 ```r
@@ -897,7 +897,55 @@ tagMatrix = getTagMatrix(peaks.limb, windows=promoter)
 tagHeatmap(tagMatrix, xlim=c(-5000, 5000), color="red")
 ```
 
+### 3 - Functional annotation of the peaks
 
+We can now annotate the peaks to the closest genes and genomic compartments (introns, exons, promoters, distal regions, etc...)
+We need to run the function which annotates the peaks, using the mouse genomic annotation (where are the introns, promoters,...?)
+
+```r
+peakAnno.forebrain = annotatePeak(peaks.forebrain, tssRegion=c(-3000, 3000), TxDb=txdb, annoDb="org.Mm.eg.db")
+peakAnno.midbrain = annotatePeak(peaks.midbrain, tssRegion=c(-3000, 3000), TxDb=txdb, annoDb="org.Mm.eg.db")
+peakAnno.limb = annotatePeak(peaks.limb, tssRegion=c(-3000, 3000), TxDb=txdb, annoDb="org.Mm.eg.db")
+```
+We can now analyze more in details the localization of the peaks (introns, exons, promoters, distal regions,...)
+
+```r
+# distribution of genomic compartments for forebrain peaks
+plotAnnoPie(peakAnno.forebrain)
+## for all the peaks
+plotAnnoBar(list(forebrain=peakAnno.forebrain, midbrain=peakAnno.midbrain,limb=peakAnno.limb))
+```
+*Question: do you see differences between the three peak sets?*
+
+An important step in ChIP-seq analysis is to interpret genes that are located close to the ChIP peaks. Hence, we need to 
+1. assign genes to peaks
+2. compute functional enrichments of the target genes.
+
+**Beware:**
+By doing so, we assume that the target gene of the peak is always the closest one. Hi-C/4C analysis have shown that in higher eukaryotes, this is not always the casse. However, in the absence of data on the real target gene of ChIP-peaks, we can work with this approximation.
+
+We will compute the enrichment of the Gene Ontoogy "Biological Process" categories in the set of putative target genes.
+
+```r
+library(clusterProfiler)
+# define the list of all mouse genes as a universe for the enrichment analysis
+universe = mappedkeys(org.Mm.egACCNUM)
+## extract the gene IDs of the forebrain target genes
+genes.forebrain = peakAnno.forebrain@anno$geneId
+ego.forebrain = enrichGO(gene          = genes.forebrain,
+                universe      = universe,
+                OrgDb         = org.Mm.eg.db,
+                ont           = "BP",
+                pAdjustMethod = "BH",
+                pvalueCutoff  = 0.01,
+                qvalueCutoff  = 0.05,
+        readable      = TRUE)
+# display the results as barplots        
+barplot(ego.forebrain,showCategory=10)
+```
+*Question: do you see an enrichment of the expected categories? What does the x-axis mean? What does the color mean?*
+
+**Exercise:** redo this analysis for the limb dataset and check if the enriched categories make sense.
 
 =========================================
 
