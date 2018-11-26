@@ -927,7 +927,7 @@ An important step in ChIP-seq analysis is to interpret genes that are located cl
 2. compute functional enrichments of the target genes.
 
 **Beware:**
-By doing so, we assume that the target gene of the peak is always the closest one. Hi-C/4C analysis have shown that in higher eukaryotes, this is not always the casse. However, in the absence of data on the real target gene of ChIP-peaks, we can work with this approximation.
+By doing so, we assume that the target gene of the peak is always the closest one. Hi-C/4C analysis have shown that in higher eukaryotes, this is not always the case. However, in the absence of data on the real target gene of ChIP-peaks, we can work with this approximation.
 
 We will compute the enrichment of the Gene Ontoogy "Biological Process" categories in the set of putative target genes.
 
@@ -952,7 +952,6 @@ barplot(ego.forebrain,showCategory=10)
 
 **Exercise:** redo this analysis for the limb dataset and check if the enriched categories make sense.
 
-=========================================
 
 ## FAQ <a name="faq"></a>
 ### How to extract peaks from the supplementary data of a publication ?
