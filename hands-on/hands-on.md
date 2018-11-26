@@ -831,7 +831,8 @@ txdb = TxDb.Mmusculus.UCSC.mm9.knownGene
 col = brewer.pal(9,'Set1')
 ````
 
-We now read the peak files for the three datasets:
+5. read the peak files for the three datasets:
+
 ```r
 # set the working directiry to the folder in which the peaks are stored
 setwd(<directory containing the peak files>)
