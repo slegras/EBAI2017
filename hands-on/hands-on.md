@@ -812,13 +812,21 @@ Now, we will open **RStudio**, on perform the rest of the analysis in R. For the
 2. Install 
    * [ChIPSeeker](https://bioconductor.org/packages/release/bioc/html/ChIPseeker.html) 
    * [mouse gene annotation](http://bioconductor.org/packages/release/data/annotation/html/TxDb.Mmusculus.UCSC.mm9.knownGene.html)
-following the instruction of the corresponding websites
-3. load the peak files
+following the instruction of the corresponding websites.
+3. Install the fantastic [RColorBrewer] package to make nice plots
+```r
+install.packages('RColorBrewer')
+```
+4. load the peak files
 ```r
 # load the required libraries
+library(RColorBrewer)
 library(ChIPSeeker)
 library(TxDb.Mmusculus.UCSC.mm9.knownGene)
+# define the annotation of the mouse genome
 txdb = TxDb.Mmusculus.UCSC.mm9.knownGene
+# define colors
+col = brewer.pal(9,'Set1')
 #
 # find the peak files
 peak.files = list.files(<directory containing the peak files>,pattern='*.txt')
@@ -829,7 +837,24 @@ names(peaks) = c('Forebrain', 'Midbrain','Limb')
 
 The peaks are stored as **GenomicRanges** object; this is an R format which ressembles the bed format, but is optimized in terms of memory requirements and speed of exectution.
 
+We can start by computing some basic statistics on the peak sets.
 
+#### Number of peaks
+
+```r
+# compute the number of peaks for each peak set
+sapply(peaks,length)
+# display this as a barplot
+barplot(sapply(peaks,length),col=col)
+```
+
+#### Size distribution of the peaks
+```r
+# size distribution of the peaks
+lapply(lapply(peaks,width),summary)
+# boxplot of the sizes
+boxplot(lapply(peaks,width),col=col)
+```
 
 
 
