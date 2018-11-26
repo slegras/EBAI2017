@@ -33,7 +33,7 @@ This training gives an introduction to ChIP-seq data analysis, covering the proc
 ### Dataset description
 For this training, we will use two datasets:
 * a dataset produced by Myers et al [Pubmed](http://www.ncbi.nlm.nih.gov/pubmed/23818864) involved in the regulation of gene expression under anaerobic conditions in bacteria. We will focus on one factor: **FNR**. The advantage of this dataset is its small size, allowing real time execution of all steps of the dataset
-* a dataset of ChIP-seq peaks obtained in different mouse tissues for the p300 co-activator protein by Visel et al. [Pubmed](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2745234/); we will use this dataset to illustrate downstream annotation of peaks using R tools
+* a dataset of ChIP-seq peaks obtained in different mouse tissues for the p300 co-activator protein by Visel et al. [Pubmed](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2745234/); we will use this dataset to illustrate downstream annotation of peaks using R tools.
 
 ## Downloading ChIP-seq reads from NCBI <a name="download"></a>
 **Goal**: Identify the dataset corresponding to the studied article and retrieve the data (reads as FASTQ file) corresponding to one experiment and the control.  
@@ -786,6 +786,22 @@ srun gzip ../data/Escherichia_coli_K12.fasta
 ```
 3. Run RSAT peak-motifs with the same options, but choosing as input file this new dataset (FNR_Anaerobic_A_summits+-100.fa)
 and setting the title box to **FNR Anaerobic A summit +/-100bp**
+
+
+## Annotation of ChIP-peaks using R tools
+
+In this part, we will use a different set of peaks obtained using a peak caller from a set of p300 ChIP-seq experiments in different mouse embryonic tissues (nirdbrain, forebrain and limb). 
+
+### 1 - Obtain the bed files from GEO
+
+We will download the already called peak files in bed format from GEO.
+1. Search for the dataset **GSE13845** either using Google or from the front page of [GEO](https://www.ncbi.nlm.nih.gov/geo/)
+2. On the description page, find the three GSM files, and click on each of then
+3. On each page, select and download the `GSMxxxxx_p300_peaks.txt.gz` file
+
+
+
+=========================================
 
 ## FAQ <a name="faq"></a>
 ### How to extract peaks from the supplementary data of a publication ?
